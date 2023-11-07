@@ -1,0 +1,10 @@
+.DS_Store
+Thumbs.db
+
+# IDE specific files
+.idea/
+.vscode/
+
+logs/
+
+target/.env

@@ -1,0 +1,49 @@
+version: '3.5'
+# 网络配置
+networks:
+  backend:
+    driver: ${NETWORKS_DRIVER}
+
+# 服务容器配置
+services:
+  etcd: # etcd容器
+    build:
+      context: ./etcd                                 # 指定构建的 Dockerfile 文件
+    environment:
+      - TZ=${TZ}
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_ADVERTISE_CLIENT_URLS=http://localhost:2379
+    ports: # 设置端口映射
+      - "${ETCD_PORT}:2379"
+    networks:
+      - backend
+    restart: always
+
+  mysql:
+    build:
+      context: ./mysql
+    environment:
+      - TZ=${TZ}
+      - MYSQL_USER=${MYSQL_USERNAME}                  # Mysql 用户名称
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}              # Mysql 用户密码
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}    # Mysql root 用户密码
+    volumes:
+      - ${DATA_PATH_HOST}/mysql:/var/lib/mysql        # Mysql 数据挂载目录
+    ports:
+      - "${MYSQL_PORT}:3306"
+    networks:
+      - backend
+    restart: always
+
+  redis:
+    build:
+      context: redis
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - ${DATA_PATH_HOST}/redis:/data                 # Redis 数据挂载目录
+    ports:
+      - "${REDIS_PORT}:6379"
+    networks:
+      - backend
+    restart: always
