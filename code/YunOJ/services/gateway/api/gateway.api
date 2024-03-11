@@ -1,0 +1,39 @@
+syntax = "v1"
+
+info(
+	title: "type title here"
+	desc: "type desc here"
+	author: "type author here"
+	email: "type email here"
+	version: "type version here"
+)
+
+type (
+	LoginRequest {
+		Phone    string `json:"phone"`
+		Password string `json:"password"`
+	}
+	LoginResponse {
+		Code    int64  `json:"code"`
+		Message string `json:"message"`
+		User    string `json:"user"`
+	}
+
+	RegisterRequest {
+		Phone    string `json:"phone"`
+		Password string `json:"password"`
+	}
+	RegisterResponse {
+		Code    int64  `json:"code"`
+		Message string `json:"message"`
+		User    string `json:"user"`
+	}
+)
+
+service User {
+	@handler Login
+	post /api/user/login (LoginRequest) returns (LoginResponse)
+
+	@handler Register
+	post /api/user/register (RegisterRequest) returns (RegisterResponse)
+}

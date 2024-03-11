@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package test;
+
+option go_package = "./test";
+
+message getOneReq {
+  int64 Id = 1;
+}
+
+message getOneResp {
+  string Info = 1;
+}
+
+service Test {
+  rpc getOne(getOneReq) returns (getOneResp);
+}

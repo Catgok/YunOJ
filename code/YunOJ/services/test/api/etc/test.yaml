@@ -1,0 +1,10 @@
+Name: test
+Host: 0.0.0.0
+Port: 8888
+
+TestRpc:
+  App: test.rpc                          # App 标识
+  Etcd:
+    Hosts:
+      - localhost:2379
+    Key: test.rpc
