@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "./user";
+
+message User {
+  int64 userid = 1;
+  string username = 2;
+  string email = 3;
+  string phone = 4;
+  int64 gender = 5;
+  int64 user_type = 6;
+  string password = 7;
+  string avatar = 8;
+  int64 status = 9;
+}
+
+message RegisterByPhoneRequest {
+  string phone = 1;
+  string password = 2;
+}
+
+message RegisterByPhoneResponse {
+  int64 code = 1;
+  string message = 2;
+  User user = 3;
+}
+
+message LoginByPhoneRequest {
+  string phone = 1;
+  string password = 2;
+}
+
+message LoginByPhoneResponse {
+  int64 code = 1;
+  string message = 2;
+  User user = 3;
+}
+
+service UserService {
+  rpc RegisterByPhone(RegisterByPhoneRequest) returns (RegisterByPhoneResponse);
+  rpc LoginByPhone(LoginByPhoneRequest) returns (LoginByPhoneResponse);
+}

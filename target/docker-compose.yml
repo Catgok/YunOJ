@@ -12,12 +12,13 @@ services:
     environment:
       - TZ=${TZ}
       - ALLOW_NONE_AUTHENTICATION=yes
-      - ETCD_ADVERTISE_CLIENT_URLS=http://localhost:2379
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+      - ETCD_ADVERTISE_CLIENT_URLS=http://0.0.0.0:2379
     ports: # 设置端口映射
       - "${ETCD_PORT}:2379"
     networks:
       - backend
-    restart: always
+    restart: no
 
   mysql:
     build:
@@ -33,11 +34,11 @@ services:
       - "${MYSQL_PORT}:3306"
     networks:
       - backend
-    restart: always
+    restart: no
 
   redis:
     build:
-      context: redis
+      context: ./redis
     environment:
       - TZ=${TZ}
     volumes:
@@ -47,3 +48,18 @@ services:
     networks:
       - backend
     restart: always
+
+  judge:
+    build:
+      context: ./judge
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - ${DATA_PATH_HOST}/judge:/data                 # judge 数据挂载目录
+    ports:
+      - "${JUDGE_PORT}:5050"
+    networks:
+      - backend
+    restart: no
+    shm_size: 256m
+    privileged: true
