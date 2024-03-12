@@ -9,36 +9,35 @@ message User {
   string username = 2;
   string email = 3;
   string phone = 4;
-  int64 gender = 5;
-  int64 user_type = 6;
-  string password = 7;
-  string avatar = 8;
-  int64 status = 9;
+  int64 user_type = 5;
+  string avatar = 6;
+  int64 status = 7;
 }
 
-message RegisterByPhoneRequest {
-  string phone = 1;
-  string password = 2;
+message RegisterRequest {
+  string username = 1;
+  string phone = 2;
+  string password = 3;
 }
 
-message RegisterByPhoneResponse {
+message RegisterResponse {
   int64 code = 1;
   string message = 2;
-  User user = 3;
+  bool success = 3;
 }
 
-message LoginByPhoneRequest {
-  string phone = 1;
+message LoginByUserKeyRequest {
+  string userKey = 1;
   string password = 2;
 }
 
-message LoginByPhoneResponse {
+message LoginByUserKeyResponse {
   int64 code = 1;
   string message = 2;
   User user = 3;
 }
 
 service UserService {
-  rpc RegisterByPhone(RegisterByPhoneRequest) returns (RegisterByPhoneResponse);
-  rpc LoginByPhone(LoginByPhoneRequest) returns (LoginByPhoneResponse);
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+  rpc LoginByUserKey(LoginByUserKeyRequest) returns (LoginByUserKeyResponse);
 }

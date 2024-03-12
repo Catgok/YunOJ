@@ -24,18 +24,20 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 }
 
 func (l *RegisterLogic) Register(req *types.RegisterRequest) (resp *types.RegisterResponse, err error) {
-	// todo: add your logic here and delete this line
-	res, err := l.svcCtx.UserRpc.RegisterByPhone(l.ctx, &user.RegisterByPhoneRequest{
+	res, err := l.svcCtx.UserRpc.Register(l.ctx, &user.RegisterRequest{
+		Username: req.Username,
 		Phone:    req.Phone,
 		Password: req.Password,
 	})
 	if err != nil {
-		return nil, err
+		resp.Code = 500
+		resp.Message = err.Error()
+		return resp, nil
 	}
-
-	return &types.RegisterResponse{
-		Code:    200,
-		Message: "success",
-		User:    res.User.GetPassword(),
-	}, nil
+	resp = &types.RegisterResponse{
+		Code:    res.GetCode(),
+		Message: res.GetMessage(),
+		Data:    res.GetSuccess(),
+	}
+	return resp, nil
 }

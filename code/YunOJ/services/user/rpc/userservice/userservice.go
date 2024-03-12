@@ -13,15 +13,15 @@ import (
 )
 
 type (
-	LoginByPhoneRequest     = user.LoginByPhoneRequest
-	LoginByPhoneResponse    = user.LoginByPhoneResponse
-	RegisterByPhoneRequest  = user.RegisterByPhoneRequest
-	RegisterByPhoneResponse = user.RegisterByPhoneResponse
-	User                    = user.User
+	LoginByUserKeyRequest  = user.LoginByUserKeyRequest
+	LoginByUserKeyResponse = user.LoginByUserKeyResponse
+	RegisterRequest        = user.RegisterRequest
+	RegisterResponse       = user.RegisterResponse
+	User                   = user.User
 
 	UserService interface {
-		RegisterByPhone(ctx context.Context, in *RegisterByPhoneRequest, opts ...grpc.CallOption) (*RegisterByPhoneResponse, error)
-		LoginByPhone(ctx context.Context, in *LoginByPhoneRequest, opts ...grpc.CallOption) (*LoginByPhoneResponse, error)
+		Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
+		LoginByUserKey(ctx context.Context, in *LoginByUserKeyRequest, opts ...grpc.CallOption) (*LoginByUserKeyResponse, error)
 	}
 
 	defaultUserService struct {
@@ -35,12 +35,12 @@ func NewUserService(cli zrpc.Client) UserService {
 	}
 }
 
-func (m *defaultUserService) RegisterByPhone(ctx context.Context, in *RegisterByPhoneRequest, opts ...grpc.CallOption) (*RegisterByPhoneResponse, error) {
+func (m *defaultUserService) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
 	client := user.NewUserServiceClient(m.cli.Conn())
-	return client.RegisterByPhone(ctx, in, opts...)
+	return client.Register(ctx, in, opts...)
 }
 
-func (m *defaultUserService) LoginByPhone(ctx context.Context, in *LoginByPhoneRequest, opts ...grpc.CallOption) (*LoginByPhoneResponse, error) {
+func (m *defaultUserService) LoginByUserKey(ctx context.Context, in *LoginByUserKeyRequest, opts ...grpc.CallOption) (*LoginByUserKeyResponse, error) {
 	client := user.NewUserServiceClient(m.cli.Conn())
-	return client.LoginByPhone(ctx, in, opts...)
+	return client.LoginByUserKey(ctx, in, opts...)
 }

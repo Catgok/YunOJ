@@ -9,28 +9,39 @@ info(
 )
 
 type (
-	LoginRequest {
+	User {
+		UserId   int64  `json:"userId"`
+		Username string `json:"username"`
+		Email    string `json:"email"`
 		Phone    string `json:"phone"`
+		UserType int64  `json:"userType"`
+		Avatar   string `json:"avatar"`
+		Status   int64  `json:"status"`
+	}
+
+	LoginRequest {
+		UserKey  string `json:"userKey"`
 		Password string `json:"password"`
 	}
 	LoginResponse {
 		Code    int64  `json:"code"`
 		Message string `json:"message"`
-		User    string `json:"user"`
+		User    User   `json:"user"`
 	}
 
 	RegisterRequest {
+		Username string `json:"username"`
 		Phone    string `json:"phone"`
 		Password string `json:"password"`
 	}
 	RegisterResponse {
 		Code    int64  `json:"code"`
 		Message string `json:"message"`
-		User    string `json:"user"`
+		Data    bool   `json:"data"`
 	}
 )
 
-service User {
+service Gateway {
 	@handler Login
 	post /api/user/login (LoginRequest) returns (LoginResponse)
 

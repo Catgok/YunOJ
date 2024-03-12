@@ -12,9 +12,9 @@ import (
 	"github.com/zeromicro/go-zero/rest"
 )
 
-var configFile = flag.String("f", "etc/user.yaml", "the config file")
+var configFile = flag.String("f", "etc/gateway.yaml", "the config file")
 
-// go run gateway.go  -f ./etc/user.yaml
+// go run gateway.go  -f ./etc/gateway.yaml
 func main() {
 
 	flag.Parse()

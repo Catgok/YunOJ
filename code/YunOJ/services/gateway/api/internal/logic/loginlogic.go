@@ -24,19 +24,31 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 	}
 }
 
-func (l *LoginLogic) Login(req *types.LoginRequest) (resp *types.RegisterResponse, err error) {
-	// todo: add your logic here and delete this line
-	res, err := l.svcCtx.UserRpc.LoginByPhone(l.ctx, &user.LoginByPhoneRequest{
-		Phone:    req.Phone,
+func (l *LoginLogic) Login(req *types.LoginRequest) (resp *types.LoginResponse, err error) {
+	res, err := l.svcCtx.UserRpc.LoginByUserKey(l.ctx, &user.LoginByUserKeyRequest{
+		UserKey:  req.UserKey,
 		Password: req.Password,
 	})
 	if err != nil {
-		return nil, err
+		resp.Code = 500
+		resp.Message = err.Error()
+		return resp, nil
 	}
 
-	return &types.RegisterResponse{
-		Code:    200,
-		Message: "success",
-		User:    res.GetUser().GetPassword(),
-	}, nil
+	userInfo := types.User{
+		UserId:   res.GetUser().GetUserid(),
+		Username: res.GetUser().GetUsername(),
+		Email:    res.GetUser().GetEmail(),
+		Phone:    res.GetUser().GetPhone(),
+		UserType: res.GetUser().GetUserType(),
+		Avatar:   res.GetUser().GetAvatar(),
+		Status:   res.GetUser().GetStatus(),
+	}
+	resp = &types.LoginResponse{
+		Code:    res.GetCode(),
+		Message: res.GetMessage(),
+		User:    userInfo,
+	}
+
+	return resp, nil
 }

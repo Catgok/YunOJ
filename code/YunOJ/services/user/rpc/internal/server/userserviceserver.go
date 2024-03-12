@@ -22,12 +22,12 @@ func NewUserServiceServer(svcCtx *svc.ServiceContext) *UserServiceServer {
 	}
 }
 
-func (s *UserServiceServer) RegisterByPhone(ctx context.Context, in *user.RegisterByPhoneRequest) (*user.RegisterByPhoneResponse, error) {
-	l := logic.NewRegisterByPhoneLogic(ctx, s.svcCtx)
-	return l.RegisterByPhone(in)
+func (s *UserServiceServer) Register(ctx context.Context, in *user.RegisterRequest) (*user.RegisterResponse, error) {
+	l := logic.NewRegisterLogic(ctx, s.svcCtx)
+	return l.Register(in)
 }
 
-func (s *UserServiceServer) LoginByPhone(ctx context.Context, in *user.LoginByPhoneRequest) (*user.LoginByPhoneResponse, error) {
-	l := logic.NewLoginByPhoneLogic(ctx, s.svcCtx)
-	return l.LoginByPhone(in)
+func (s *UserServiceServer) LoginByUserKey(ctx context.Context, in *user.LoginByUserKeyRequest) (*user.LoginByUserKeyResponse, error) {
+	l := logic.NewLoginByUserKeyLogic(ctx, s.svcCtx)
+	return l.LoginByUserKey(in)
 }

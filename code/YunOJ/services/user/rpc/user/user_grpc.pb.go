@@ -19,16 +19,16 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	UserService_RegisterByPhone_FullMethodName = "/user.UserService/RegisterByPhone"
-	UserService_LoginByPhone_FullMethodName    = "/user.UserService/LoginByPhone"
+	UserService_Register_FullMethodName       = "/user.UserService/Register"
+	UserService_LoginByUserKey_FullMethodName = "/user.UserService/LoginByUserKey"
 )
 
 // UserServiceClient is the client API for UserService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
-	RegisterByPhone(ctx context.Context, in *RegisterByPhoneRequest, opts ...grpc.CallOption) (*RegisterByPhoneResponse, error)
-	LoginByPhone(ctx context.Context, in *LoginByPhoneRequest, opts ...grpc.CallOption) (*LoginByPhoneResponse, error)
+	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
+	LoginByUserKey(ctx context.Context, in *LoginByUserKeyRequest, opts ...grpc.CallOption) (*LoginByUserKeyResponse, error)
 }
 
 type userServiceClient struct {
@@ -39,18 +39,18 @@ func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
 	return &userServiceClient{cc}
 }
 
-func (c *userServiceClient) RegisterByPhone(ctx context.Context, in *RegisterByPhoneRequest, opts ...grpc.CallOption) (*RegisterByPhoneResponse, error) {
-	out := new(RegisterByPhoneResponse)
-	err := c.cc.Invoke(ctx, UserService_RegisterByPhone_FullMethodName, in, out, opts...)
+func (c *userServiceClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
+	out := new(RegisterResponse)
+	err := c.cc.Invoke(ctx, UserService_Register_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userServiceClient) LoginByPhone(ctx context.Context, in *LoginByPhoneRequest, opts ...grpc.CallOption) (*LoginByPhoneResponse, error) {
-	out := new(LoginByPhoneResponse)
-	err := c.cc.Invoke(ctx, UserService_LoginByPhone_FullMethodName, in, out, opts...)
+func (c *userServiceClient) LoginByUserKey(ctx context.Context, in *LoginByUserKeyRequest, opts ...grpc.CallOption) (*LoginByUserKeyResponse, error) {
+	out := new(LoginByUserKeyResponse)
+	err := c.cc.Invoke(ctx, UserService_LoginByUserKey_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -61,8 +61,8 @@ func (c *userServiceClient) LoginByPhone(ctx context.Context, in *LoginByPhoneRe
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
 type UserServiceServer interface {
-	RegisterByPhone(context.Context, *RegisterByPhoneRequest) (*RegisterByPhoneResponse, error)
-	LoginByPhone(context.Context, *LoginByPhoneRequest) (*LoginByPhoneResponse, error)
+	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
+	LoginByUserKey(context.Context, *LoginByUserKeyRequest) (*LoginByUserKeyResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -70,11 +70,11 @@ type UserServiceServer interface {
 type UnimplementedUserServiceServer struct {
 }
 
-func (UnimplementedUserServiceServer) RegisterByPhone(context.Context, *RegisterByPhoneRequest) (*RegisterByPhoneResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RegisterByPhone not implemented")
+func (UnimplementedUserServiceServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
-func (UnimplementedUserServiceServer) LoginByPhone(context.Context, *LoginByPhoneRequest) (*LoginByPhoneResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method LoginByPhone not implemented")
+func (UnimplementedUserServiceServer) LoginByUserKey(context.Context, *LoginByUserKeyRequest) (*LoginByUserKeyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LoginByUserKey not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -89,38 +89,38 @@ func RegisterUserServiceServer(s grpc.ServiceRegistrar, srv UserServiceServer) {
 	s.RegisterService(&UserService_ServiceDesc, srv)
 }
 
-func _UserService_RegisterByPhone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RegisterByPhoneRequest)
+func _UserService_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).RegisterByPhone(ctx, in)
+		return srv.(UserServiceServer).Register(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserService_RegisterByPhone_FullMethodName,
+		FullMethod: UserService_Register_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).RegisterByPhone(ctx, req.(*RegisterByPhoneRequest))
+		return srv.(UserServiceServer).Register(ctx, req.(*RegisterRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_LoginByPhone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LoginByPhoneRequest)
+func _UserService_LoginByUserKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginByUserKeyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).LoginByPhone(ctx, in)
+		return srv.(UserServiceServer).LoginByUserKey(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserService_LoginByPhone_FullMethodName,
+		FullMethod: UserService_LoginByUserKey_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).LoginByPhone(ctx, req.(*LoginByPhoneRequest))
+		return srv.(UserServiceServer).LoginByUserKey(ctx, req.(*LoginByUserKeyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -133,12 +133,12 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*UserServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "RegisterByPhone",
-			Handler:    _UserService_RegisterByPhone_Handler,
+			MethodName: "Register",
+			Handler:    _UserService_Register_Handler,
 		},
 		{
-			MethodName: "LoginByPhone",
-			Handler:    _UserService_LoginByPhone_Handler,
+			MethodName: "LoginByUserKey",
+			Handler:    _UserService_LoginByUserKey_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
