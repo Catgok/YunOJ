@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
+	"time"
 )
 
 var configFile = flag.String("f", "etc/gateway.yaml", "the config file")
@@ -19,7 +20,7 @@ func main() {
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
 
-	//time.Sleep(5 * time.Second)
+	time.Sleep(5 * time.Second)
 	server := rest.MustNewServer(c.RestConf)
 	defer server.Stop()
 

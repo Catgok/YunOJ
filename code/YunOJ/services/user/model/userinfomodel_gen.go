@@ -33,6 +33,7 @@ type (
 		FindOne(ctx context.Context, userid int64) (*UserInfo, error)
 		FindOneByPhone(ctx context.Context, phone string) (*UserInfo, error)
 		FindOneByUsername(ctx context.Context, username string) (*UserInfo, error)
+		FindOneByEmail(ctx context.Context, email string) (*UserInfo, error)
 		Update(ctx context.Context, data *UserInfo) error
 		Delete(ctx context.Context, userid int64) error
 	}
@@ -123,6 +124,26 @@ func (m *defaultUserInfoModel) FindOneByUsername(ctx context.Context, username s
 	err := m.QueryRowIndexCtx(ctx, &resp, userInfoUsernameKey, m.formatPrimary, func(ctx context.Context, conn sqlx.SqlConn, v any) (i any, e error) {
 		query := fmt.Sprintf("select %s from %s where `username` = ? limit 1", userInfoRows, m.table)
 		if err := conn.QueryRowCtx(ctx, &resp, query, username); err != nil {
+			return nil, err
+		}
+		return resp.Userid, nil
+	}, m.queryPrimary)
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
+
+func (m *defaultUserInfoModel) FindOneByEmail(ctx context.Context, email string) (*UserInfo, error) {
+	userInfoUsernameKey := fmt.Sprintf("%s%v", cacheUserInfoUsernamePrefix, email)
+	var resp UserInfo
+	err := m.QueryRowIndexCtx(ctx, &resp, userInfoUsernameKey, m.formatPrimary, func(ctx context.Context, conn sqlx.SqlConn, v any) (i any, e error) {
+		query := fmt.Sprintf("select %s from %s where `email` = ? limit 1", userInfoRows, m.table)
+		if err := conn.QueryRowCtx(ctx, &resp, query, email); err != nil {
 			return nil, err
 		}
 		return resp.Userid, nil
