@@ -32,13 +32,11 @@ func (l *LoginByUserKeyLogic) LoginByUserKey(in *user.LoginByUserKeyRequest) (*u
 	// 查询用户是否存在
 	res, err := l.loginByUserKey(in)
 	if err != nil {
-		resp.Code = 1001
-		resp.Message = "用户不存在"
+		resp.Code, resp.Message = 1001, "用户不存在"
 		return resp, nil
 	}
 	if in.Password != res.Password {
-		resp.Code = 4001
-		resp.Message = "密码错误"
+		resp.Code, resp.Message = 4001, "密码错误"
 		return resp, nil
 	}
 	resp.User = &user.User{

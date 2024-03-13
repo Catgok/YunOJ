@@ -4,6 +4,7 @@ package handler
 import (
 	"net/http"
 
+	user "YunOJ/services/gateway/api/internal/handler/user"
 	"YunOJ/services/gateway/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -14,14 +15,15 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/api/user/login",
-				Handler: LoginHandler(serverCtx),
+				Path:    "/login",
+				Handler: user.LoginHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/api/user/register",
-				Handler: RegisterHandler(serverCtx),
+				Path:    "/register",
+				Handler: user.RegisterHandler(serverCtx),
 			},
 		},
+		rest.WithPrefix("/v1/user"),
 	)
 }

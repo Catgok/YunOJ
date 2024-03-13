@@ -1,4 +1,4 @@
-package logic
+package user
 
 import (
 	"YunOJ/services/gateway/api/internal/svc"
@@ -24,20 +24,17 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 }
 
 func (l *RegisterLogic) Register(req *types.RegisterRequest) (resp *types.RegisterResponse, err error) {
+	resp = &types.RegisterResponse{}
 	res, err := l.svcCtx.UserRpc.Register(l.ctx, &user.RegisterRequest{
 		Username: req.Username,
 		Phone:    req.Phone,
 		Password: req.Password,
 	})
 	if err != nil {
-		resp.Code = 500
-		resp.Message = err.Error()
+		resp.Code, resp.Message = 500, err.Error()
 		return resp, nil
 	}
-	resp = &types.RegisterResponse{
-		Code:    res.GetCode(),
-		Message: res.GetMessage(),
-		Data:    res.GetSuccess(),
-	}
+	resp.Code, resp.Message = res.GetCode(), res.GetMessage()
+	resp.Data = res.GetSuccess()
 	return resp, nil
 }

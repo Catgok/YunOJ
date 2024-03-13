@@ -25,3 +25,13 @@ func NewUserInfoModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Option
 		defaultUserInfoModel: newUserInfoModel(conn, c, opts...),
 	}
 }
+
+func NewDefaultUserInfo() *UserInfo {
+	return &UserInfo{
+		Email:    "",
+		Gender:   1,
+		UserType: 2,
+		Avatar:   "Avatar_hhh",
+		Status:   1,
+	}
+}

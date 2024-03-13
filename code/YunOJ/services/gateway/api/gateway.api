@@ -8,6 +8,11 @@ info(
 	version: "type version here"
 )
 
+type BaseResponse {
+	Code    int64  `json:"code"`
+	Message string `json:"message"`
+}
+
 type (
 	User {
 		UserId   int64  `json:"userId"`
@@ -24,9 +29,8 @@ type (
 		Password string `json:"password"`
 	}
 	LoginResponse {
-		Code    int64  `json:"code"`
-		Message string `json:"message"`
-		User    User   `json:"user"`
+		BaseResponse
+		Data User `json:"data"`
 	}
 
 	RegisterRequest {
@@ -35,16 +39,19 @@ type (
 		Password string `json:"password"`
 	}
 	RegisterResponse {
-		Code    int64  `json:"code"`
-		Message string `json:"message"`
-		Data    bool   `json:"data"`
+		BaseResponse
+		Data bool `json:"data"`
 	}
 )
 
+@server(
+	group: user
+	prefix: /v1/user
+)
 service Gateway {
 	@handler Login
-	post /api/user/login (LoginRequest) returns (LoginResponse)
+	post /login (LoginRequest) returns (LoginResponse)
 
 	@handler Register
-	post /api/user/register (RegisterRequest) returns (RegisterResponse)
+	post /register (RegisterRequest) returns (RegisterResponse)
 }

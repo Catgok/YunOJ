@@ -1,11 +1,10 @@
-package logic
+package user
 
 import (
-	"YunOJ/services/user/rpc/user"
-	"context"
-
 	"YunOJ/services/gateway/api/internal/svc"
 	"YunOJ/services/gateway/api/internal/types"
+	"YunOJ/services/user/rpc/user"
+	"context"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,13 +24,18 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 }
 
 func (l *LoginLogic) Login(req *types.LoginRequest) (resp *types.LoginResponse, err error) {
+	resp = &types.LoginResponse{}
+	if req.UserKey == "" {
+		resp.Code, resp.Message = 400, "入参非法"
+		return resp, nil
+	}
+
 	res, err := l.svcCtx.UserRpc.LoginByUserKey(l.ctx, &user.LoginByUserKeyRequest{
 		UserKey:  req.UserKey,
 		Password: req.Password,
 	})
 	if err != nil {
-		resp.Code = 500
-		resp.Message = err.Error()
+		resp.Code, resp.Message = 500, err.Error()
 		return resp, nil
 	}
 
@@ -44,11 +48,8 @@ func (l *LoginLogic) Login(req *types.LoginRequest) (resp *types.LoginResponse, 
 		Avatar:   res.GetUser().GetAvatar(),
 		Status:   res.GetUser().GetStatus(),
 	}
-	resp = &types.LoginResponse{
-		Code:    res.GetCode(),
-		Message: res.GetMessage(),
-		User:    userInfo,
-	}
+	resp.Code, resp.Message = res.GetCode(), res.GetMessage()
+	resp.Data = userInfo
 
 	return resp, nil
 }

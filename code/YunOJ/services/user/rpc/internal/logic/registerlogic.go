@@ -32,26 +32,23 @@ func (l *RegisterLogic) Register(in *user.RegisterRequest) (*user.RegisterRespon
 	}
 	_, err := l.svcCtx.UserInfoModel.FindOneByPhone(l.ctx, in.Phone)
 	if err == nil {
-		resp.Code = 1002
-		resp.Message = "手机号已注册"
+		resp.Code, resp.Message = 1002, "手机号已注册"
 		return resp, nil
 	}
 	_, err = l.svcCtx.UserInfoModel.FindOneByUsername(l.ctx, in.Username)
 	if err == nil {
-		resp.Code = 1003
-		resp.Message = "用户名已存在"
+		resp.Code, resp.Message = 1003, "用户名已存在"
 		return resp, nil
 	}
-	newUserInfo := &model.UserInfo{
-		Username: in.GetUsername(),
-		Phone:    in.GetPhone(),
-		Password: in.GetPassword(),
-		Avatar:   "empty_avatar",
-	}
+
+	newUserInfo := model.NewDefaultUserInfo()
+	newUserInfo.Username = in.GetUsername()
+	newUserInfo.Phone = in.GetPhone()
+	newUserInfo.Password = in.GetPassword()
+
 	_, err = l.svcCtx.UserInfoModel.Insert(l.ctx, newUserInfo)
 	if err != nil {
-		resp.Code = 2001
-		resp.Message = err.Error()
+		resp.Code, resp.Message = 2001, err.Error()
 		resp.Success = false
 		return resp, nil
 	}

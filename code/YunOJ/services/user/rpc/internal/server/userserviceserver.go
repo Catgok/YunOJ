@@ -31,3 +31,8 @@ func (s *UserServiceServer) LoginByUserKey(ctx context.Context, in *user.LoginBy
 	l := logic.NewLoginByUserKeyLogic(ctx, s.svcCtx)
 	return l.LoginByUserKey(in)
 }
+
+func (s *UserServiceServer) GetUserInfoById(ctx context.Context, in *user.GetUserInfoByIdRequest) (*user.GetUserInfoByIdResponse, error) {
+	l := logic.NewGetUserInfoByIdLogic(ctx, s.svcCtx)
+	return l.GetUserInfoById(in)
+}
