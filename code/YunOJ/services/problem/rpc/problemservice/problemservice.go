@@ -29,6 +29,8 @@ type (
 	Submit                                = problem.Submit
 	UpdateProblemRequest                  = problem.UpdateProblemRequest
 	UpdateProblemResponse                 = problem.UpdateProblemResponse
+	UpdateSubmitRequest                   = problem.UpdateSubmitRequest
+	UpdateSubmitResponse                  = problem.UpdateSubmitResponse
 
 	ProblemService interface {
 		GetProblemById(ctx context.Context, in *GetProblemByIdRequest, opts ...grpc.CallOption) (*GetProblemByIdResponse, error)
@@ -38,6 +40,7 @@ type (
 		DeleteProblem(ctx context.Context, in *DeleteProblemRequest, opts ...grpc.CallOption) (*DeleteProblemResponse, error)
 		CreateSubmit(ctx context.Context, in *CreateSubmitRequest, opts ...grpc.CallOption) (*CreateSubmitResponse, error)
 		GetSubmitByUserIdAndProblemId(ctx context.Context, in *GetSubmitByUserIdAndProblemIdRequest, opts ...grpc.CallOption) (*GetSubmitByUserIdAndProblemIdResponse, error)
+		UpdateSubmit(ctx context.Context, in *UpdateSubmitRequest, opts ...grpc.CallOption) (*UpdateSubmitResponse, error)
 	}
 
 	defaultProblemService struct {
@@ -84,4 +87,9 @@ func (m *defaultProblemService) CreateSubmit(ctx context.Context, in *CreateSubm
 func (m *defaultProblemService) GetSubmitByUserIdAndProblemId(ctx context.Context, in *GetSubmitByUserIdAndProblemIdRequest, opts ...grpc.CallOption) (*GetSubmitByUserIdAndProblemIdResponse, error) {
 	client := problem.NewProblemServiceClient(m.cli.Conn())
 	return client.GetSubmitByUserIdAndProblemId(ctx, in, opts...)
+}
+
+func (m *defaultProblemService) UpdateSubmit(ctx context.Context, in *UpdateSubmitRequest, opts ...grpc.CallOption) (*UpdateSubmitResponse, error) {
+	client := problem.NewProblemServiceClient(m.cli.Conn())
+	return client.UpdateSubmit(ctx, in, opts...)
 }

@@ -31,6 +31,7 @@ type (
 		FindOne(ctx context.Context, submitId int64) (*UserSubmit, error)
 		Update(ctx context.Context, data *UserSubmit) error
 		Delete(ctx context.Context, submitId int64) error
+		FindByUserIdAndProblemId(ctx context.Context, userId, problemId int64) ([]UserSubmit, error)
 	}
 
 	defaultUserSubmitModel struct {
@@ -43,6 +44,7 @@ type (
 		UserId     int64     `db:"user_id"`     // 用户id
 		ProblemId  int64     `db:"problem_id"`  // 题目id
 		Code       string    `db:"code"`        // 代码
+		Status     int64     `db:"status"`      // 状态 0-未评测 1-编译中 2-编译错误 3-评测中 4-评测通过 5-评测未通过
 		Language   int64     `db:"language"`    // 语言 1-c++
 		Result     int64     `db:"result"`      // 结果
 		Time       int64     `db:"time"`        // 运行时间 单位ms
@@ -88,8 +90,8 @@ func (m *defaultUserSubmitModel) FindOne(ctx context.Context, submitId int64) (*
 func (m *defaultUserSubmitModel) Insert(ctx context.Context, data *UserSubmit) (sql.Result, error) {
 	userSubmitSubmitIdKey := fmt.Sprintf("%s%v", cacheUserSubmitSubmitIdPrefix, data.SubmitId)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?)", m.table, userSubmitRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.UserId, data.ProblemId, data.Code, data.Language, data.Result, data.Time, data.Memory)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?)", m.table, userSubmitRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.UserId, data.ProblemId, data.Code, data.Status, data.Language, data.Result, data.Time, data.Memory)
 	}, userSubmitSubmitIdKey)
 	return ret, err
 }
@@ -98,9 +100,26 @@ func (m *defaultUserSubmitModel) Update(ctx context.Context, data *UserSubmit) e
 	userSubmitSubmitIdKey := fmt.Sprintf("%s%v", cacheUserSubmitSubmitIdPrefix, data.SubmitId)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `submit_id` = ?", m.table, userSubmitRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, data.UserId, data.ProblemId, data.Code, data.Language, data.Result, data.Time, data.Memory, data.SubmitId)
+		return conn.ExecCtx(ctx, query, data.UserId, data.ProblemId, data.Code, data.Status, data.Language, data.Result, data.Time, data.Memory, data.SubmitId)
 	}, userSubmitSubmitIdKey)
 	return err
+}
+
+func (m *defaultUserSubmitModel) FindByUserIdAndProblemId(ctx context.Context, userId, problemId int64) ([]UserSubmit, error) { // todo check sql ans resp
+	userSubmitUserIdAndProblemIdKey := fmt.Sprintf("%s%v%v", cacheUserSubmitSubmitIdPrefix, userId, problemId)
+	var resp []UserSubmit
+	err := m.QueryRowCtx(ctx, &resp, userSubmitUserIdAndProblemIdKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
+		query := fmt.Sprintf("select %s from %s where `user_id` = ? and `problem_id` = ? order by `update_time` ", userSubmitRows, m.table)
+		return conn.QueryRowCtx(ctx, v, query, userId, problemId)
+	})
+	switch err {
+	case nil:
+		return resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
 }
 
 func (m *defaultUserSubmitModel) formatPrimary(primary any) string {

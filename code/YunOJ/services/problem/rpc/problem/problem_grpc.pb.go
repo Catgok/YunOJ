@@ -26,6 +26,7 @@ const (
 	ProblemService_DeleteProblem_FullMethodName                 = "/problem.ProblemService/DeleteProblem"
 	ProblemService_CreateSubmit_FullMethodName                  = "/problem.ProblemService/CreateSubmit"
 	ProblemService_GetSubmitByUserIdAndProblemId_FullMethodName = "/problem.ProblemService/GetSubmitByUserIdAndProblemId"
+	ProblemService_UpdateSubmit_FullMethodName                  = "/problem.ProblemService/UpdateSubmit"
 )
 
 // ProblemServiceClient is the client API for ProblemService service.
@@ -39,6 +40,7 @@ type ProblemServiceClient interface {
 	DeleteProblem(ctx context.Context, in *DeleteProblemRequest, opts ...grpc.CallOption) (*DeleteProblemResponse, error)
 	CreateSubmit(ctx context.Context, in *CreateSubmitRequest, opts ...grpc.CallOption) (*CreateSubmitResponse, error)
 	GetSubmitByUserIdAndProblemId(ctx context.Context, in *GetSubmitByUserIdAndProblemIdRequest, opts ...grpc.CallOption) (*GetSubmitByUserIdAndProblemIdResponse, error)
+	UpdateSubmit(ctx context.Context, in *UpdateSubmitRequest, opts ...grpc.CallOption) (*UpdateSubmitResponse, error)
 }
 
 type problemServiceClient struct {
@@ -112,6 +114,15 @@ func (c *problemServiceClient) GetSubmitByUserIdAndProblemId(ctx context.Context
 	return out, nil
 }
 
+func (c *problemServiceClient) UpdateSubmit(ctx context.Context, in *UpdateSubmitRequest, opts ...grpc.CallOption) (*UpdateSubmitResponse, error) {
+	out := new(UpdateSubmitResponse)
+	err := c.cc.Invoke(ctx, ProblemService_UpdateSubmit_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ProblemServiceServer is the server API for ProblemService service.
 // All implementations must embed UnimplementedProblemServiceServer
 // for forward compatibility
@@ -123,6 +134,7 @@ type ProblemServiceServer interface {
 	DeleteProblem(context.Context, *DeleteProblemRequest) (*DeleteProblemResponse, error)
 	CreateSubmit(context.Context, *CreateSubmitRequest) (*CreateSubmitResponse, error)
 	GetSubmitByUserIdAndProblemId(context.Context, *GetSubmitByUserIdAndProblemIdRequest) (*GetSubmitByUserIdAndProblemIdResponse, error)
+	UpdateSubmit(context.Context, *UpdateSubmitRequest) (*UpdateSubmitResponse, error)
 	mustEmbedUnimplementedProblemServiceServer()
 }
 
@@ -150,6 +162,9 @@ func (UnimplementedProblemServiceServer) CreateSubmit(context.Context, *CreateSu
 }
 func (UnimplementedProblemServiceServer) GetSubmitByUserIdAndProblemId(context.Context, *GetSubmitByUserIdAndProblemIdRequest) (*GetSubmitByUserIdAndProblemIdResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSubmitByUserIdAndProblemId not implemented")
+}
+func (UnimplementedProblemServiceServer) UpdateSubmit(context.Context, *UpdateSubmitRequest) (*UpdateSubmitResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSubmit not implemented")
 }
 func (UnimplementedProblemServiceServer) mustEmbedUnimplementedProblemServiceServer() {}
 
@@ -290,6 +305,24 @@ func _ProblemService_GetSubmitByUserIdAndProblemId_Handler(srv interface{}, ctx 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProblemService_UpdateSubmit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSubmitRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProblemServiceServer).UpdateSubmit(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProblemService_UpdateSubmit_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProblemServiceServer).UpdateSubmit(ctx, req.(*UpdateSubmitRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ProblemService_ServiceDesc is the grpc.ServiceDesc for ProblemService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -324,6 +357,10 @@ var ProblemService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetSubmitByUserIdAndProblemId",
 			Handler:    _ProblemService_GetSubmitByUserIdAndProblemId_Handler,
+		},
+		{
+			MethodName: "UpdateSubmit",
+			Handler:    _ProblemService_UpdateSubmit_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

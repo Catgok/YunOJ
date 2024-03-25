@@ -33,6 +33,7 @@ type (
 		FindOneByTitle(ctx context.Context, title string) (*Problem, error)
 		Update(ctx context.Context, data *Problem) error
 		Delete(ctx context.Context, problemId int64) error
+		FindByPage(ctx context.Context, offset, limit int64) ([]Problem, error)
 	}
 
 	defaultProblemModel struct {
@@ -138,6 +139,23 @@ func (m *defaultProblemModel) Update(ctx context.Context, newData *Problem) erro
 		return conn.ExecCtx(ctx, query, newData.Title, newData.TimeLimit, newData.MemoryLimit, newData.Description, newData.HardLevel, newData.IsDelete, newData.SubmitCount, newData.PassCount, newData.Solution, newData.ProblemId)
 	}, problemProblemIdKey, problemTitleKey)
 	return err
+}
+
+func (m *defaultProblemModel) FindByPage(ctx context.Context, offset, limit int64) ([]Problem, error) { // todo check sql and resp
+	problemPageKey := fmt.Sprintf("%s%v%v", cacheProblemProblemIdPrefix, offset, limit)
+	var resp []Problem
+	err := m.QueryRowCtx(ctx, &resp, problemPageKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
+		query := fmt.Sprintf("select %s from %s where `is_delete` = 0 order by `problem_id` LIMIT ? OFFSET ?", problemRows, m.table)
+		return conn.QueryRowCtx(ctx, v, query, limit, offset)
+	})
+	switch err {
+	case nil:
+		return resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
 }
 
 func (m *defaultProblemModel) formatPrimary(primary any) string {

@@ -1,4 +1,4 @@
-package logic
+package problem
 
 import (
 	"context"
@@ -24,7 +24,24 @@ func NewDeleteProblemLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Del
 }
 
 func (l *DeleteProblemLogic) DeleteProblem(in *problem.DeleteProblemRequest) (*problem.DeleteProblemResponse, error) {
-	// todo: add your logic here and delete this line
+	resp := &problem.DeleteProblemResponse{
+		Code:    0,
+		Message: "success",
+	}
 
-	return &problem.DeleteProblemResponse{}, nil
+	res, err := l.svcCtx.ProblemModel.FindOne(l.ctx, in.ProblemId)
+	if err != nil {
+		resp.Code, resp.Message = 5003, err.Error()
+		resp.Success = false
+		return resp, nil
+	}
+	res.IsDelete = 1
+	err = l.svcCtx.ProblemModel.Update(l.ctx, res)
+	if err != nil {
+		resp.Code, resp.Message = 5003, err.Error()
+		resp.Success = false
+		return resp, nil
+	}
+	resp.Success = true
+	return resp, nil
 }

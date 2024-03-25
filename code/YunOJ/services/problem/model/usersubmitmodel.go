@@ -25,3 +25,9 @@ func NewUserSubmitModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Opti
 		defaultUserSubmitModel: newUserSubmitModel(conn, c, opts...),
 	}
 }
+
+func NewUserSubmit() *UserSubmit {
+	return &UserSubmit{
+		Language: 1,
+	}
+}

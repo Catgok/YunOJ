@@ -43,7 +43,7 @@ message CreateProblemRequest {
 message CreateProblemResponse {
   int64 code = 1;
   string message = 2;
-  Problem problem = 3;
+  int64 problem_id = 3;
 }
 
 message UpdateProblemRequest {
@@ -53,7 +53,7 @@ message UpdateProblemRequest {
 message UpdateProblemResponse {
   int64 code = 1;
   string message = 2;
-  Problem problem = 3;
+  bool success = 3;
 }
 
 message DeleteProblemRequest {
@@ -63,10 +63,8 @@ message DeleteProblemRequest {
 message DeleteProblemResponse {
   int64 code = 1;
   string message = 2;
-  Problem problem = 3;
+  bool success = 3;
 }
-
-
 
 
 message Submit {
@@ -74,10 +72,11 @@ message Submit {
   int64 user_id = 2;
   int64 problem_id = 3;
   string code = 4;
-  int64 language = 5;
-  int64 result = 6;
-  int64 time = 7;
-  int64 memory = 8;
+  int64 status = 5;
+  int64 language = 6;
+  int64 result = 7;
+  int64 time = 8;
+  int64 memory = 9;
 }
 
 message CreateSubmitRequest {
@@ -90,8 +89,19 @@ message CreateSubmitRequest {
 message CreateSubmitResponse {
   int64 code = 1;
   string message = 2;
-  Submit submit = 3;
+  int64 submit_id = 3;
 }
+
+message UpdateSubmitRequest {
+  Submit submit = 1;
+}
+
+message UpdateSubmitResponse {
+  int64 code = 1;
+  string message = 2;
+  bool success = 3;
+}
+
 
 message GetSubmitByUserIdAndProblemIdRequest {
   int64 user_id = 1;
@@ -110,6 +120,8 @@ service ProblemService {
   rpc CreateProblem(CreateProblemRequest) returns (CreateProblemResponse);
   rpc UpdateProblem(UpdateProblemRequest) returns (UpdateProblemResponse);
   rpc DeleteProblem(DeleteProblemRequest) returns (DeleteProblemResponse);
+
   rpc CreateSubmit(CreateSubmitRequest) returns (CreateSubmitResponse);
   rpc GetSubmitByUserIdAndProblemId(GetSubmitByUserIdAndProblemIdRequest) returns (GetSubmitByUserIdAndProblemIdResponse);
+  rpc UpdateSubmit(UpdateSubmitRequest) returns (UpdateSubmitResponse);
 }

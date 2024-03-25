@@ -25,3 +25,7 @@ func NewProblemModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Option)
 		defaultProblemModel: newProblemModel(conn, c, opts...),
 	}
 }
+
+func NewProblem() *Problem {
+	return &Problem{}
+}
