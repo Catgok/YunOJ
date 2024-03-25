@@ -1,0 +1,115 @@
+syntax = "proto3";
+
+package problem;
+
+option go_package = "./problem";
+
+message Problem {
+  int64 problem_id = 1;
+  string title = 2;
+  int64 time_limit = 3;
+  int64 memory_limit = 4;
+  string description = 5;
+  int64 hard_level = 6;
+  int64 submit_count = 7;
+  int64 pass_count = 8;
+}
+
+message GetProblemByIdRequest {
+  int64 problem_id = 1;
+}
+
+message GetProblemByIdResponse {
+  int64 code = 1;
+  string message = 2;
+  Problem problem = 3;
+}
+
+message GetProblemsByPageRequest {
+  int64 page_number = 1;
+  int64 page_size = 2;
+}
+
+message GetProblemsByPageResponse {
+  int64 code = 1;
+  string message = 2;
+  repeated Problem problems = 3;
+}
+
+message CreateProblemRequest {
+  Problem problem = 1;
+}
+
+message CreateProblemResponse {
+  int64 code = 1;
+  string message = 2;
+  Problem problem = 3;
+}
+
+message UpdateProblemRequest {
+  Problem problem = 1;
+}
+
+message UpdateProblemResponse {
+  int64 code = 1;
+  string message = 2;
+  Problem problem = 3;
+}
+
+message DeleteProblemRequest {
+  int64 problem_id = 1;
+}
+
+message DeleteProblemResponse {
+  int64 code = 1;
+  string message = 2;
+  Problem problem = 3;
+}
+
+
+
+
+message Submit {
+  int64 submit_id = 1;
+  int64 user_id = 2;
+  int64 problem_id = 3;
+  string code = 4;
+  int64 language = 5;
+  int64 result = 6;
+  int64 time = 7;
+  int64 memory = 8;
+}
+
+message CreateSubmitRequest {
+  int64 user_id = 1;
+  int64 problem_id = 2;
+  string code = 3;
+  int64 language = 4;
+}
+
+message CreateSubmitResponse {
+  int64 code = 1;
+  string message = 2;
+  Submit submit = 3;
+}
+
+message GetSubmitByUserIdAndProblemIdRequest {
+  int64 user_id = 1;
+  int64 problem_id = 2;
+}
+
+message GetSubmitByUserIdAndProblemIdResponse {
+  int64 code = 1;
+  string message = 2;
+  repeated Submit submits = 3;
+}
+
+service ProblemService {
+  rpc GetProblemById(GetProblemByIdRequest) returns (GetProblemByIdResponse);
+  rpc GetProblemsByPage(GetProblemsByPageRequest) returns (GetProblemsByPageResponse);
+  rpc CreateProblem(CreateProblemRequest) returns (CreateProblemResponse);
+  rpc UpdateProblem(UpdateProblemRequest) returns (UpdateProblemResponse);
+  rpc DeleteProblem(DeleteProblemRequest) returns (DeleteProblemResponse);
+  rpc CreateSubmit(CreateSubmitRequest) returns (CreateSubmitResponse);
+  rpc GetSubmitByUserIdAndProblemId(GetSubmitByUserIdAndProblemIdRequest) returns (GetSubmitByUserIdAndProblemIdResponse);
+}

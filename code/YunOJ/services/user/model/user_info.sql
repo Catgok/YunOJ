@@ -1,4 +1,4 @@
-CREATE TABLE userInfo
+CREATE TABLE user_info
 (
     userid     INT AUTO_INCREMENT COMMENT '用户ID',
     username   VARCHAR(16)  NOT NULL UNIQUE COMMENT '用户名称',
