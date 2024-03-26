@@ -33,6 +33,7 @@
     ```
     - 3 api
     ```shell
+    goctl api go -api ./gateway.api  -dir .
     ```
    - 4 统计代码行数
     ```shell

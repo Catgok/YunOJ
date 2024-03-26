@@ -38,6 +38,10 @@ func (l *LoginLogic) Login(req *types.LoginRequest) (resp *types.LoginResponse, 
 		resp.Code, resp.Message = 500, err.Error()
 		return resp, nil
 	}
+	if res.Code != 0 {
+		resp.Code, resp.Message = 500, "Internal Server Error"
+		return resp, nil
+	}
 
 	userInfo := types.User{
 		UserId:   res.GetUser().GetUserid(),

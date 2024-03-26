@@ -95,7 +95,11 @@ type (
 	}
 
 	CreateProblemRequest {
-		Problem Problem `json:"problem"`
+		Title       string `json:"title"`
+		TimeLimit   int64  `json:"timeLimit"`
+		MemoryLimit int64  `json:"memoryLimit"`
+		Description string `json:"description"`
+		HardLevel   int64  `json:"hardLevel"`
 	}
 	CreateProblemResponse {
 		BaseResponse
@@ -103,7 +107,12 @@ type (
 	}
 
 	UpdateProblemRequest {
-		Problem Problem `json:"problem"`
+		ProblemId   int64  `json:"problemId"`
+		Title       string `json:"title"`
+		TimeLimit   int64  `json:"timeLimit"`
+		MemoryLimit int64  `json:"memoryLimit"`
+		Description string `json:"description"`
+		HardLevel   int64  `json:"hardLevel"`
 	}
 	UpdateProblemResponse {
 		BaseResponse

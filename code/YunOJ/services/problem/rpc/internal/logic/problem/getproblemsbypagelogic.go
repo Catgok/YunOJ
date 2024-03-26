@@ -41,6 +41,7 @@ func (l *GetProblemsByPageLogic) GetProblemsByPage(in *problem.GetProblemsByPage
 			ProblemId:   p.ProblemId,
 			Title:       p.Title,
 			HardLevel:   p.HardLevel,
+			Description: p.Description,
 			SubmitCount: p.SubmitCount,
 			PassCount:   p.PassCount,
 		})

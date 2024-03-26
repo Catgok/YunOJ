@@ -28,15 +28,19 @@ func (l *CreateProblemLogic) CreateProblem(req *types.CreateProblemRequest) (res
 	resp = &types.CreateProblemResponse{}
 	res, err := l.svcCtx.ProblemRpc.CreateProblem(l.ctx, &problem.CreateProblemRequest{
 		Problem: &problem.Problem{
-			Title:       req.Problem.Title,
-			TimeLimit:   req.Problem.TimeLimit,
-			MemoryLimit: req.Problem.MemoryLimit,
-			Description: req.Problem.Description,
-			HardLevel:   req.Problem.ProblemId,
+			Title:       req.Title,
+			TimeLimit:   req.TimeLimit,
+			MemoryLimit: req.MemoryLimit,
+			Description: req.Description,
+			HardLevel:   req.HardLevel,
 		},
 	})
 	if err != nil {
 		resp.Code, resp.Message = 500, err.Error()
+		return resp, nil
+	}
+	if res.Code != 0 {
+		resp.Code, resp.Message = 500, "Internal Server Error"
 		return resp, nil
 	}
 	resp.Code, resp.Message = res.GetCode(), res.GetMessage()

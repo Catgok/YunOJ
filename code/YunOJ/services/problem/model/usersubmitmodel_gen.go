@@ -22,7 +22,8 @@ var (
 	userSubmitRowsExpectAutoSet   = strings.Join(stringx.Remove(userSubmitFieldNames, "`submit_id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
 	userSubmitRowsWithPlaceHolder = strings.Join(stringx.Remove(userSubmitFieldNames, "`submit_id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 
-	cacheUserSubmitSubmitIdPrefix = "cache:userSubmit:submitId:"
+	cacheUserSubmitSubmitIdPrefix           = "cache:userSubmit:submitId:"
+	cacheUserSubmitUserIdAndProblemIdPrefix = "cache:userSubmit:userIdAndProblemId:"
 )
 
 type (
@@ -106,11 +107,11 @@ func (m *defaultUserSubmitModel) Update(ctx context.Context, data *UserSubmit) e
 }
 
 func (m *defaultUserSubmitModel) FindByUserIdAndProblemId(ctx context.Context, userId, problemId int64) ([]UserSubmit, error) { // todo check sql ans resp
-	userSubmitUserIdAndProblemIdKey := fmt.Sprintf("%s%v%v", cacheUserSubmitSubmitIdPrefix, userId, problemId)
+	userSubmitUserIdAndProblemIdKey := fmt.Sprintf("%s%v%v", cacheUserSubmitUserIdAndProblemIdPrefix, userId, problemId)
 	var resp []UserSubmit
 	err := m.QueryRowCtx(ctx, &resp, userSubmitUserIdAndProblemIdKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
 		query := fmt.Sprintf("select %s from %s where `user_id` = ? and `problem_id` = ? order by `update_time` ", userSubmitRows, m.table)
-		return conn.QueryRowCtx(ctx, v, query, userId, problemId)
+		return conn.QueryRowsCtx(ctx, v, query, userId, problemId)
 	})
 	switch err {
 	case nil:

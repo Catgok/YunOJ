@@ -24,6 +24,7 @@ var (
 
 	cacheProblemProblemIdPrefix = "cache:problem:problemId:"
 	cacheProblemTitlePrefix     = "cache:problem:title:"
+	cacheProblemPagePrefix      = "cache:problem:page:"
 )
 
 type (
@@ -142,11 +143,11 @@ func (m *defaultProblemModel) Update(ctx context.Context, newData *Problem) erro
 }
 
 func (m *defaultProblemModel) FindByPage(ctx context.Context, offset, limit int64) ([]Problem, error) { // todo check sql and resp
-	problemPageKey := fmt.Sprintf("%s%v%v", cacheProblemProblemIdPrefix, offset, limit)
+	problemPageKey := fmt.Sprintf("%s%v%v", cacheProblemPagePrefix, offset, limit)
 	var resp []Problem
 	err := m.QueryRowCtx(ctx, &resp, problemPageKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
 		query := fmt.Sprintf("select %s from %s where `is_delete` = 0 order by `problem_id` LIMIT ? OFFSET ?", problemRows, m.table)
-		return conn.QueryRowCtx(ctx, v, query, limit, offset)
+		return conn.QueryRowsCtx(ctx, v, query, limit, offset)
 	})
 	switch err {
 	case nil:

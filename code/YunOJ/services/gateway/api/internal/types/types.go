@@ -80,7 +80,11 @@ type GetProblemsByPageResponse struct {
 }
 
 type CreateProblemRequest struct {
-	Problem Problem `json:"problem"`
+	Title       string `json:"title"`
+	TimeLimit   int64  `json:"timeLimit"`
+	MemoryLimit int64  `json:"memoryLimit"`
+	Description string `json:"description"`
+	HardLevel   int64  `json:"hardLevel"`
 }
 
 type CreateProblemResponse struct {
@@ -89,7 +93,12 @@ type CreateProblemResponse struct {
 }
 
 type UpdateProblemRequest struct {
-	Problem Problem `json:"problem"`
+	ProblemId   int64  `json:"problemId"`
+	Title       string `json:"title"`
+	TimeLimit   int64  `json:"timeLimit"`
+	MemoryLimit int64  `json:"memoryLimit"`
+	Description string `json:"description"`
+	HardLevel   int64  `json:"hardLevel"`
 }
 
 type UpdateProblemResponse struct {

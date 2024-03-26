@@ -18,7 +18,6 @@ import (
 
 var configFile = flag.String("f", "etc/user.yaml", "the config file")
 
-// go run user.go -f ./etc/user.yaml
 func main() {
 	flag.Parse()
 

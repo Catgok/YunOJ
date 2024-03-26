@@ -34,6 +34,10 @@ func (l *GetSubmissionByUserIdAndProblemIdLogic) GetSubmissionByUserIdAndProblem
 		resp.Code, resp.Message = 500, err.Error()
 		return resp, nil
 	}
+	if res.Code != 0 {
+		resp.Code, resp.Message = 500, "Internal Server Error"
+		return resp, nil
+	}
 	resp.Code, resp.Message = res.GetCode(), res.GetMessage()
 	data := make([]types.Submit, 0)
 	for _, v := range res.GetSubmits() {

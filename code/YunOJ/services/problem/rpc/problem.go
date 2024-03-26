@@ -1,13 +1,12 @@
 package main
 
 import (
-	"flag"
-	"fmt"
-
 	"YunOJ/services/problem/rpc/internal/config"
 	"YunOJ/services/problem/rpc/internal/server"
 	"YunOJ/services/problem/rpc/internal/svc"
 	"YunOJ/services/problem/rpc/problem"
+	"flag"
+	"fmt"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"

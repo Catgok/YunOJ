@@ -34,6 +34,10 @@ func (l *GetProblemsByPageLogic) GetProblemsByPage(req *types.GetProblemsByPageR
 		resp.Code, resp.Message = 500, err.Error()
 		return resp, nil
 	}
+	if res.Code != 0 {
+		resp.Code, resp.Message = 500, "Internal Server Error"
+		return resp, nil
+	}
 	resp.Code, resp.Message = res.GetCode(), res.GetMessage()
 	data := make([]types.Problem, 0)
 	for _, v := range res.GetProblems() {

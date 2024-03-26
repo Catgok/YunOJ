@@ -28,16 +28,20 @@ func (l *UpdateProblemLogic) UpdateProblem(req *types.UpdateProblemRequest) (res
 	resp = &types.UpdateProblemResponse{}
 	res, err := l.svcCtx.ProblemRpc.UpdateProblem(l.ctx, &problem.UpdateProblemRequest{
 		Problem: &problem.Problem{
-			ProblemId:   req.Problem.ProblemId,
-			Title:       req.Problem.Title,
-			TimeLimit:   req.Problem.TimeLimit,
-			MemoryLimit: req.Problem.MemoryLimit,
-			Description: req.Problem.Description,
-			HardLevel:   req.Problem.ProblemId,
+			ProblemId:   req.ProblemId,
+			Title:       req.Title,
+			TimeLimit:   req.TimeLimit,
+			MemoryLimit: req.MemoryLimit,
+			Description: req.Description,
+			HardLevel:   req.HardLevel,
 		},
 	})
 	if err != nil {
 		resp.Code, resp.Message = 500, err.Error()
+		return resp, nil
+	}
+	if res.Code != 0 {
+		resp.Code, resp.Message = 500, "Internal Server Error"
 		return resp, nil
 	}
 	resp.Code, resp.Message = res.GetCode(), res.GetMessage()

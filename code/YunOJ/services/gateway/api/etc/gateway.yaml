@@ -7,3 +7,9 @@ UserRpc:
     Hosts:
       - serverhost:12379
     Key: user.rpc
+
+ProblemRpc:
+  Etcd:
+    Hosts:
+      - serverhost:12379
+    Key: problem.rpc

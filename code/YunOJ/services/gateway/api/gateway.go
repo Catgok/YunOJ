@@ -13,7 +13,6 @@ import (
 
 var configFile = flag.String("f", "etc/gateway.yaml", "the config file")
 
-// go run gateway.go  -f ./etc/gateway.yaml
 func main() {
 	flag.Parse()
 
