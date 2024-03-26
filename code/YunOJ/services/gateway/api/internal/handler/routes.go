@@ -4,6 +4,7 @@ package handler
 import (
 	"net/http"
 
+	problem "YunOJ/services/gateway/api/internal/handler/problem"
 	user "YunOJ/services/gateway/api/internal/handler/user"
 	"YunOJ/services/gateway/api/internal/svc"
 
@@ -25,5 +26,46 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithPrefix("/v1/user"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/get",
+				Handler: problem.GetProblemByIdHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/getByPage",
+				Handler: problem.GetProblemsByPageHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/create",
+				Handler: problem.CreateProblemHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/update",
+				Handler: problem.UpdateProblemHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/delete",
+				Handler: problem.DeleteProblemHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/submit",
+				Handler: problem.SubmitHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/getSubmissionByProblemId",
+				Handler: problem.GetSubmissionByUserIdAndProblemIdHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/v1/problem"),
 	)
 }

@@ -46,6 +46,7 @@ func (l *CreateSubmitLogic) CreateSubmit(in *problem.CreateSubmitRequest) (*prob
 		resp.Code, resp.Message = 5003, err.Error()
 		return resp, nil
 	}
+	// todo 发送评测消息
 	resp.SubmitId = ld
 	return resp, nil
 }

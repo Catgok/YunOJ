@@ -34,6 +34,10 @@
     - 3 api
     ```shell
     ```
+   - 4 统计代码行数
+    ```shell
+   find ./ -name "*.go" -exec cat {} + | wc -l
+    ```
 
 
 

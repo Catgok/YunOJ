@@ -36,3 +36,94 @@ type RegisterResponse struct {
 	BaseResponse
 	Data bool `json:"data"`
 }
+
+type Problem struct {
+	ProblemId   int64  `json:"problemId"`
+	Title       string `json:"title"`
+	TimeLimit   int64  `json:"timeLimit"`
+	MemoryLimit int64  `json:"memoryLimit"`
+	Description string `json:"description"`
+	HardLevel   int64  `json:"hardLevel"`
+	SubmitCount int64  `json:"submitCount"`
+	PassCount   int64  `json:"passCount"`
+}
+
+type Submit struct {
+	SubmitId  int64  `json:"submitId"`
+	UserId    int64  `json:"userId"`
+	ProblemId int64  `json:"problemId"`
+	Code      string `json:"code"`
+	Status    int64  `json:"status"`
+	Language  int64  `json:"language"`
+	Result    int64  `json:"result"`
+	Time      int64  `json:"time"`
+	Memory    int64  `json:"memory"`
+}
+
+type GetProblemByIdRequest struct {
+	ProblemId int64 `json:"problemId"`
+}
+
+type GetProblemByIdResponse struct {
+	BaseResponse
+	Data Problem `json:"data"`
+}
+
+type GetProblemsByPageRequest struct {
+	PageNo   int64 `json:"pageNo"`
+	PageSize int64 `json:"pageSize"`
+}
+
+type GetProblemsByPageResponse struct {
+	BaseResponse
+	Data []Problem `json:"data"`
+}
+
+type CreateProblemRequest struct {
+	Problem Problem `json:"problem"`
+}
+
+type CreateProblemResponse struct {
+	BaseResponse
+	Data int64 `json:"data"`
+}
+
+type UpdateProblemRequest struct {
+	Problem Problem `json:"problem"`
+}
+
+type UpdateProblemResponse struct {
+	BaseResponse
+	Data bool `json:"data"`
+}
+
+type DeleteProblemRequest struct {
+	ProblemId int64 `json:"problemId"`
+}
+
+type DeleteProblemResponse struct {
+	BaseResponse
+	Data bool `json:"data"`
+}
+
+type SubmitRequest struct {
+	ProblemId int64  `json:"problemId"`
+	UserId    int64  `json:"userId"`
+	Code      string `json:"code"`
+	Language  int64  `json:"language"`
+}
+
+type SubmitResponse struct {
+	BaseResponse
+	Data int64 `json:"data"`
+}
+
+type GetSubmissionByProblemIdRequest struct {
+	UserId    int64 `json:"userId"`
+	ProblemId int64 `json:"problemId"`
+}
+
+type GetSubmissionByProblemIdResponse struct {
+	BaseResponse
+	Data []Submit `json:"data"`
+}
