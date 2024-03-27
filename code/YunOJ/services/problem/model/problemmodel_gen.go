@@ -142,7 +142,7 @@ func (m *defaultProblemModel) Update(ctx context.Context, newData *Problem) erro
 	return err
 }
 
-func (m *defaultProblemModel) FindByPage(ctx context.Context, offset, limit int64) ([]Problem, error) { // todo check sql and resp
+func (m *defaultProblemModel) FindByPage(ctx context.Context, offset, limit int64) ([]Problem, error) {
 	problemPageKey := fmt.Sprintf("%s%v%v", cacheProblemPagePrefix, offset, limit)
 	var resp []Problem
 	err := m.QueryRowCtx(ctx, &resp, problemPageKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {

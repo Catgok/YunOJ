@@ -106,7 +106,7 @@ func (m *defaultUserSubmitModel) Update(ctx context.Context, data *UserSubmit) e
 	return err
 }
 
-func (m *defaultUserSubmitModel) FindByUserIdAndProblemId(ctx context.Context, userId, problemId int64) ([]UserSubmit, error) { // todo check sql ans resp
+func (m *defaultUserSubmitModel) FindByUserIdAndProblemId(ctx context.Context, userId, problemId int64) ([]UserSubmit, error) {
 	userSubmitUserIdAndProblemIdKey := fmt.Sprintf("%s%v%v", cacheUserSubmitUserIdAndProblemIdPrefix, userId, problemId)
 	var resp []UserSubmit
 	err := m.QueryRowCtx(ctx, &resp, userSubmitUserIdAndProblemIdKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {

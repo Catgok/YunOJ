@@ -53,6 +53,11 @@ func (s *ProblemServiceServer) CreateSubmit(ctx context.Context, in *problem.Cre
 	return l.CreateSubmit(in)
 }
 
+func (s *ProblemServiceServer) GetSubmitById(ctx context.Context, in *problem.GetSubmitByIdRequest) (*problem.GetSubmitByIdResponse, error) {
+	l := submit.NewGetSubmitByIdLogic(ctx, s.svcCtx)
+	return l.GetSubmitById(in)
+}
+
 func (s *ProblemServiceServer) GetSubmitByUserIdAndProblemId(ctx context.Context, in *problem.GetSubmitByUserIdAndProblemIdRequest) (*problem.GetSubmitByUserIdAndProblemIdResponse, error) {
 	l := submit.NewGetSubmitByUserIdAndProblemIdLogic(ctx, s.svcCtx)
 	return l.GetSubmitByUserIdAndProblemId(in)

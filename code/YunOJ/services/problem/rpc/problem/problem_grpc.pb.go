@@ -25,6 +25,7 @@ const (
 	ProblemService_UpdateProblem_FullMethodName                 = "/problem.ProblemService/UpdateProblem"
 	ProblemService_DeleteProblem_FullMethodName                 = "/problem.ProblemService/DeleteProblem"
 	ProblemService_CreateSubmit_FullMethodName                  = "/problem.ProblemService/CreateSubmit"
+	ProblemService_GetSubmitById_FullMethodName                 = "/problem.ProblemService/GetSubmitById"
 	ProblemService_GetSubmitByUserIdAndProblemId_FullMethodName = "/problem.ProblemService/GetSubmitByUserIdAndProblemId"
 	ProblemService_UpdateSubmit_FullMethodName                  = "/problem.ProblemService/UpdateSubmit"
 )
@@ -39,6 +40,7 @@ type ProblemServiceClient interface {
 	UpdateProblem(ctx context.Context, in *UpdateProblemRequest, opts ...grpc.CallOption) (*UpdateProblemResponse, error)
 	DeleteProblem(ctx context.Context, in *DeleteProblemRequest, opts ...grpc.CallOption) (*DeleteProblemResponse, error)
 	CreateSubmit(ctx context.Context, in *CreateSubmitRequest, opts ...grpc.CallOption) (*CreateSubmitResponse, error)
+	GetSubmitById(ctx context.Context, in *GetSubmitByIdRequest, opts ...grpc.CallOption) (*GetSubmitByIdResponse, error)
 	GetSubmitByUserIdAndProblemId(ctx context.Context, in *GetSubmitByUserIdAndProblemIdRequest, opts ...grpc.CallOption) (*GetSubmitByUserIdAndProblemIdResponse, error)
 	UpdateSubmit(ctx context.Context, in *UpdateSubmitRequest, opts ...grpc.CallOption) (*UpdateSubmitResponse, error)
 }
@@ -105,6 +107,15 @@ func (c *problemServiceClient) CreateSubmit(ctx context.Context, in *CreateSubmi
 	return out, nil
 }
 
+func (c *problemServiceClient) GetSubmitById(ctx context.Context, in *GetSubmitByIdRequest, opts ...grpc.CallOption) (*GetSubmitByIdResponse, error) {
+	out := new(GetSubmitByIdResponse)
+	err := c.cc.Invoke(ctx, ProblemService_GetSubmitById_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *problemServiceClient) GetSubmitByUserIdAndProblemId(ctx context.Context, in *GetSubmitByUserIdAndProblemIdRequest, opts ...grpc.CallOption) (*GetSubmitByUserIdAndProblemIdResponse, error) {
 	out := new(GetSubmitByUserIdAndProblemIdResponse)
 	err := c.cc.Invoke(ctx, ProblemService_GetSubmitByUserIdAndProblemId_FullMethodName, in, out, opts...)
@@ -133,6 +144,7 @@ type ProblemServiceServer interface {
 	UpdateProblem(context.Context, *UpdateProblemRequest) (*UpdateProblemResponse, error)
 	DeleteProblem(context.Context, *DeleteProblemRequest) (*DeleteProblemResponse, error)
 	CreateSubmit(context.Context, *CreateSubmitRequest) (*CreateSubmitResponse, error)
+	GetSubmitById(context.Context, *GetSubmitByIdRequest) (*GetSubmitByIdResponse, error)
 	GetSubmitByUserIdAndProblemId(context.Context, *GetSubmitByUserIdAndProblemIdRequest) (*GetSubmitByUserIdAndProblemIdResponse, error)
 	UpdateSubmit(context.Context, *UpdateSubmitRequest) (*UpdateSubmitResponse, error)
 	mustEmbedUnimplementedProblemServiceServer()
@@ -159,6 +171,9 @@ func (UnimplementedProblemServiceServer) DeleteProblem(context.Context, *DeleteP
 }
 func (UnimplementedProblemServiceServer) CreateSubmit(context.Context, *CreateSubmitRequest) (*CreateSubmitResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateSubmit not implemented")
+}
+func (UnimplementedProblemServiceServer) GetSubmitById(context.Context, *GetSubmitByIdRequest) (*GetSubmitByIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSubmitById not implemented")
 }
 func (UnimplementedProblemServiceServer) GetSubmitByUserIdAndProblemId(context.Context, *GetSubmitByUserIdAndProblemIdRequest) (*GetSubmitByUserIdAndProblemIdResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSubmitByUserIdAndProblemId not implemented")
@@ -287,6 +302,24 @@ func _ProblemService_CreateSubmit_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProblemService_GetSubmitById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSubmitByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProblemServiceServer).GetSubmitById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProblemService_GetSubmitById_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProblemServiceServer).GetSubmitById(ctx, req.(*GetSubmitByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ProblemService_GetSubmitByUserIdAndProblemId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetSubmitByUserIdAndProblemIdRequest)
 	if err := dec(in); err != nil {
@@ -353,6 +386,10 @@ var ProblemService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateSubmit",
 			Handler:    _ProblemService_CreateSubmit_Handler,
+		},
+		{
+			MethodName: "GetSubmitById",
+			Handler:    _ProblemService_GetSubmitById_Handler,
 		},
 		{
 			MethodName: "GetSubmitByUserIdAndProblemId",

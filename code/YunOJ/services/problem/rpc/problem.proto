@@ -92,6 +92,15 @@ message CreateSubmitResponse {
   int64 submit_id = 3;
 }
 
+message GetSubmitByIdRequest {
+  int64 submit_id = 1;
+}
+message GetSubmitByIdResponse {
+  int64 code = 1;
+  string message = 2;
+  Submit submit = 3;
+}
+
 message UpdateSubmitRequest {
   Submit submit = 1;
 }
@@ -122,6 +131,7 @@ service ProblemService {
   rpc DeleteProblem(DeleteProblemRequest) returns (DeleteProblemResponse);
 
   rpc CreateSubmit(CreateSubmitRequest) returns (CreateSubmitResponse);
+  rpc GetSubmitById(GetSubmitByIdRequest) returns (GetSubmitByIdResponse);
   rpc GetSubmitByUserIdAndProblemId(GetSubmitByUserIdAndProblemIdRequest) returns (GetSubmitByUserIdAndProblemIdResponse);
   rpc UpdateSubmit(UpdateSubmitRequest) returns (UpdateSubmitResponse);
 }

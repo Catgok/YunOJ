@@ -16,20 +16,14 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/login",
-				Handler: user.LoginHandler(serverCtx),
+				Path:    "/create",
+				Handler: problem.CreateProblemHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/register",
-				Handler: user.RegisterHandler(serverCtx),
+				Path:    "/delete",
+				Handler: problem.DeleteProblemHandler(serverCtx),
 			},
-		},
-		rest.WithPrefix("/v1/user"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
 			{
 				Method:  http.MethodPost,
 				Path:    "/get",
@@ -42,18 +36,13 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/create",
-				Handler: problem.CreateProblemHandler(serverCtx),
+				Path:    "/getSubmissionByProblemId",
+				Handler: problem.GetSubmissionByUserIdAndProblemIdHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/update",
-				Handler: problem.UpdateProblemHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/delete",
-				Handler: problem.DeleteProblemHandler(serverCtx),
+				Path:    "/getSubmit",
+				Handler: problem.GetSubmitByIdHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
@@ -62,10 +51,26 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/getSubmissionByProblemId",
-				Handler: problem.GetSubmissionByUserIdAndProblemIdHandler(serverCtx),
+				Path:    "/update",
+				Handler: problem.UpdateProblemHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/v1/problem"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/login",
+				Handler: user.LoginHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/register",
+				Handler: user.RegisterHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/v1/user"),
 	)
 }

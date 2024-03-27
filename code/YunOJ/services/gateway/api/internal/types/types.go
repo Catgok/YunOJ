@@ -6,58 +6,26 @@ type BaseResponse struct {
 	Message string `json:"message"`
 }
 
-type User struct {
-	UserId   int64  `json:"userId"`
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Phone    string `json:"phone"`
-	UserType int64  `json:"userType"`
-	Avatar   string `json:"avatar"`
-	Status   int64  `json:"status"`
-}
-
-type LoginRequest struct {
-	UserKey  string `json:"userKey"`
-	Password string `json:"password"`
-}
-
-type LoginResponse struct {
-	BaseResponse
-	Data User `json:"data"`
-}
-
-type RegisterRequest struct {
-	Username string `json:"username"`
-	Phone    string `json:"phone"`
-	Password string `json:"password"`
-}
-
-type RegisterResponse struct {
-	BaseResponse
-	Data bool `json:"data"`
-}
-
-type Problem struct {
-	ProblemId   int64  `json:"problemId"`
+type CreateProblemRequest struct {
 	Title       string `json:"title"`
 	TimeLimit   int64  `json:"timeLimit"`
 	MemoryLimit int64  `json:"memoryLimit"`
 	Description string `json:"description"`
 	HardLevel   int64  `json:"hardLevel"`
-	SubmitCount int64  `json:"submitCount"`
-	PassCount   int64  `json:"passCount"`
 }
 
-type Submit struct {
-	SubmitId  int64  `json:"submitId"`
-	UserId    int64  `json:"userId"`
-	ProblemId int64  `json:"problemId"`
-	Code      string `json:"code"`
-	Status    int64  `json:"status"`
-	Language  int64  `json:"language"`
-	Result    int64  `json:"result"`
-	Time      int64  `json:"time"`
-	Memory    int64  `json:"memory"`
+type CreateProblemResponse struct {
+	BaseResponse
+	Data int64 `json:"data"`
+}
+
+type DeleteProblemRequest struct {
+	ProblemId int64 `json:"problemId"`
+}
+
+type DeleteProblemResponse struct {
+	BaseResponse
+	Data bool `json:"data"`
 }
 
 type GetProblemByIdRequest struct {
@@ -79,15 +47,77 @@ type GetProblemsByPageResponse struct {
 	Data []Problem `json:"data"`
 }
 
-type CreateProblemRequest struct {
+type GetSubmissionByProblemIdRequest struct {
+	UserId    int64 `json:"userId"`
+	ProblemId int64 `json:"problemId"`
+}
+
+type GetSubmissionByProblemIdResponse struct {
+	BaseResponse
+	Data []Submit `json:"data"`
+}
+
+type GetSubmitByIdRequest struct {
+	SubmitId int64 `json:"submitId"`
+}
+
+type GetSubmitByIdResponse struct {
+	BaseResponse
+	Data Submit `json:"data"`
+}
+
+type LoginRequest struct {
+	UserKey  string `json:"userKey"`
+	Password string `json:"password"`
+}
+
+type LoginResponse struct {
+	BaseResponse
+	Data User `json:"data"`
+}
+
+type Problem struct {
+	ProblemId   int64  `json:"problemId"`
 	Title       string `json:"title"`
 	TimeLimit   int64  `json:"timeLimit"`
 	MemoryLimit int64  `json:"memoryLimit"`
 	Description string `json:"description"`
 	HardLevel   int64  `json:"hardLevel"`
+	SubmitCount int64  `json:"submitCount"`
+	PassCount   int64  `json:"passCount"`
 }
 
-type CreateProblemResponse struct {
+type RegisterRequest struct {
+	Username string `json:"username"`
+	Phone    string `json:"phone"`
+	Password string `json:"password"`
+}
+
+type RegisterResponse struct {
+	BaseResponse
+	Data bool `json:"data"`
+}
+
+type Submit struct {
+	SubmitId  int64  `json:"submitId"`
+	UserId    int64  `json:"userId"`
+	ProblemId int64  `json:"problemId"`
+	Code      string `json:"code"`
+	Status    int64  `json:"status"`
+	Language  int64  `json:"language"`
+	Result    int64  `json:"result"`
+	Time      int64  `json:"time"`
+	Memory    int64  `json:"memory"`
+}
+
+type SubmitRequest struct {
+	ProblemId int64  `json:"problemId"`
+	UserId    int64  `json:"userId"`
+	Code      string `json:"code"`
+	Language  int64  `json:"language"`
+}
+
+type SubmitResponse struct {
 	BaseResponse
 	Data int64 `json:"data"`
 }
@@ -106,33 +136,12 @@ type UpdateProblemResponse struct {
 	Data bool `json:"data"`
 }
 
-type DeleteProblemRequest struct {
-	ProblemId int64 `json:"problemId"`
-}
-
-type DeleteProblemResponse struct {
-	BaseResponse
-	Data bool `json:"data"`
-}
-
-type SubmitRequest struct {
-	ProblemId int64  `json:"problemId"`
-	UserId    int64  `json:"userId"`
-	Code      string `json:"code"`
-	Language  int64  `json:"language"`
-}
-
-type SubmitResponse struct {
-	BaseResponse
-	Data int64 `json:"data"`
-}
-
-type GetSubmissionByProblemIdRequest struct {
-	UserId    int64 `json:"userId"`
-	ProblemId int64 `json:"problemId"`
-}
-
-type GetSubmissionByProblemIdResponse struct {
-	BaseResponse
-	Data []Submit `json:"data"`
+type User struct {
+	UserId   int64  `json:"userId"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Phone    string `json:"phone"`
+	UserType int64  `json:"userType"`
+	Avatar   string `json:"avatar"`
+	Status   int64  `json:"status"`
 }

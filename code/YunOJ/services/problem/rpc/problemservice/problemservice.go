@@ -23,6 +23,8 @@ type (
 	GetProblemByIdResponse                = problem.GetProblemByIdResponse
 	GetProblemsByPageRequest              = problem.GetProblemsByPageRequest
 	GetProblemsByPageResponse             = problem.GetProblemsByPageResponse
+	GetSubmitByIdRequest                  = problem.GetSubmitByIdRequest
+	GetSubmitByIdResponse                 = problem.GetSubmitByIdResponse
 	GetSubmitByUserIdAndProblemIdRequest  = problem.GetSubmitByUserIdAndProblemIdRequest
 	GetSubmitByUserIdAndProblemIdResponse = problem.GetSubmitByUserIdAndProblemIdResponse
 	Problem                               = problem.Problem
@@ -39,6 +41,7 @@ type (
 		UpdateProblem(ctx context.Context, in *UpdateProblemRequest, opts ...grpc.CallOption) (*UpdateProblemResponse, error)
 		DeleteProblem(ctx context.Context, in *DeleteProblemRequest, opts ...grpc.CallOption) (*DeleteProblemResponse, error)
 		CreateSubmit(ctx context.Context, in *CreateSubmitRequest, opts ...grpc.CallOption) (*CreateSubmitResponse, error)
+		GetSubmitById(ctx context.Context, in *GetSubmitByIdRequest, opts ...grpc.CallOption) (*GetSubmitByIdResponse, error)
 		GetSubmitByUserIdAndProblemId(ctx context.Context, in *GetSubmitByUserIdAndProblemIdRequest, opts ...grpc.CallOption) (*GetSubmitByUserIdAndProblemIdResponse, error)
 		UpdateSubmit(ctx context.Context, in *UpdateSubmitRequest, opts ...grpc.CallOption) (*UpdateSubmitResponse, error)
 	}
@@ -82,6 +85,11 @@ func (m *defaultProblemService) DeleteProblem(ctx context.Context, in *DeletePro
 func (m *defaultProblemService) CreateSubmit(ctx context.Context, in *CreateSubmitRequest, opts ...grpc.CallOption) (*CreateSubmitResponse, error) {
 	client := problem.NewProblemServiceClient(m.cli.Conn())
 	return client.CreateSubmit(ctx, in, opts...)
+}
+
+func (m *defaultProblemService) GetSubmitById(ctx context.Context, in *GetSubmitByIdRequest, opts ...grpc.CallOption) (*GetSubmitByIdResponse, error) {
+	client := problem.NewProblemServiceClient(m.cli.Conn())
+	return client.GetSubmitById(ctx, in, opts...)
 }
 
 func (m *defaultProblemService) GetSubmitByUserIdAndProblemId(ctx context.Context, in *GetSubmitByUserIdAndProblemIdRequest, opts ...grpc.CallOption) (*GetSubmitByUserIdAndProblemIdResponse, error) {
