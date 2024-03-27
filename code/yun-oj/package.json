@@ -1,0 +1,37 @@
+{
+  "name": "yun_oj_front",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.1.0",
+    "axios": "^1.4.0",
+    "core-js": "^3.8.3",
+    "diff-match-patch": "^1.0.5",
+    "element-plus": "^2.3.7",
+    "jwt-decode": "^3.1.2",
+    "qrcode": "^1.5.3",
+    "qrcode-parser": "^2.1.3",
+    "vue": "^3.2.13",
+    "vue-clipboard3": "^2.0.0",
+    "vue-router": "^4.2.4"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.16",
+    "@babel/eslint-parser": "^7.12.16",
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-eslint": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "compression-webpack-plugin": "^10.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ]
+}
