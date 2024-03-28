@@ -14,9 +14,9 @@
     </div>
   </div>
 </template>
+
 <script>
 import {ElButton, ElHeader, ElInput} from "element-plus";
-
 export default {
   name: "login",
   components: {ElInput, ElButton, ElHeader},

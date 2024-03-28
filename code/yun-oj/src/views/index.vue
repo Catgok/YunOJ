@@ -5,25 +5,25 @@
         <GlobalHeader/>
       </el-header>
       <el-main class="global-main">
-        <div class="main-content">
-          Main
-        </div>
+        <el-scrollbar class="main-content">
+          <router-view></router-view>
+        </el-scrollbar>
       </el-main>
-<!--      <el-footer class="global-footer">-->
-<!--        Footer-->
-<!--      </el-footer>-->
+      <!--      <el-footer class="global-footer">-->
+      <!--        Footer-->
+      <!--      </el-footer>-->
     </el-container>
   </div>
 </template>
 
 <script>
 
-import {ElContainer, ElHeader, ElMain, ElFooter} from "element-plus";
+import {ElContainer, ElHeader, ElMain, ElFooter, ElScrollbar} from "element-plus";
 import GlobalHeader from "@/components/globalHeader.vue";
 
 export default {
   name: "AppIndex",
-  components: {ElContainer, ElHeader, ElMain, ElFooter, GlobalHeader},
+  components: {ElContainer, ElHeader, ElMain, ElFooter, ElScrollbar, GlobalHeader},
 }
 </script>
 
@@ -37,7 +37,6 @@ export default {
   background-color: #f0f0f0;
   //border: 1px red solid;
   height: 56px;
-  margin-bottom: 20px;
 }
 
 .global-main {
@@ -48,6 +47,8 @@ export default {
   align-items: center;
   padding: 0;
   background-color: #ffffff;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .main-content {

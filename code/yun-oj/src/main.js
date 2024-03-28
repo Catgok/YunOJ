@@ -11,7 +11,7 @@ axios.defaults.baseURL = 'https://utiool-api.hhxxblog.top/';
 
 const app = createApp(App)
 app.use(router)
-app.config.globalProperties.$axios = axios;
+app.config.globalProperties.$axios = axios
 app.mount('#app')
 
 export default app
