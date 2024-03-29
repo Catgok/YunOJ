@@ -4,11 +4,11 @@
       <el-header class="global-header">
         <GlobalHeader/>
       </el-header>
-      <el-main class="global-main">
-        <el-scrollbar class="main-content">
+      <el-scrollbar class="main-content">
+        <el-main class="global-main">
           <router-view></router-view>
-        </el-scrollbar>
-      </el-main>
+        </el-main>
+      </el-scrollbar>
       <!--      <el-footer class="global-footer">-->
       <!--        Footer-->
       <!--      </el-footer>-->
@@ -40,22 +40,18 @@ export default {
 }
 
 .global-main {
-  flex: 1;
   border: 1px red solid;
+  background-color: #ffffff;
+  margin: 0 20px 0 20px;
+  width: 80vw;
+}
+
+.main-content {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 0;
-  background-color: #ffffff;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
-.main-content {
   border: 1px red solid;
-  text-align: center;
-  width: 80vw;
-  height: 100%;
 }
 
 .global-footer {

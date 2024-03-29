@@ -21,6 +21,16 @@ const routes = [{
     component: () => import('@/views/problem/problemContent.vue'),
     meta: {}
 }, {
+    path: '/problem/submission/:problemId',
+    name: 'submitList',
+    component: () => import('@/views/problem/submissionList.vue'),
+    meta: {}
+}, {
+    path: '/problem/submission/:problemId/:submissionId',
+    name: 'submissionContent',
+    component: () => import('@/views/problem/submissionContent.vue'),
+    meta: {}
+}, {
     path: '/contest',
     name: 'competition',
     component: () => import('@/views/contest/contest.vue'),

@@ -1,19 +1,23 @@
 <template>
   <div>
-    <div>
-      problem
+    <div style="width: 100%;text-align:center; font-size: 30px;padding: 13px 0 13px 0">
+      YunOJ 题库
     </div>
+    <div style="height: 40px">
+    </div>
+
     <el-table :data="problemData" stripe style="width: 100%;">
-      <el-table-column prop="id" label="ID" width="50"/>
+      <el-table-column prop="id" label="ID" width="70"/>
       <el-table-column prop="problemName" label="题目名称">
         <template #default="scope">
-          <div @click="handleProblemClick(scope.row.problemId)">{{ scope.row.problemName }}</div>
+          <div @click="handleProblemClick(scope.row.problemId)" class="problem-item">{{ scope.row.problemName }}</div>
         </template>
       </el-table-column>
       <el-table-column prop="hardLevel" label="难度" width="150"/>
       <el-table-column prop="passRate" label="通过率" width="150"/>
     </el-table>
-    <div style="display: flex;flex-direction: row-reverse; margin: 20px">
+
+    <div style="display: flex;flex-direction: row-reverse; margin: 30px 0 40px 0 ">
       <el-pagination
           small background layout="prev, pager, next"
           :total="total"
@@ -69,4 +73,9 @@ export default {
 
 <style scoped>
 
+.problem-item:hover {
+  cursor: pointer;
+  color: blue;
+  text-decoration: underline;
+}
 </style>

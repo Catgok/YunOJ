@@ -3,21 +3,23 @@
     <div style="display: flex;justify-content: space-between">
       <div>在线IDE</div>
       <div style="display:flex;">
-        <div>语言(C++)</div>
-        <div>运行</div>
+        <div>C++</div>
+        <div>
+          <el-button>运行</el-button>
+        </div>
       </div>
     </div>
 
     <div class="code-editor">
       <codemirror
           class="code-editor-codemirror"
+          style="height: 400px;"
           v-model="inputCode"
-          placeholder="打出你的代码吧"
+          placeholder="打出你的代码吧！"
           :autofocus="true"
           :indent-with-tab="true"
           :tab-size="4"
           :extensions="codemirrorExtensions"
-          @ready="handleReady"
           @change="codeChange"
           @focus="codeFocus"
           @blur="codeBlur"
@@ -26,16 +28,16 @@
 
     <div style="display: flex;">
       <div>
-        <div>输入</div>
-        <div class="translate-text-show">
+        <div style="text-align: left">输入</div>
+        <div class="put-text-show">
           <textarea v-model="inputCase" class="textarea-class input-case-textarea"></textarea>
         </div>
       </div>
 
       <div>
-        <div>输出</div>
-        <div class="translate-text-show">
-          <textarea v-model="outputCase" class="textarea-class output-case-textarea"></textarea>
+        <div style="text-align: left">输出</div>
+        <div class="put-text-show">
+          <textarea v-model="outputCase" readonly class="textarea-class output-case-textarea"></textarea>
         </div>
       </div>
     </div>
@@ -50,11 +52,11 @@ import {autoTextarea} from "@/utils/utils";
 
 import {basicLight} from '@uiw/codemirror-theme-basic/light'
 import {Codemirror} from 'vue-codemirror'
-import {ElInput} from "element-plus";
+import {ElButton, ElInput} from "element-plus";
 
 export default {
   name: 'OnlineIDE',
-  components: {Codemirror, ElInput},
+  components: {Codemirror, ElInput, ElButton},
   data() {
     return {
       inputCode: `#include <iostream>
@@ -65,7 +67,7 @@ int main() {
 }`,
       codemirrorExtensions: [cpp(), autocompletion(), basicLight],
       inputCase: '',
-      outputCase: '',
+      outputCase: '2323',
     }
   },
   mounted() {
@@ -75,10 +77,6 @@ int main() {
     autoTextarea(targetTextElement)
   },
   methods: {
-    handleReady(payload) {
-      // const view = shallowRef()
-      // view.value = payload.view
-    },
     codeChange() {
       console.log('change', this.inputCode)
     },
@@ -98,9 +96,7 @@ int main() {
 }
 
 .code-editor-codemirror {
-  height: 400px;
   text-align: left;
-  border: 1px red;
 }
 
 .textarea-class {
@@ -121,10 +117,9 @@ int main() {
   resize: none;
 }
 
-.translate-text-show {
+.put-text-show {
   flex: 1;
   flex-basis: 50%;
-  padding: 15px 20px;
   font-family: inherit;
   font-size: 18px;
 }
