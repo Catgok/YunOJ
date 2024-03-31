@@ -202,6 +202,7 @@ export default {
 }
 
 .put-text-tip-line-text {
+  border-top: #938c8c 1px solid;
   width: 100px;
   background-color: white;
 }

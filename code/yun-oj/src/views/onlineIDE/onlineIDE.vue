@@ -1,11 +1,12 @@
 <template>
   <div>
-    <div style="display: flex;justify-content: space-between">
+<!--    todo 宽度-->
+    <div style="display: flex;justify-content: space-between;margin: 20px 0 1px 0;background-color: #acacac">
       <div>在线IDE</div>
-      <div style="display:flex;">
+      <div style="margin-right: 15px;display: flex">
         <div>C++</div>
         <div>
-          <el-button>运行</el-button>
+          <el-button type="text"> 运行</el-button>
         </div>
       </div>
     </div>
@@ -26,16 +27,24 @@
       />
     </div>
 
+    <!--    <div style="display: flex;justify-content: flex-end;margin: 25px 10px 15px 0">-->
+    <!--      <el-button>运行</el-button>-->
+    <!--      <el-button>提交</el-button>-->
+    <!--    </div>-->
     <div style="display: flex;">
       <div>
-        <div style="text-align: left">输入</div>
+        <div class="put-text-tip-line">
+          <div class="put-text-tip-line-text"><\>输入</div>
+        </div>
         <div class="put-text-show">
           <textarea v-model="inputCase" class="textarea-class input-case-textarea"></textarea>
         </div>
       </div>
 
       <div>
-        <div style="text-align: left">输出</div>
+        <div class="put-text-tip-line">
+          <div class="put-text-tip-line-text"><\>输出</div>
+        </div>
         <div class="put-text-show">
           <textarea v-model="outputCase" readonly class="textarea-class output-case-textarea"></textarea>
         </div>
@@ -100,7 +109,7 @@ int main() {
 }
 
 .textarea-class {
-  width: 40vw;
+  width: calc(40vw - 20px);
   min-height: 148px;
   _height: 120px;
   margin: 0;
@@ -112,7 +121,7 @@ int main() {
   word-wrap: break-word;
   overflow-x: hidden;
   overflow-y: auto;
-  border: 1px red solid;
+  border: 1px gray solid;
   overflow-wrap: break-word;
   resize: none;
 }
@@ -122,5 +131,18 @@ int main() {
   flex-basis: 50%;
   font-family: inherit;
   font-size: 18px;
+}
+
+.put-text-tip-line {
+  //padding-left: 5px;
+  text-align: left;
+  border-left: red 1px solid;
+  background-color: #acacac;
+}
+
+.put-text-tip-line-text {
+  border-top: #938c8c 1px solid;
+  width: 100px;
+  background-color: white;
 }
 </style>
