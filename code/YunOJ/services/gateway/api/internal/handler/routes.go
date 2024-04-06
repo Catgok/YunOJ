@@ -4,6 +4,7 @@ package handler
 import (
 	"net/http"
 
+	judge "YunOJ/services/gateway/api/internal/handler/judge"
 	problem "YunOJ/services/gateway/api/internal/handler/problem"
 	user "YunOJ/services/gateway/api/internal/handler/user"
 	"YunOJ/services/gateway/api/internal/svc"
@@ -12,6 +13,22 @@ import (
 )
 
 func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/judge",
+				Handler: judge.JudgeHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/setJudgeCase",
+				Handler: judge.SetJudgeCaseHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/v1/judge"),
+	)
+
 	server.AddRoutes(
 		[]rest.Route{
 			{

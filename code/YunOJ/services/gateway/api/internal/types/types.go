@@ -66,6 +66,22 @@ type GetSubmitByIdResponse struct {
 	Data Submit `json:"data"`
 }
 
+type JudgeCase struct {
+	Input  string `json:"input"`
+	OutPut string `json:"output"`
+}
+
+type JudgeRequest struct {
+	ProblemId int64  `json:"problemId"`
+	Code      string `json:"code"`
+	Language  int64  `json:"language"`
+	UserId    int64  `json:"userId"`
+}
+
+type JudgeResponse struct {
+	BaseResponse
+}
+
 type LoginRequest struct {
 	UserKey  string `json:"userKey"`
 	Password string `json:"password"`
@@ -96,6 +112,16 @@ type RegisterRequest struct {
 type RegisterResponse struct {
 	BaseResponse
 	Data bool `json:"data"`
+}
+
+type SetJudgeCaseRequest struct {
+	ProblemId string      `json:"problemId"`
+	Cases     []JudgeCase `json:"cases"`
+}
+
+type SetJudgeCaseResponse struct {
+	BaseResponse
+	Data []int64 `json:"data"`
 }
 
 type Submit struct {

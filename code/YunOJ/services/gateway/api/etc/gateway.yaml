@@ -13,3 +13,10 @@ ProblemRpc:
     Hosts:
       - serverhost:12379
     Key: problem.rpc
+
+
+JudgeRpc:
+  Etcd:
+    Hosts:
+      - serverhost:12379
+    Key: judge.rpc

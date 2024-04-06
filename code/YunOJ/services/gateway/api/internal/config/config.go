@@ -9,4 +9,5 @@ type Config struct {
 	rest.RestConf
 	UserRpc    zrpc.RpcClientConf
 	ProblemRpc zrpc.RpcClientConf
+	JudgeRpc   zrpc.RpcClientConf
 }
