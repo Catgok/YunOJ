@@ -15,5 +15,5 @@ type Config struct {
 		BucketName      string
 		RootPath        string
 	}
-	KqConsumerConf kq.KqConf
+	JudgeConsumerConf kq.KqConf
 }

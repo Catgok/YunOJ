@@ -16,6 +16,17 @@ message JudgeResponse {
   string message = 2;
 }
 
+message OnlineJudgeRequest {
+  string input = 1;
+  string code = 2;
+  int64 language = 3;
+}
+message OnlineJudgeResponse {
+  int64 code = 1;
+  string message = 2;
+  string output = 3;
+}
+
 message JudgeCase{
   string input = 1;
   string output = 2;
@@ -48,6 +59,7 @@ message DeleteJudgeCaseByProblemIdResponse {
 
 service JudgeService {
   rpc Judge(JudgeRequest) returns (JudgeResponse);
+  rpc OnlineJudge(OnlineJudgeRequest) returns (OnlineJudgeResponse);
   rpc AddJudgeCases(AddJudgeCasesRequest) returns (AddJudgeCasesResponse);
   rpc GetJudgeCasePathsByProblemId(GetJudgeCasePathsRequest) returns (GetJudgeCasePathsResponse);
   rpc DeleteJudgeCaseByProblemId(DeleteJudgeCaseByProblemIdRequest) returns (DeleteJudgeCaseByProblemIdResponse);

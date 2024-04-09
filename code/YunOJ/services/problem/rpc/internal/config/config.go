@@ -10,7 +10,11 @@ type Config struct {
 	Mysql struct {
 		DataSource string
 	}
-	KqPusherConf struct {
+	JudgePusherConf struct {
+		Brokers []string
+		Topic   string
+	}
+	SubmitChangeNoticerConf struct {
 		Brokers []string
 		Topic   string
 	}

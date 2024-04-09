@@ -190,6 +190,15 @@ type (
     SetJudgeCaseResponse {
         BaseResponse
     }
+    OnlineJudgeRequest {
+        Code string `json:"code"`
+        Language int64 `json:"language"`
+        Input string `json:"input"`
+    }
+    OnlineJudgeResponse {
+        BaseResponse
+        Data string `json:"data"`
+    }
 )
 
 @server(
@@ -199,5 +208,8 @@ type (
 service Gateway {
     @handler SetJudgeCase
     post /setJudgeCase (SetJudgeCaseRequest) returns (SetJudgeCaseResponse)
+
+    @handler OnlineJudge
+    post /onlineJudge (OnlineJudgeRequest) returns (OnlineJudgeResponse)
 }
 

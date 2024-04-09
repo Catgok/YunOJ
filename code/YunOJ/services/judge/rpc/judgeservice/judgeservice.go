@@ -22,9 +22,12 @@ type (
 	JudgeCase                          = judge.JudgeCase
 	JudgeRequest                       = judge.JudgeRequest
 	JudgeResponse                      = judge.JudgeResponse
+	OnlineJudgeRequest                 = judge.OnlineJudgeRequest
+	OnlineJudgeResponse                = judge.OnlineJudgeResponse
 
 	JudgeService interface {
 		Judge(ctx context.Context, in *JudgeRequest, opts ...grpc.CallOption) (*JudgeResponse, error)
+		OnlineJudge(ctx context.Context, in *OnlineJudgeRequest, opts ...grpc.CallOption) (*OnlineJudgeResponse, error)
 		AddJudgeCases(ctx context.Context, in *AddJudgeCasesRequest, opts ...grpc.CallOption) (*AddJudgeCasesResponse, error)
 		GetJudgeCasePathsByProblemId(ctx context.Context, in *GetJudgeCasePathsRequest, opts ...grpc.CallOption) (*GetJudgeCasePathsResponse, error)
 		DeleteJudgeCaseByProblemId(ctx context.Context, in *DeleteJudgeCaseByProblemIdRequest, opts ...grpc.CallOption) (*DeleteJudgeCaseByProblemIdResponse, error)
@@ -44,6 +47,11 @@ func NewJudgeService(cli zrpc.Client) JudgeService {
 func (m *defaultJudgeService) Judge(ctx context.Context, in *JudgeRequest, opts ...grpc.CallOption) (*JudgeResponse, error) {
 	client := judge.NewJudgeServiceClient(m.cli.Conn())
 	return client.Judge(ctx, in, opts...)
+}
+
+func (m *defaultJudgeService) OnlineJudge(ctx context.Context, in *OnlineJudgeRequest, opts ...grpc.CallOption) (*OnlineJudgeResponse, error) {
+	client := judge.NewJudgeServiceClient(m.cli.Conn())
+	return client.OnlineJudge(ctx, in, opts...)
 }
 
 func (m *defaultJudgeService) AddJudgeCases(ctx context.Context, in *AddJudgeCasesRequest, opts ...grpc.CallOption) (*AddJudgeCasesResponse, error) {

@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	JudgeService_Judge_FullMethodName                        = "/judge.JudgeService/Judge"
+	JudgeService_OnlineJudge_FullMethodName                  = "/judge.JudgeService/OnlineJudge"
 	JudgeService_AddJudgeCases_FullMethodName                = "/judge.JudgeService/AddJudgeCases"
 	JudgeService_GetJudgeCasePathsByProblemId_FullMethodName = "/judge.JudgeService/GetJudgeCasePathsByProblemId"
 	JudgeService_DeleteJudgeCaseByProblemId_FullMethodName   = "/judge.JudgeService/DeleteJudgeCaseByProblemId"
@@ -30,6 +31,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type JudgeServiceClient interface {
 	Judge(ctx context.Context, in *JudgeRequest, opts ...grpc.CallOption) (*JudgeResponse, error)
+	OnlineJudge(ctx context.Context, in *OnlineJudgeRequest, opts ...grpc.CallOption) (*OnlineJudgeResponse, error)
 	AddJudgeCases(ctx context.Context, in *AddJudgeCasesRequest, opts ...grpc.CallOption) (*AddJudgeCasesResponse, error)
 	GetJudgeCasePathsByProblemId(ctx context.Context, in *GetJudgeCasePathsRequest, opts ...grpc.CallOption) (*GetJudgeCasePathsResponse, error)
 	DeleteJudgeCaseByProblemId(ctx context.Context, in *DeleteJudgeCaseByProblemIdRequest, opts ...grpc.CallOption) (*DeleteJudgeCaseByProblemIdResponse, error)
@@ -46,6 +48,15 @@ func NewJudgeServiceClient(cc grpc.ClientConnInterface) JudgeServiceClient {
 func (c *judgeServiceClient) Judge(ctx context.Context, in *JudgeRequest, opts ...grpc.CallOption) (*JudgeResponse, error) {
 	out := new(JudgeResponse)
 	err := c.cc.Invoke(ctx, JudgeService_Judge_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *judgeServiceClient) OnlineJudge(ctx context.Context, in *OnlineJudgeRequest, opts ...grpc.CallOption) (*OnlineJudgeResponse, error) {
+	out := new(OnlineJudgeResponse)
+	err := c.cc.Invoke(ctx, JudgeService_OnlineJudge_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -84,6 +95,7 @@ func (c *judgeServiceClient) DeleteJudgeCaseByProblemId(ctx context.Context, in 
 // for forward compatibility
 type JudgeServiceServer interface {
 	Judge(context.Context, *JudgeRequest) (*JudgeResponse, error)
+	OnlineJudge(context.Context, *OnlineJudgeRequest) (*OnlineJudgeResponse, error)
 	AddJudgeCases(context.Context, *AddJudgeCasesRequest) (*AddJudgeCasesResponse, error)
 	GetJudgeCasePathsByProblemId(context.Context, *GetJudgeCasePathsRequest) (*GetJudgeCasePathsResponse, error)
 	DeleteJudgeCaseByProblemId(context.Context, *DeleteJudgeCaseByProblemIdRequest) (*DeleteJudgeCaseByProblemIdResponse, error)
@@ -96,6 +108,9 @@ type UnimplementedJudgeServiceServer struct {
 
 func (UnimplementedJudgeServiceServer) Judge(context.Context, *JudgeRequest) (*JudgeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Judge not implemented")
+}
+func (UnimplementedJudgeServiceServer) OnlineJudge(context.Context, *OnlineJudgeRequest) (*OnlineJudgeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OnlineJudge not implemented")
 }
 func (UnimplementedJudgeServiceServer) AddJudgeCases(context.Context, *AddJudgeCasesRequest) (*AddJudgeCasesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddJudgeCases not implemented")
@@ -133,6 +148,24 @@ func _JudgeService_Judge_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(JudgeServiceServer).Judge(ctx, req.(*JudgeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _JudgeService_OnlineJudge_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OnlineJudgeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JudgeServiceServer).OnlineJudge(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: JudgeService_OnlineJudge_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JudgeServiceServer).OnlineJudge(ctx, req.(*OnlineJudgeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -201,6 +234,10 @@ var JudgeService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Judge",
 			Handler:    _JudgeService_Judge_Handler,
+		},
+		{
+			MethodName: "OnlineJudge",
+			Handler:    _JudgeService_OnlineJudge_Handler,
 		},
 		{
 			MethodName: "AddJudgeCases",

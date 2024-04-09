@@ -11,19 +11,21 @@ import (
 )
 
 type ServiceContext struct {
-	Config          config.Config
-	KqPusherClient  *kq.Pusher
-	ProblemModel    model.ProblemModel
-	UserSubmitModel model.UserSubmitModel
+	Config              config.Config
+	JudgePusher         *kq.Pusher
+	SubmitChangeNoticer *kq.Pusher
+	ProblemModel        model.ProblemModel
+	UserSubmitModel     model.UserSubmitModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	conn := sqlx.NewMysql(c.Mysql.DataSource)
 	expiryConf := cache.WithExpiry(time.Second)
 	return &ServiceContext{
-		Config:          c,
-		KqPusherClient:  kq.NewPusher(c.KqPusherConf.Brokers, c.KqPusherConf.Topic),
-		ProblemModel:    model.NewProblemModel(conn, c.CacheRedis, expiryConf),
-		UserSubmitModel: model.NewUserSubmitModel(conn, c.CacheRedis, expiryConf),
+		Config:              c,
+		JudgePusher:         kq.NewPusher(c.JudgePusherConf.Brokers, c.JudgePusherConf.Topic),
+		SubmitChangeNoticer: kq.NewPusher(c.SubmitChangeNoticerConf.Brokers, c.SubmitChangeNoticerConf.Topic),
+		ProblemModel:        model.NewProblemModel(conn, c.CacheRedis, expiryConf),
+		UserSubmitModel:     model.NewUserSubmitModel(conn, c.CacheRedis, expiryConf),
 	}
 }

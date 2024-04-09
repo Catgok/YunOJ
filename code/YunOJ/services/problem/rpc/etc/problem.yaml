@@ -13,7 +13,12 @@ CacheRedis:
     Type: node
     Pass: redis1234
 
-KqPusherConf:
+JudgePusherConf:
   Brokers:
     - serverhost:9092
   Topic: problem-submit
+
+SubmitChangeNoticerConf:
+  Brokers:
+    - serverhost:9092
+  Topic: submit-change-notice

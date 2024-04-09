@@ -56,8 +56,8 @@ func (l *CreateSubmitLogic) CreateSubmit(in *problem.CreateSubmitRequest) (*prob
 		Code:      in.Code,
 	}
 	message, _ := json.Marshal(problemSubmitMessageBody)
-	if l.svcCtx.KqPusherClient.Push(string(message)) != nil {
-		logx.Errorf("KqPusherClient Push Error , err :%v", err)
+	if l.svcCtx.JudgePusher.Push(string(message)) != nil {
+		logx.Errorf("JudgePusher Push Error , err :%v", err)
 	}
 	resp.SubmitId = id
 	return resp, nil

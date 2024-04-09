@@ -2,6 +2,7 @@ package submit
 
 import (
 	"context"
+	"encoding/json"
 
 	"YunOJ/services/problem/rpc/internal/svc"
 	"YunOJ/services/problem/rpc/problem"
@@ -46,5 +47,9 @@ func (l *UpdateSubmitLogic) UpdateSubmit(in *problem.UpdateSubmitRequest) (*prob
 		return resp, nil
 	}
 	resp.Success = true
+	message, _ := json.Marshal(in.Submit)
+	if l.svcCtx.SubmitChangeNoticer.Push(string(message)) != nil {
+		logx.Errorf("SubmitChangeNoticer Push Error , err :%v", err)
+	}
 	return resp, nil
 }

@@ -17,6 +17,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
+				Path:    "/onlineJudge",
+				Handler: judge.OnlineJudgeHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
 				Path:    "/setJudgeCase",
 				Handler: judge.SetJudgeCaseHandler(serverCtx),
 			},

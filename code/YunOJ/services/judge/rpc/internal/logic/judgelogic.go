@@ -88,7 +88,7 @@ func (l *JudgeLogic) Judge(in *judge.JudgeRequest) (*judge.JudgeResponse, error)
 			updateSubmitResult, err := l.svcCtx.ProblemRpc.UpdateSubmit(l.ctx, &problem.UpdateSubmitRequest{
 				Submit: &problem.Submit{
 					SubmitId: in.SubmitId,
-					Status:   res,
+					Status:   int64(res),
 					Time:     timeTotUsed,
 					Memory:   memTotUsed,
 				},
@@ -103,7 +103,7 @@ func (l *JudgeLogic) Judge(in *judge.JudgeRequest) (*judge.JudgeResponse, error)
 	updateSubmitResult, err := l.svcCtx.ProblemRpc.UpdateSubmit(l.ctx, &problem.UpdateSubmitRequest{
 		Submit: &problem.Submit{
 			SubmitId: in.SubmitId,
-			Status:   Accepted,
+			Status:   int64(Accepted),
 			Time:     timeTotUsed,
 			Memory:   memTotUsed,
 		},
@@ -116,13 +116,13 @@ func (l *JudgeLogic) Judge(in *judge.JudgeRequest) (*judge.JudgeResponse, error)
 	return resp, nil
 }
 
-func judgeOne(code, input, output string, submitId, timeLimit, memLimit int64) (res, timeUsed, memUsed int64) {
+func judgeOne(code, input, output string, submitId, timeLimit, memLimit int64) (res judgeResult, timeUsed, memUsed int64) {
 	timeLimitNs, memLimitB := timeLimit*1000000, memLimit<<20
 
 	// https://github.com/criyle/go-judge/blob/master/README.cn.md
 
 	compileReq := fmt.Sprintf(`{"cmd":[{"args":["/usr/bin/g++","%d.cpp","-o","%d"],"env":["PATH=/usr/bin:/bin"],"files":[{"content":""},{"name":"stdout","max":10240},{"name":"stderr","max":10240}],"cpuLimit":10000000000,"memoryLimit":134217728,"procLimit":50,"copyIn":{"%d.cpp":{"content":%s}},"copyOut":["stdout","stderr"],"copyOutCached":["%d"]}]}`, submitId, submitId, submitId, strconv.Quote(code), submitId)
-	compileResp, err := utils.HttpPost("http://localhost:5050/run", []byte(compileReq))
+	compileResp, err := utils.HttpPost("http://serverhost:5050/run", []byte(compileReq))
 	if err != nil {
 		return SystemError, 0, 0
 	}
@@ -138,7 +138,7 @@ func judgeOne(code, input, output string, submitId, timeLimit, memLimit int64) (
 	fileId := compileData[0].FileIds[fmt.Sprintf("%d", submitId)]
 
 	runReq := fmt.Sprintf(`{"cmd":[{"args":["%d"],"env":["PATH=/usr/bin:/bin"],"files":[{"content":%s},{"name":"stdout","max":10240},{"name":"stderr","max":10240}],"cpuLimit":%d,"memoryLimit":%d,"procLimit":50,"copyIn":{"%d":{"fileId":"%s"}}}]}`, submitId, strconv.Quote(input), timeLimitNs, memLimitB, submitId, fileId)
-	runResp, err := utils.HttpPost("http://localhost:5050/run", []byte(runReq))
+	runResp, err := utils.HttpPost("http://serverhost:5050/run", []byte(runReq))
 	if err != nil {
 		return SystemError, 0, 0
 	}
@@ -149,7 +149,7 @@ func judgeOne(code, input, output string, submitId, timeLimit, memLimit int64) (
 		return SystemError, 0, 0
 	}
 
-	if runData[0].Status != "Accepted" || runData[0].ExitStatus != 0 {
+	if runData[0].ExitStatus != 0 {
 		return RuntimeError, 0, 0
 	}
 	if runData[0].RunTime > timeLimitNs {
@@ -168,17 +168,42 @@ func judgeOne(code, input, output string, submitId, timeLimit, memLimit int64) (
 	return Accepted, runData[0].RunTime, runData[0].Memory
 }
 
+type judgeResult int
+
 // 评测结果
 const (
-	Accepted            = 0
-	WrongAnswer         = 1
-	TimeLimitExceeded   = 2
-	MemoryLimitExceeded = 3
-	RuntimeError        = 4
-	OutputLimitExceeded = 5
-	CompileError        = 6
-	SystemError         = 7
+	Accepted            judgeResult = 0
+	WrongAnswer         judgeResult = 1
+	TimeLimitExceeded   judgeResult = 2
+	MemoryLimitExceeded judgeResult = 3
+	RuntimeError        judgeResult = 4
+	OutputLimitExceeded judgeResult = 5
+	CompileError        judgeResult = 6
+	SystemError         judgeResult = 7
 )
+
+func (s judgeResult) GetMsg() string {
+	switch s {
+	case Accepted:
+		return "Accepted"
+	case WrongAnswer:
+		return "Wrong Answer"
+	case TimeLimitExceeded:
+		return "Time Limit Exceeded"
+	case MemoryLimitExceeded:
+		return "Memory Limit Exceeded"
+	case RuntimeError:
+		return "Runtime Error"
+	case OutputLimitExceeded:
+		return "Output Limit Exceeded"
+	case CompileError:
+		return "Compile Error"
+	case SystemError:
+		return "System Error"
+	default:
+		return "Unknown"
+	}
+}
 
 type compileResultBody struct {
 	Status     string            `json:"status"`

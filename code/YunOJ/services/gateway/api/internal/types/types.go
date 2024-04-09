@@ -71,17 +71,6 @@ type JudgeCase struct {
 	Output string `json:"output"`
 }
 
-type JudgeRequest struct {
-	ProblemId int64  `json:"problemId"`
-	Code      string `json:"code"`
-	Language  int64  `json:"language"`
-	UserId    int64  `json:"userId"`
-}
-
-type JudgeResponse struct {
-	BaseResponse
-}
-
 type LoginRequest struct {
 	UserKey  string `json:"userKey"`
 	Password string `json:"password"`
@@ -90,6 +79,17 @@ type LoginRequest struct {
 type LoginResponse struct {
 	BaseResponse
 	Data User `json:"data"`
+}
+
+type OnlineJudgeRequest struct {
+	Code     string `json:"code"`
+	Language int64  `json:"language"`
+	Input    string `json:"input"`
+}
+
+type OnlineJudgeResponse struct {
+	BaseResponse
+	Data string `json:"data"`
 }
 
 type Problem struct {
@@ -121,7 +121,6 @@ type SetJudgeCaseRequest struct {
 
 type SetJudgeCaseResponse struct {
 	BaseResponse
-	Data []int64 `json:"data"`
 }
 
 type Submit struct {

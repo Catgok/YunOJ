@@ -13,7 +13,7 @@ func Consumers(c config.Config, ctx context.Context, svcContext *svc.ServiceCont
 
 	return []service.Service{
 		//Listening for changes in consumption flow status
-		kq.MustNewQueue(c.KqConsumerConf, NewProblemSubmit(ctx, svcContext)),
+		kq.MustNewQueue(c.JudgeConsumerConf, NewProblemSubmit(ctx, svcContext)),
 		//.....
 	}
 

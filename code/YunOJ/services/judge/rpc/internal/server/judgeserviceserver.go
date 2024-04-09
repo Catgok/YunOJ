@@ -27,6 +27,11 @@ func (s *JudgeServiceServer) Judge(ctx context.Context, in *judge.JudgeRequest) 
 	return l.Judge(in)
 }
 
+func (s *JudgeServiceServer) OnlineJudge(ctx context.Context, in *judge.OnlineJudgeRequest) (*judge.OnlineJudgeResponse, error) {
+	l := logic.NewOnlineJudgeLogic(ctx, s.svcCtx)
+	return l.OnlineJudge(in)
+}
+
 func (s *JudgeServiceServer) AddJudgeCases(ctx context.Context, in *judge.AddJudgeCasesRequest) (*judge.AddJudgeCasesResponse, error) {
 	l := logic.NewAddJudgeCasesLogic(ctx, s.svcCtx)
 	return l.AddJudgeCases(in)
