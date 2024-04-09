@@ -10,6 +10,9 @@ type Config struct {
 	Mysql struct {
 		DataSource string
 	}
-
+	KqPusherConf struct {
+		Brokers []string
+		Topic   string
+	}
 	CacheRedis cache.CacheConf
 }

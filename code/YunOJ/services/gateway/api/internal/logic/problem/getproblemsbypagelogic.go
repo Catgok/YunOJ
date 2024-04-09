@@ -39,7 +39,7 @@ func (l *GetProblemsByPageLogic) GetProblemsByPage(req *types.GetProblemsByPageR
 		return resp, nil
 	}
 	resp.Code, resp.Message = res.GetCode(), res.GetMessage()
-	data := make([]types.Problem, 0)
+	var data []types.Problem
 	for _, v := range res.GetProblems() {
 		data = append(data, types.Problem{
 			ProblemId:   v.GetProblemId(),

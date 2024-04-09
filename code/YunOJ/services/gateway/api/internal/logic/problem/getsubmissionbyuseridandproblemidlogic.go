@@ -39,7 +39,7 @@ func (l *GetSubmissionByUserIdAndProblemIdLogic) GetSubmissionByUserIdAndProblem
 		return resp, nil
 	}
 	resp.Code, resp.Message = res.GetCode(), res.GetMessage()
-	data := make([]types.Submit, 0)
+	var data []types.Submit
 	for _, v := range res.GetSubmits() {
 		data = append(data, types.Submit{
 			SubmitId:  v.GetSubmitId(),

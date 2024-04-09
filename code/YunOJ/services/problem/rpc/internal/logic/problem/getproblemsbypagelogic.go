@@ -35,7 +35,7 @@ func (l *GetProblemsByPageLogic) GetProblemsByPage(in *problem.GetProblemsByPage
 		return resp, nil
 	}
 
-	resp.Problems = make([]*problem.Problem, 0)
+	resp.Problems = []*problem.Problem{}
 	for _, p := range problems {
 		resp.Problems = append(resp.Problems, &problem.Problem{
 			ProblemId:   p.ProblemId,

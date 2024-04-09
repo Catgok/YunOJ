@@ -12,3 +12,8 @@ CacheRedis:
   - Host: serverhost:16379
     Type: node
     Pass: redis1234
+
+KqPusherConf:
+  Brokers:
+    - serverhost:9092
+  Topic: problem-submit

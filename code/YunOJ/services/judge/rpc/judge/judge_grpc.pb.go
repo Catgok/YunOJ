@@ -19,11 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	JudgeService_Judge_FullMethodName                      = "/judge.JudgeService/Judge"
-	JudgeService_AddJudgeCases_FullMethodName              = "/judge.JudgeService/AddJudgeCases"
-	JudgeService_UpdateJudgeCase_FullMethodName            = "/judge.JudgeService/UpdateJudgeCase"
-	JudgeService_GetJudgeCaseIdsByProblemId_FullMethodName = "/judge.JudgeService/GetJudgeCaseIdsByProblemId"
-	JudgeService_DeleteJudgeCaseByCaseId_FullMethodName    = "/judge.JudgeService/DeleteJudgeCaseByCaseId"
+	JudgeService_Judge_FullMethodName                        = "/judge.JudgeService/Judge"
+	JudgeService_AddJudgeCases_FullMethodName                = "/judge.JudgeService/AddJudgeCases"
+	JudgeService_GetJudgeCasePathsByProblemId_FullMethodName = "/judge.JudgeService/GetJudgeCasePathsByProblemId"
+	JudgeService_DeleteJudgeCaseByProblemId_FullMethodName   = "/judge.JudgeService/DeleteJudgeCaseByProblemId"
 )
 
 // JudgeServiceClient is the client API for JudgeService service.
@@ -32,9 +31,8 @@ const (
 type JudgeServiceClient interface {
 	Judge(ctx context.Context, in *JudgeRequest, opts ...grpc.CallOption) (*JudgeResponse, error)
 	AddJudgeCases(ctx context.Context, in *AddJudgeCasesRequest, opts ...grpc.CallOption) (*AddJudgeCasesResponse, error)
-	UpdateJudgeCase(ctx context.Context, in *UpdateJudgeCaseRequest, opts ...grpc.CallOption) (*UpdateJudgeCaseResponse, error)
-	GetJudgeCaseIdsByProblemId(ctx context.Context, in *GetJudgeCaseIdsByProblemIdRequest, opts ...grpc.CallOption) (*GetJudgeCaseIdsByProblemIdResponse, error)
-	DeleteJudgeCaseByCaseId(ctx context.Context, in *DeleteJudgeCaseByCaseIdRequest, opts ...grpc.CallOption) (*DeleteJudgeCaseByCaseIdResponse, error)
+	GetJudgeCasePathsByProblemId(ctx context.Context, in *GetJudgeCasePathsRequest, opts ...grpc.CallOption) (*GetJudgeCasePathsResponse, error)
+	DeleteJudgeCaseByProblemId(ctx context.Context, in *DeleteJudgeCaseByProblemIdRequest, opts ...grpc.CallOption) (*DeleteJudgeCaseByProblemIdResponse, error)
 }
 
 type judgeServiceClient struct {
@@ -63,27 +61,18 @@ func (c *judgeServiceClient) AddJudgeCases(ctx context.Context, in *AddJudgeCase
 	return out, nil
 }
 
-func (c *judgeServiceClient) UpdateJudgeCase(ctx context.Context, in *UpdateJudgeCaseRequest, opts ...grpc.CallOption) (*UpdateJudgeCaseResponse, error) {
-	out := new(UpdateJudgeCaseResponse)
-	err := c.cc.Invoke(ctx, JudgeService_UpdateJudgeCase_FullMethodName, in, out, opts...)
+func (c *judgeServiceClient) GetJudgeCasePathsByProblemId(ctx context.Context, in *GetJudgeCasePathsRequest, opts ...grpc.CallOption) (*GetJudgeCasePathsResponse, error) {
+	out := new(GetJudgeCasePathsResponse)
+	err := c.cc.Invoke(ctx, JudgeService_GetJudgeCasePathsByProblemId_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *judgeServiceClient) GetJudgeCaseIdsByProblemId(ctx context.Context, in *GetJudgeCaseIdsByProblemIdRequest, opts ...grpc.CallOption) (*GetJudgeCaseIdsByProblemIdResponse, error) {
-	out := new(GetJudgeCaseIdsByProblemIdResponse)
-	err := c.cc.Invoke(ctx, JudgeService_GetJudgeCaseIdsByProblemId_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *judgeServiceClient) DeleteJudgeCaseByCaseId(ctx context.Context, in *DeleteJudgeCaseByCaseIdRequest, opts ...grpc.CallOption) (*DeleteJudgeCaseByCaseIdResponse, error) {
-	out := new(DeleteJudgeCaseByCaseIdResponse)
-	err := c.cc.Invoke(ctx, JudgeService_DeleteJudgeCaseByCaseId_FullMethodName, in, out, opts...)
+func (c *judgeServiceClient) DeleteJudgeCaseByProblemId(ctx context.Context, in *DeleteJudgeCaseByProblemIdRequest, opts ...grpc.CallOption) (*DeleteJudgeCaseByProblemIdResponse, error) {
+	out := new(DeleteJudgeCaseByProblemIdResponse)
+	err := c.cc.Invoke(ctx, JudgeService_DeleteJudgeCaseByProblemId_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -96,9 +85,8 @@ func (c *judgeServiceClient) DeleteJudgeCaseByCaseId(ctx context.Context, in *De
 type JudgeServiceServer interface {
 	Judge(context.Context, *JudgeRequest) (*JudgeResponse, error)
 	AddJudgeCases(context.Context, *AddJudgeCasesRequest) (*AddJudgeCasesResponse, error)
-	UpdateJudgeCase(context.Context, *UpdateJudgeCaseRequest) (*UpdateJudgeCaseResponse, error)
-	GetJudgeCaseIdsByProblemId(context.Context, *GetJudgeCaseIdsByProblemIdRequest) (*GetJudgeCaseIdsByProblemIdResponse, error)
-	DeleteJudgeCaseByCaseId(context.Context, *DeleteJudgeCaseByCaseIdRequest) (*DeleteJudgeCaseByCaseIdResponse, error)
+	GetJudgeCasePathsByProblemId(context.Context, *GetJudgeCasePathsRequest) (*GetJudgeCasePathsResponse, error)
+	DeleteJudgeCaseByProblemId(context.Context, *DeleteJudgeCaseByProblemIdRequest) (*DeleteJudgeCaseByProblemIdResponse, error)
 	mustEmbedUnimplementedJudgeServiceServer()
 }
 
@@ -112,14 +100,11 @@ func (UnimplementedJudgeServiceServer) Judge(context.Context, *JudgeRequest) (*J
 func (UnimplementedJudgeServiceServer) AddJudgeCases(context.Context, *AddJudgeCasesRequest) (*AddJudgeCasesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddJudgeCases not implemented")
 }
-func (UnimplementedJudgeServiceServer) UpdateJudgeCase(context.Context, *UpdateJudgeCaseRequest) (*UpdateJudgeCaseResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateJudgeCase not implemented")
+func (UnimplementedJudgeServiceServer) GetJudgeCasePathsByProblemId(context.Context, *GetJudgeCasePathsRequest) (*GetJudgeCasePathsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetJudgeCasePathsByProblemId not implemented")
 }
-func (UnimplementedJudgeServiceServer) GetJudgeCaseIdsByProblemId(context.Context, *GetJudgeCaseIdsByProblemIdRequest) (*GetJudgeCaseIdsByProblemIdResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetJudgeCaseIdsByProblemId not implemented")
-}
-func (UnimplementedJudgeServiceServer) DeleteJudgeCaseByCaseId(context.Context, *DeleteJudgeCaseByCaseIdRequest) (*DeleteJudgeCaseByCaseIdResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteJudgeCaseByCaseId not implemented")
+func (UnimplementedJudgeServiceServer) DeleteJudgeCaseByProblemId(context.Context, *DeleteJudgeCaseByProblemIdRequest) (*DeleteJudgeCaseByProblemIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteJudgeCaseByProblemId not implemented")
 }
 func (UnimplementedJudgeServiceServer) mustEmbedUnimplementedJudgeServiceServer() {}
 
@@ -170,56 +155,38 @@ func _JudgeService_AddJudgeCases_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _JudgeService_UpdateJudgeCase_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateJudgeCaseRequest)
+func _JudgeService_GetJudgeCasePathsByProblemId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetJudgeCasePathsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(JudgeServiceServer).UpdateJudgeCase(ctx, in)
+		return srv.(JudgeServiceServer).GetJudgeCasePathsByProblemId(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: JudgeService_UpdateJudgeCase_FullMethodName,
+		FullMethod: JudgeService_GetJudgeCasePathsByProblemId_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(JudgeServiceServer).UpdateJudgeCase(ctx, req.(*UpdateJudgeCaseRequest))
+		return srv.(JudgeServiceServer).GetJudgeCasePathsByProblemId(ctx, req.(*GetJudgeCasePathsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _JudgeService_GetJudgeCaseIdsByProblemId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetJudgeCaseIdsByProblemIdRequest)
+func _JudgeService_DeleteJudgeCaseByProblemId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteJudgeCaseByProblemIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(JudgeServiceServer).GetJudgeCaseIdsByProblemId(ctx, in)
+		return srv.(JudgeServiceServer).DeleteJudgeCaseByProblemId(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: JudgeService_GetJudgeCaseIdsByProblemId_FullMethodName,
+		FullMethod: JudgeService_DeleteJudgeCaseByProblemId_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(JudgeServiceServer).GetJudgeCaseIdsByProblemId(ctx, req.(*GetJudgeCaseIdsByProblemIdRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _JudgeService_DeleteJudgeCaseByCaseId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteJudgeCaseByCaseIdRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(JudgeServiceServer).DeleteJudgeCaseByCaseId(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: JudgeService_DeleteJudgeCaseByCaseId_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(JudgeServiceServer).DeleteJudgeCaseByCaseId(ctx, req.(*DeleteJudgeCaseByCaseIdRequest))
+		return srv.(JudgeServiceServer).DeleteJudgeCaseByProblemId(ctx, req.(*DeleteJudgeCaseByProblemIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -240,16 +207,12 @@ var JudgeService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _JudgeService_AddJudgeCases_Handler,
 		},
 		{
-			MethodName: "UpdateJudgeCase",
-			Handler:    _JudgeService_UpdateJudgeCase_Handler,
+			MethodName: "GetJudgeCasePathsByProblemId",
+			Handler:    _JudgeService_GetJudgeCasePathsByProblemId_Handler,
 		},
 		{
-			MethodName: "GetJudgeCaseIdsByProblemId",
-			Handler:    _JudgeService_GetJudgeCaseIdsByProblemId_Handler,
-		},
-		{
-			MethodName: "DeleteJudgeCaseByCaseId",
-			Handler:    _JudgeService_DeleteJudgeCaseByCaseId_Handler,
+			MethodName: "DeleteJudgeCaseByProblemId",
+			Handler:    _JudgeService_DeleteJudgeCaseByProblemId_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

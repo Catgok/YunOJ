@@ -15,22 +15,19 @@ import (
 type (
 	AddJudgeCasesRequest               = judge.AddJudgeCasesRequest
 	AddJudgeCasesResponse              = judge.AddJudgeCasesResponse
-	DeleteJudgeCaseByCaseIdRequest     = judge.DeleteJudgeCaseByCaseIdRequest
-	DeleteJudgeCaseByCaseIdResponse    = judge.DeleteJudgeCaseByCaseIdResponse
-	GetJudgeCaseIdsByProblemIdRequest  = judge.GetJudgeCaseIdsByProblemIdRequest
-	GetJudgeCaseIdsByProblemIdResponse = judge.GetJudgeCaseIdsByProblemIdResponse
+	DeleteJudgeCaseByProblemIdRequest  = judge.DeleteJudgeCaseByProblemIdRequest
+	DeleteJudgeCaseByProblemIdResponse = judge.DeleteJudgeCaseByProblemIdResponse
+	GetJudgeCasePathsRequest           = judge.GetJudgeCasePathsRequest
+	GetJudgeCasePathsResponse          = judge.GetJudgeCasePathsResponse
 	JudgeCase                          = judge.JudgeCase
 	JudgeRequest                       = judge.JudgeRequest
 	JudgeResponse                      = judge.JudgeResponse
-	UpdateJudgeCaseRequest             = judge.UpdateJudgeCaseRequest
-	UpdateJudgeCaseResponse            = judge.UpdateJudgeCaseResponse
 
 	JudgeService interface {
 		Judge(ctx context.Context, in *JudgeRequest, opts ...grpc.CallOption) (*JudgeResponse, error)
 		AddJudgeCases(ctx context.Context, in *AddJudgeCasesRequest, opts ...grpc.CallOption) (*AddJudgeCasesResponse, error)
-		UpdateJudgeCase(ctx context.Context, in *UpdateJudgeCaseRequest, opts ...grpc.CallOption) (*UpdateJudgeCaseResponse, error)
-		GetJudgeCaseIdsByProblemId(ctx context.Context, in *GetJudgeCaseIdsByProblemIdRequest, opts ...grpc.CallOption) (*GetJudgeCaseIdsByProblemIdResponse, error)
-		DeleteJudgeCaseByCaseId(ctx context.Context, in *DeleteJudgeCaseByCaseIdRequest, opts ...grpc.CallOption) (*DeleteJudgeCaseByCaseIdResponse, error)
+		GetJudgeCasePathsByProblemId(ctx context.Context, in *GetJudgeCasePathsRequest, opts ...grpc.CallOption) (*GetJudgeCasePathsResponse, error)
+		DeleteJudgeCaseByProblemId(ctx context.Context, in *DeleteJudgeCaseByProblemIdRequest, opts ...grpc.CallOption) (*DeleteJudgeCaseByProblemIdResponse, error)
 	}
 
 	defaultJudgeService struct {
@@ -54,17 +51,12 @@ func (m *defaultJudgeService) AddJudgeCases(ctx context.Context, in *AddJudgeCas
 	return client.AddJudgeCases(ctx, in, opts...)
 }
 
-func (m *defaultJudgeService) UpdateJudgeCase(ctx context.Context, in *UpdateJudgeCaseRequest, opts ...grpc.CallOption) (*UpdateJudgeCaseResponse, error) {
+func (m *defaultJudgeService) GetJudgeCasePathsByProblemId(ctx context.Context, in *GetJudgeCasePathsRequest, opts ...grpc.CallOption) (*GetJudgeCasePathsResponse, error) {
 	client := judge.NewJudgeServiceClient(m.cli.Conn())
-	return client.UpdateJudgeCase(ctx, in, opts...)
+	return client.GetJudgeCasePathsByProblemId(ctx, in, opts...)
 }
 
-func (m *defaultJudgeService) GetJudgeCaseIdsByProblemId(ctx context.Context, in *GetJudgeCaseIdsByProblemIdRequest, opts ...grpc.CallOption) (*GetJudgeCaseIdsByProblemIdResponse, error) {
+func (m *defaultJudgeService) DeleteJudgeCaseByProblemId(ctx context.Context, in *DeleteJudgeCaseByProblemIdRequest, opts ...grpc.CallOption) (*DeleteJudgeCaseByProblemIdResponse, error) {
 	client := judge.NewJudgeServiceClient(m.cli.Conn())
-	return client.GetJudgeCaseIdsByProblemId(ctx, in, opts...)
-}
-
-func (m *defaultJudgeService) DeleteJudgeCaseByCaseId(ctx context.Context, in *DeleteJudgeCaseByCaseIdRequest, opts ...grpc.CallOption) (*DeleteJudgeCaseByCaseIdResponse, error) {
-	client := judge.NewJudgeServiceClient(m.cli.Conn())
-	return client.DeleteJudgeCaseByCaseId(ctx, in, opts...)
+	return client.DeleteJudgeCaseByProblemId(ctx, in, opts...)
 }

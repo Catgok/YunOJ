@@ -68,7 +68,7 @@ type GetSubmitByIdResponse struct {
 
 type JudgeCase struct {
 	Input  string `json:"input"`
-	OutPut string `json:"output"`
+	Output string `json:"output"`
 }
 
 type JudgeRequest struct {
@@ -115,7 +115,7 @@ type RegisterResponse struct {
 }
 
 type SetJudgeCaseRequest struct {
-	ProblemId string      `json:"problemId"`
+	ProblemId int64       `json:"problemId"`
 	Cases     []JudgeCase `json:"cases"`
 }
 

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"YunOJ/services/judge/rpc/internal/mq"
+	"context"
 	"flag"
 	"fmt"
 
@@ -24,7 +26,6 @@ func main() {
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
 	ctx := svc.NewServiceContext(c)
-
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
 		judge.RegisterJudgeServiceServer(grpcServer, server.NewJudgeServiceServer(ctx))
 
@@ -33,6 +34,13 @@ func main() {
 		}
 	})
 	defer s.Stop()
+
+	serviceGroup := service.NewServiceGroup()
+	for _, mqConsumer := range mq.Consumers(c, context.Background(), ctx) {
+		serviceGroup.Add(mqConsumer)
+	}
+	go serviceGroup.Start()
+	defer serviceGroup.Stop()
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
 	s.Start()

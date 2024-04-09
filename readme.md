@@ -20,7 +20,7 @@
     ```
     - 查看注册到etcd中的服务
     ```shell
-     etcdctl get --prefix ""
+    etcdctl --endpoints=serverhost:12379 get --prefix ""
     ```
 2. goctl 相关
     - 1 mysql model

@@ -1,7 +1,6 @@
 package logic
 
 import (
-	"YunOJ/services/judge/model"
 	"context"
 
 	"YunOJ/services/judge/rpc/internal/svc"
@@ -29,23 +28,10 @@ func (l *AddJudgeCasesLogic) AddJudgeCases(in *judge.AddJudgeCasesRequest) (*jud
 		Code:    0,
 		Message: "success",
 	}
-
-	newJudgeCases := make([]model.JudgeCase, 0)
-	for _, v := range in.Cases {
-		newJudgeCases = append(newJudgeCases, model.JudgeCase{
-			ProblemId: in.ProblemId,
-			Input:     v.Input,
-			Output:    v.Output,
-		})
+	err := l.svcCtx.OssConfig.Upload(in.Cases, in.ProblemId)
+	if err != nil {
+		resp.Code, resp.Message = 6001, err.Error()
+		return resp, nil
 	}
-	//res, err := l.svcCtx.JudgeCaseModel.Inserts(l.ctx, newJudgeCases)
-	//if err != nil {
-	//	resp.Code, resp.Message = 5003, err.Error()
-	//	return resp, nil
-	//}
-	// todo oss处理输入输出
-	caseIds := make([]int64, 0)
-
-	resp.CaseIds = caseIds
 	return resp, nil
 }

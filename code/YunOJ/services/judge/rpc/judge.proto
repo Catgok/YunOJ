@@ -5,10 +5,11 @@ package judge;
 option go_package = "./judge";
 
 message JudgeRequest {
-  int64 user_id = 1;
-  int64 problem_id = 2;
-  string code = 3;
-  int64 language = 4;
+  int64 submit_id = 1;
+  int64 user_id = 2;
+  int64 problem_id = 3;
+  string code = 4;
+  int64 language = 5;
 }
 message JudgeResponse {
   int64 code = 1;
@@ -26,32 +27,21 @@ message AddJudgeCasesRequest {
 message AddJudgeCasesResponse {
   int64 code = 1;
   string message = 2;
-  repeated int64 case_ids = 3;
 }
 
-message UpdateJudgeCaseRequest {
-  int64 case_id = 1;
-  string input = 2;
-  string output = 3;
-}
-message UpdateJudgeCaseResponse {
-  int64 code = 1;
-  string message = 2;
-}
-
-message GetJudgeCaseIdsByProblemIdRequest {
+message GetJudgeCasePathsRequest {
   int64 problem_id = 1;
 }
-message GetJudgeCaseIdsByProblemIdResponse {
+message GetJudgeCasePathsResponse {
   int64 code = 1;
   string message = 2;
-  repeated int64 case_ids = 3;
+  repeated string paths = 3;
 }
 
-message DeleteJudgeCaseByCaseIdRequest {
-  int64 case_id = 1;
+message DeleteJudgeCaseByProblemIdRequest {
+  int64 problem_id = 1;
 }
-message DeleteJudgeCaseByCaseIdResponse {
+message DeleteJudgeCaseByProblemIdResponse {
   int64 code = 1;
   string message = 2;
 }
@@ -59,7 +49,6 @@ message DeleteJudgeCaseByCaseIdResponse {
 service JudgeService {
   rpc Judge(JudgeRequest) returns (JudgeResponse);
   rpc AddJudgeCases(AddJudgeCasesRequest) returns (AddJudgeCasesResponse);
-  rpc UpdateJudgeCase(UpdateJudgeCaseRequest) returns (UpdateJudgeCaseResponse);
-  rpc GetJudgeCaseIdsByProblemId(GetJudgeCaseIdsByProblemIdRequest) returns (GetJudgeCaseIdsByProblemIdResponse);
-  rpc DeleteJudgeCaseByCaseId(DeleteJudgeCaseByCaseIdRequest) returns (DeleteJudgeCaseByCaseIdResponse);
+  rpc GetJudgeCasePathsByProblemId(GetJudgeCasePathsRequest) returns (GetJudgeCasePathsResponse);
+  rpc DeleteJudgeCaseByProblemId(DeleteJudgeCaseByProblemIdRequest) returns (DeleteJudgeCaseByProblemIdResponse);
 }

@@ -3,6 +3,7 @@ package submit
 import (
 	"YunOJ/services/problem/model"
 	"context"
+	"encoding/json"
 
 	"YunOJ/services/problem/rpc/internal/svc"
 	"YunOJ/services/problem/rpc/problem"
@@ -41,12 +42,31 @@ func (l *CreateSubmitLogic) CreateSubmit(in *problem.CreateSubmitRequest) (*prob
 		resp.Code, resp.Message = 5003, err.Error()
 		return resp, nil
 	}
-	ld, err := res.LastInsertId()
+	id, err := res.LastInsertId()
 	if err != nil {
 		resp.Code, resp.Message = 5003, err.Error()
 		return resp, nil
 	}
-	// todo 发送评测消息
-	resp.SubmitId = ld
+
+	problemSubmitMessageBody := ProblemSubmitMessageBody{
+		SubmitId:  id,
+		ProblemId: in.ProblemId,
+		UserId:    in.UserId,
+		Language:  in.Language,
+		Code:      in.Code,
+	}
+	message, _ := json.Marshal(problemSubmitMessageBody)
+	if l.svcCtx.KqPusherClient.Push(string(message)) != nil {
+		logx.Errorf("KqPusherClient Push Error , err :%v", err)
+	}
+	resp.SubmitId = id
 	return resp, nil
+}
+
+type ProblemSubmitMessageBody struct {
+	SubmitId  int64  `json:"submitId"`
+	ProblemId int64  `json:"problemId"`
+	UserId    int64  `json:"userId"`
+	Language  int64  `json:"language"`
+	Code      string `json:"code"`
 }

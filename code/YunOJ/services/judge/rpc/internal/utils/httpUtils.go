@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-// Get 发送GET请求并返回响应的内容和错误（如果有）
+// HttpGet 发送GET请求并返回响应的内容和错误（如果有）
 func HttpGet(url string) ([]byte, error) {
 	resp, err := http.Get(url)
 	if err != nil {
@@ -22,7 +22,7 @@ func HttpGet(url string) ([]byte, error) {
 	return body, nil
 }
 
-// Post 发送POST请求并返回响应的内容和错误（如果有）
+// HttpPost 发送POST请求并返回响应的内容和错误（如果有）
 func HttpPost(url string, data []byte) ([]byte, error) {
 	resp, err := http.Post(url, "application/json", bytes.NewBuffer(data))
 	if err != nil {

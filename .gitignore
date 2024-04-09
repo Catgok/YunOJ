@@ -10,3 +10,5 @@ logs/
 target
 
 *.puml
+
+code/YunOJ/services/judge/rpc/etc/judge.yaml

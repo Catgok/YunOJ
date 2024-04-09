@@ -6,7 +6,7 @@ CREATE TABLE user_submit
     code        TEXT      NOT NULL COMMENT '代码',
     status      TINYINT   NOT NULL DEFAULT 0 COMMENT '状态 0-未评测 1-编译中 2-编译错误 3-评测中 4-评测通过 5-评测未通过',
     language    TINYINT   NOT NULL DEFAULT 1 COMMENT '语言 1-c++',
-    result      TINYINT   NOT NULL DEFAULT 0 COMMENT '结果',
+    result      TINYINT   NOT NULL DEFAULT -1 COMMENT '结果',
     time        INT       NOT NULL DEFAULT 0 COMMENT '运行时间 单位ms',
     memory      INT       NOT NULL DEFAULT 0 COMMENT '内存占用 单位MB',
     create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

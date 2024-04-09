@@ -32,17 +32,12 @@ func (s *JudgeServiceServer) AddJudgeCases(ctx context.Context, in *judge.AddJud
 	return l.AddJudgeCases(in)
 }
 
-func (s *JudgeServiceServer) UpdateJudgeCase(ctx context.Context, in *judge.UpdateJudgeCaseRequest) (*judge.UpdateJudgeCaseResponse, error) {
-	l := logic.NewUpdateJudgeCaseLogic(ctx, s.svcCtx)
-	return l.UpdateJudgeCase(in)
+func (s *JudgeServiceServer) GetJudgeCasePathsByProblemId(ctx context.Context, in *judge.GetJudgeCasePathsRequest) (*judge.GetJudgeCasePathsResponse, error) {
+	l := logic.NewGetJudgeCasePathsByProblemIdLogic(ctx, s.svcCtx)
+	return l.GetJudgeCasePathsByProblemId(in)
 }
 
-func (s *JudgeServiceServer) GetJudgeCaseIdsByProblemId(ctx context.Context, in *judge.GetJudgeCaseIdsByProblemIdRequest) (*judge.GetJudgeCaseIdsByProblemIdResponse, error) {
-	l := logic.NewGetJudgeCaseIdsByProblemIdLogic(ctx, s.svcCtx)
-	return l.GetJudgeCaseIdsByProblemId(in)
-}
-
-func (s *JudgeServiceServer) DeleteJudgeCaseByCaseId(ctx context.Context, in *judge.DeleteJudgeCaseByCaseIdRequest) (*judge.DeleteJudgeCaseByCaseIdResponse, error) {
-	l := logic.NewDeleteJudgeCaseByCaseIdLogic(ctx, s.svcCtx)
-	return l.DeleteJudgeCaseByCaseId(in)
+func (s *JudgeServiceServer) DeleteJudgeCaseByProblemId(ctx context.Context, in *judge.DeleteJudgeCaseByProblemIdRequest) (*judge.DeleteJudgeCaseByProblemIdResponse, error) {
+	l := logic.NewDeleteJudgeCaseByProblemIdLogic(ctx, s.svcCtx)
+	return l.DeleteJudgeCaseByProblemId(in)
 }

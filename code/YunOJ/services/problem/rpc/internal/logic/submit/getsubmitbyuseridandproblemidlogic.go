@@ -35,7 +35,7 @@ func (l *GetSubmitByUserIdAndProblemIdLogic) GetSubmitByUserIdAndProblemId(in *p
 		return resp, nil
 	}
 
-	resp.Submits = make([]*problem.Submit, 0)
+	resp.Submits = []*problem.Submit{}
 	for _, submit := range res {
 		resp.Submits = append(resp.Submits, &problem.Submit{
 			SubmitId:  submit.SubmitId,

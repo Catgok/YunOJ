@@ -1,15 +1,19 @@
 package config
 
 import (
-	"github.com/zeromicro/go-zero/core/stores/cache"
+	"github.com/zeromicro/go-queue/kq"
 	"github.com/zeromicro/go-zero/zrpc"
 )
 
 type Config struct {
 	zrpc.RpcServerConf
-	Mysql struct {
-		DataSource string
+	ProblemRpc zrpc.RpcClientConf
+	OssConfig  struct {
+		AccessKeyID     string
+		AccessKeySecret string
+		Endpoint        string
+		BucketName      string
+		RootPath        string
 	}
-
-	CacheRedis cache.CacheConf
+	KqConsumerConf kq.KqConf
 }
