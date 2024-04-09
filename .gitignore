@@ -1,3 +1,5 @@
+code/YunOJ/services/judge/rpc/etc/judge.yaml
+
 .DS_Store
 Thumbs.db
 
@@ -10,5 +12,3 @@ logs/
 target
 
 *.puml
-
-code/YunOJ/services/judge/rpc/etc/judge.yaml
