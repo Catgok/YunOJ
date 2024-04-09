@@ -1,15 +1,20 @@
 <template>
   <div class="main">
     <div style="width:33vw">
-      <div class="header">登录一下</div>
+      <div class="header">{{ headText }}</div>
       <div class="text">用户名</div>
-      <el-input v-model="username" class="input-box"></el-input>
+      <el-input v-model="username" class="input-box"
+                :placeholder="funcType==='login'?'用户名,手机号,邮箱':''"></el-input>
+      <div v-show="funcType==='register'" class="text">手机号</div>
+      <el-input v-show="funcType==='register'" v-model="phone" class="input-box"></el-input>
       <div class="text">密码</div>
       <el-input v-model="password" class="input-box" type="password"></el-input>
-      <el-button class="login-button" type="success" @click="login">登录</el-button>
+      <el-button class="login-button" :type="funcType==='login'?'success':'primary'" @click="doFunc">
+        {{ funcName }}
+      </el-button>
       <div class="help-line">
-        <div>找回密码</div>
-        <div>注册账号</div>
+        <div @click="forgetPass">找回密码</div>
+        <div @click="changeLoginAndRegister">{{ switchText }}</div>
       </div>
     </div>
   </div>
@@ -17,36 +22,77 @@
 
 <script>
 import {ElButton, ElHeader, ElInput} from "element-plus";
+import {eventBus} from '@/utils/eventBus.js'
+
 export default {
   name: "login",
   components: {ElInput, ElButton, ElHeader},
   data() {
     return {
-      username: 'public',
-      password: 'public',
+      funcType: 'login',
+      username: 'u1se',
+      password: 'pass',
+      headText: '登录一下',
+      funcName: '登录',
+      switchText: '注册账号',
+      phone: '',
     }
   },
   methods: {
+    changeLoginAndRegister() {
+      if (this.funcType === 'login') {
+        this.funcType = 'register'
+        this.headText = '注册账号'
+        this.funcName = '注册'
+        this.switchText = '已有账号？点此登录'
+      } else {
+        this.funcType = 'login'
+        this.headText = '登录一下'
+        this.funcName = '登录'
+        this.switchText = '注册账号'
+      }
+    },
+    doFunc() {
+      if (this.funcType === 'login') this.login()
+      else this.register()
+    },
     login() {
       const req = {
-        username: this.username,
+        userKey: this.username,
         password: this.password
       }
-      let that = this
-      const redirect = this.$route.query.redirect
-
-      this.$axios.post('/login', req).then((res) => {
-        const data = res.data
-        if (data.code === 200 && data.result !== "") {
-          const token = data.result
-          localStorage.setItem('jwtToken', token)
-          that.$axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-          if (redirect) that.$router.push(redirect)
-          else that.$router.push('/')
+      this.$axios.post('/user/login', req).then((res) => {
+        const resp = res.data
+        if (resp.code !== 0) {
+          // todo toast 密码错误
+          return
         }
-      }).catch((error) => {
-      });
+        localStorage.setItem('userInfo', JSON.stringify(resp.data))
+        localStorage.setItem('loginStatus', 'true')
+        eventBus.emit('globalHeaderLoadUserInfo')
+        this.$router.go(-1)
+      })
     },
+    register() {
+      const req = {
+        username: this.username,
+        phone: this.phone,
+        password: this.password
+      }
+      this.$axios.post('/user/register', req).then((res) => {
+        const resp = res.data
+        if (resp.code !== 0) {
+          // todo toast 注册失败 resp.message
+          return
+        }
+        if (resp.code === 0 && resp.data) {
+          this.login()
+        }
+      })
+    },
+    forgetPass() {
+      // tos提示
+    }
   }
 }
 </script>
@@ -55,7 +101,8 @@ export default {
 .main {
   display: flex;
   flex-direction: column;
-  padding-top: 18vh;
+  padding-top: 4vh;
+  padding-bottom: 8vh;
   justify-content: center;
   align-items: center
 }

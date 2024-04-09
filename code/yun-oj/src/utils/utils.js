@@ -1,4 +1,3 @@
-
 export function autoTextarea(elem, extra, maxHeight) {
     extra = extra || 0;
     let isFirefox = !!document.getBoxObjectFor || 'mozInnerScreenX' in window,

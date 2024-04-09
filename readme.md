@@ -35,10 +35,27 @@
     ```shell
     goctl api go -api ./gateway.api  -dir .
     ```
-   - 4 统计代码行数
+    - 4 统计代码行数
     ```shell
-   find ./ -name "*.go" -exec cat {} + | wc -l
+    find ./ -name "*.go" -exec cat {} + | wc -l
     ```
+
+3. 运行
+    - 1 启动服务
+    ```shell
+    go run ./services/user/rpc/user.go -f ./services/user/rpc/etc/user.yaml
+    go run ./services/problem/rpc/problem.go -f ./services/problem/rpc/etc/problem.yaml
+    go run ./services/judge/rpc/judge.go -f ./services/judge/rpc/etc/judge.yaml
+    ```
+    - 2 启动网关
+    ```shell
+    go run ./services/gateway/api/gateway.go -f ./services/gateway/api/etc/gateway.yaml
+    ```
+    - 3 启动web
+    ```shell
+    vue-cli-service serve
+    ```
+       
 
 
 

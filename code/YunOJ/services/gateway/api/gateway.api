@@ -1,215 +1,216 @@
 syntax = "v1"
 
-info(
-    title: "type title here"
-    desc: "type desc here"
-    author: "type author here"
-    email: "type email here"
-    version: "type version here"
+info (
+	title:   "type title here"
+	desc:    "type desc here"
+	author:  "type author here"
+	email:   "type email here"
+	version: "type version here"
 )
 
 type BaseResponse {
-    Code int64 `json:"code"`
-    Message string `json:"message"`
+	Code    int64  `json:"code"`
+	Message string `json:"message"`
 }
 
 type (
-    User {
-        UserId int64 `json:"userId"`
-        Username string `json:"username"`
-        Email string `json:"email"`
-        Phone string `json:"phone"`
-        UserType int64 `json:"userType"`
-        Avatar string `json:"avatar"`
-        Status int64 `json:"status"`
-    }
-    LoginRequest {
-        UserKey string `json:"userKey"`
-        Password string `json:"password"`
-    }
-    LoginResponse {
-        BaseResponse
-        Data User `json:"data"`
-    }
-    RegisterRequest {
-        Username string `json:"username"`
-        Phone string `json:"phone"`
-        Password string `json:"password"`
-    }
-    RegisterResponse {
-        BaseResponse
-        Data bool `json:"data"`
-    }
+	User {
+		UserId   int64  `json:"userId"`
+		Username string `json:"username"`
+		Email    string `json:"email"`
+		Phone    string `json:"phone"`
+		UserType int64  `json:"userType"`
+		Avatar   string `json:"avatar"`
+		Status   int64  `json:"status"`
+	}
+	LoginRequest {
+		UserKey  string `json:"userKey"`
+		Password string `json:"password"`
+	}
+	LoginResponse {
+		BaseResponse
+		Data User `json:"data"`
+	}
+	RegisterRequest {
+		Username string `json:"username"`
+		Phone    string `json:"phone"`
+		Password string `json:"password"`
+	}
+	RegisterResponse {
+		BaseResponse
+		Data bool `json:"data"`
+	}
 )
 
-@server(
-    group: user
-    prefix: /v1/user
+@server (
+	group:  user
+	prefix: /v1/user
 )
 service Gateway {
-    @handler Login
-    post /login (LoginRequest) returns (LoginResponse)
+	@handler Login
+	post /login (LoginRequest) returns (LoginResponse)
 
-    @handler Register
-    post /register (RegisterRequest) returns (RegisterResponse)
+	@handler Register
+	post /register (RegisterRequest) returns (RegisterResponse)
 }
 
 type (
-    Problem {
-        ProblemId int64 `json:"problemId"`
-        Title string `json:"title"`
-        TimeLimit int64 `json:"timeLimit"`
-        MemoryLimit int64 `json:"memoryLimit"`
-        Description string `json:"description"`
-        HardLevel int64 `json:"hardLevel"`
-        SubmitCount int64 `json:"submitCount"`
-        PassCount int64 `json:"passCount"`
-    }
-    Submit {
-        SubmitId int64 `json:"submitId"`
-        UserId int64 `json:"userId"`
-        ProblemId int64 `json:"problemId"`
-        Code string `json:"code"`
-        Status int64 `json:"status"`
-        Language int64 `json:"language"`
-        Result int64 `json:"result"`
-        Time int64 `json:"time"`
-        Memory int64 `json:"memory"`
-    }
-    GetProblemByIdRequest {
-        ProblemId int64 `json:"problemId"`
-    }
-    GetProblemByIdResponse {
-        BaseResponse
-        Data Problem `json:"data"`
-    }
-    GetProblemsByPageRequest {
-        PageNo int64 `json:"pageNo"`
-        PageSize int64 `json:"pageSize"`
-    }
-    GetProblemsByPageResponse {
-        BaseResponse
-        Data []Problem `json:"data"`
-    }
-    CreateProblemRequest {
-        Title string `json:"title"`
-        TimeLimit int64 `json:"timeLimit"`
-        MemoryLimit int64 `json:"memoryLimit"`
-        Description string `json:"description"`
-        HardLevel int64 `json:"hardLevel"`
-    }
-    CreateProblemResponse {
-        BaseResponse
-        Data int64 `json:"data"`
-    }
-    UpdateProblemRequest {
-        ProblemId int64 `json:"problemId"`
-        Title string `json:"title"`
-        TimeLimit int64 `json:"timeLimit"`
-        MemoryLimit int64 `json:"memoryLimit"`
-        Description string `json:"description"`
-        HardLevel int64 `json:"hardLevel"`
-    }
-    UpdateProblemResponse {
-        BaseResponse
-        Data bool `json:"data"`
-    }
-    DeleteProblemRequest {
-        ProblemId int64 `json:"problemId"`
-    }
-    DeleteProblemResponse {
-        BaseResponse
-        Data bool `json:"data"`
-    }
-    SubmitRequest {
-        ProblemId int64 `json:"problemId"`
-        UserId int64 `json:"userId"`
-        Code string `json:"code"`
-        Language int64 `json:"language"`
-    }
-    SubmitResponse {
-        BaseResponse
-        Data int64 `json:"data"`
-    }
-    GetSubmitByIdRequest {
-        SubmitId int64 `json:"submitId"`
-    }
-    GetSubmitByIdResponse {
-        BaseResponse
-        Data Submit `json:"data"`
-    }
-    GetSubmissionByProblemIdRequest {
-        UserId int64 `json:"userId"`
-        ProblemId int64 `json:"problemId"`
-    }
-    GetSubmissionByProblemIdResponse {
-        BaseResponse
-        Data []Submit `json:"data"`
-    }
+	Problem {
+		ProblemId   int64  `json:"problemId"`
+		Title       string `json:"title"`
+		TimeLimit   int64  `json:"timeLimit"`
+		MemoryLimit int64  `json:"memoryLimit"`
+		Description string `json:"description"`
+		HardLevel   int64  `json:"hardLevel"`
+		SubmitCount int64  `json:"submitCount"`
+		PassCount   int64  `json:"passCount"`
+	}
+	Submit {
+		SubmitId  int64  `json:"submitId"`
+		UserId    int64  `json:"userId"`
+		ProblemId int64  `json:"problemId"`
+		Code      string `json:"code"`
+		Status    int64  `json:"status"`
+		Language  int64  `json:"language"`
+		Result    int64  `json:"result"`
+		Time      int64  `json:"time"`
+		Memory    int64  `json:"memory"`
+	}
+	GetProblemByIdRequest {
+		ProblemId int64 `json:"problemId"`
+	}
+	GetProblemByIdResponse {
+		BaseResponse
+		Data Problem `json:"data"`
+	}
+	GetProblemsByPageRequest {
+		PageNo   int64 `json:"pageNo"`
+		PageSize int64 `json:"pageSize"`
+	}
+	GetProblemsByPageResponse {
+		BaseResponse
+		Data  []Problem `json:"data"`
+		Total int64     `json:"total"`
+	}
+	CreateProblemRequest {
+		Title       string `json:"title"`
+		TimeLimit   int64  `json:"timeLimit"`
+		MemoryLimit int64  `json:"memoryLimit"`
+		Description string `json:"description"`
+		HardLevel   int64  `json:"hardLevel"`
+	}
+	CreateProblemResponse {
+		BaseResponse
+		Data int64 `json:"data"`
+	}
+	UpdateProblemRequest {
+		ProblemId   int64  `json:"problemId"`
+		Title       string `json:"title"`
+		TimeLimit   int64  `json:"timeLimit"`
+		MemoryLimit int64  `json:"memoryLimit"`
+		Description string `json:"description"`
+		HardLevel   int64  `json:"hardLevel"`
+	}
+	UpdateProblemResponse {
+		BaseResponse
+		Data bool `json:"data"`
+	}
+	DeleteProblemRequest {
+		ProblemId int64 `json:"problemId"`
+	}
+	DeleteProblemResponse {
+		BaseResponse
+		Data bool `json:"data"`
+	}
+	SubmitRequest {
+		ProblemId int64  `json:"problemId"`
+		UserId    int64  `json:"userId"`
+		Code      string `json:"code"`
+		Language  int64  `json:"language"`
+	}
+	SubmitResponse {
+		BaseResponse
+		Data int64 `json:"data"`
+	}
+	GetSubmitByIdRequest {
+		SubmitId int64 `json:"submitId"`
+	}
+	GetSubmitByIdResponse {
+		BaseResponse
+		Data Submit `json:"data"`
+	}
+	GetSubmissionByProblemIdRequest {
+		UserId    int64 `json:"userId"`
+		ProblemId int64 `json:"problemId"`
+	}
+	GetSubmissionByProblemIdResponse {
+		BaseResponse
+		Data []Submit `json:"data"`
+	}
 )
 
-@server(
-    group: problem
-    prefix: /v1/problem
+@server (
+	group:  problem
+	prefix: /v1/problem
 )
 service Gateway {
-    @handler GetProblemById
-    post /get (GetProblemByIdRequest) returns (GetProblemByIdResponse)
+	@handler GetProblemById
+	post /get (GetProblemByIdRequest) returns (GetProblemByIdResponse)
 
-    @handler GetProblemsByPage
-    post /getByPage (GetProblemsByPageRequest) returns (GetProblemsByPageResponse)
+	@handler GetProblemsByPage
+	post /getByPage (GetProblemsByPageRequest) returns (GetProblemsByPageResponse)
 
-    @handler CreateProblem
-    post /create (CreateProblemRequest) returns (CreateProblemResponse)
+	@handler CreateProblem
+	post /create (CreateProblemRequest) returns (CreateProblemResponse)
 
-    @handler UpdateProblem
-    post /update (UpdateProblemRequest) returns (UpdateProblemResponse)
+	@handler UpdateProblem
+	post /update (UpdateProblemRequest) returns (UpdateProblemResponse)
 
-    @handler DeleteProblem
-    post /delete (DeleteProblemRequest) returns (DeleteProblemResponse)
+	@handler DeleteProblem
+	post /delete (DeleteProblemRequest) returns (DeleteProblemResponse)
 
-    @handler Submit
-    post /submit (SubmitRequest) returns (SubmitResponse)
+	@handler Submit
+	post /submit (SubmitRequest) returns (SubmitResponse)
 
-    @handler getSubmitById
-    post /getSubmit (GetSubmitByIdRequest) returns (GetSubmitByIdResponse)
+	@handler getSubmitById
+	post /getSubmit (GetSubmitByIdRequest) returns (GetSubmitByIdResponse)
 
-    @handler GetSubmissionByUserIdAndProblemId
-    post /getSubmissionByProblemId (GetSubmissionByProblemIdRequest) returns (GetSubmissionByProblemIdResponse)
+	@handler GetSubmissionByUserIdAndProblemId
+	post /getSubmissionByProblemId (GetSubmissionByProblemIdRequest) returns (GetSubmissionByProblemIdResponse)
 }
 
 type (
-    JudgeCase {
-        Input string `json:"input"`
-        Output string `json:"output"`
-    }
-    SetJudgeCaseRequest {
-        ProblemId int64 `json:"problemId"`
-        Cases []JudgeCase `json:"cases"`
-    }
-    SetJudgeCaseResponse {
-        BaseResponse
-    }
-    OnlineJudgeRequest {
-        Code string `json:"code"`
-        Language int64 `json:"language"`
-        Input string `json:"input"`
-    }
-    OnlineJudgeResponse {
-        BaseResponse
-        Data string `json:"data"`
-    }
+	JudgeCase {
+		Input  string `json:"input"`
+		Output string `json:"output"`
+	}
+	SetJudgeCaseRequest {
+		ProblemId int64       `json:"problemId"`
+		Cases     []JudgeCase `json:"cases"`
+	}
+	SetJudgeCaseResponse {
+		BaseResponse
+	}
+	OnlineJudgeRequest {
+		Code     string `json:"code"`
+		Language int64  `json:"language"`
+		Input    string `json:"input"`
+	}
+	OnlineJudgeResponse {
+		BaseResponse
+		Data string `json:"data"`
+	}
 )
 
-@server(
-    group: judge
-    prefix: /v1/judge
+@server (
+	group:  judge
+	prefix: /v1/judge
 )
 service Gateway {
-    @handler SetJudgeCase
-    post /setJudgeCase (SetJudgeCaseRequest) returns (SetJudgeCaseResponse)
+	@handler SetJudgeCase
+	post /setJudgeCase (SetJudgeCaseRequest) returns (SetJudgeCaseResponse)
 
-    @handler OnlineJudge
-    post /onlineJudge (OnlineJudgeRequest) returns (OnlineJudgeResponse)
+	@handler OnlineJudge
+	post /onlineJudge (OnlineJudgeRequest) returns (OnlineJudgeResponse)
 }
 

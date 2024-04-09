@@ -4,10 +4,10 @@
       {{ this.$route.params.problemId }}. {{ problemInfo.title }}
     </div>
     <div style="display: flex">
-      <div style="flex: 10;border-top: 1px #938c8c solid;">
+      <div style="flex: 20;border-top: 1px #938c8c solid;">
         <div style="text-align:left;" v-html="renderedMarkdown"></div>
       </div>
-      <div style="flex: 4;">
+      <div style="flex: 8;">
         <div class="problem-attach-info problem-attach-info-0">
           <div>时/空限制 :</div>
           <div>{{ problemInfo.timeLimit }} ms / {{ problemInfo.memoryLimit }} MB</div>
@@ -28,10 +28,14 @@
     </div>
     <div>
 
-      <div style="display: flex;justify-content: space-between;margin: 20px 0 1px 0;background-color: #acacac">
-        <div>在线IDE</div>
-        <div style="margin-right: 15px">
-          <div>C++</div>
+      <div style="display: flex;justify-content: space-between;margin: 20px 0 1px 0;background-color: #DCDCDC">
+        <div style="display: flex;align-items: center;font-size: 20px;margin-left: 5px">
+          <div>在线IDE</div>
+        </div>
+        <div>
+          <el-select v-model="language" placeholder="C++" style="width: 100px">
+            <el-option v-for="item in languageOptions" :key="item.value" :label="item.label" :value="item.value"/>
+          </el-select>
         </div>
       </div>
 
@@ -51,10 +55,14 @@
         />
       </div>
 
-      <div style="display: flex;justify-content: flex-end;margin: 25px 10px 15px 0">
-        <el-button>运行</el-button>
-        <el-button>提交</el-button>
+      <div style="display: flex;justify-content: space-between;align-items: center">
+        <div></div>
+        <div style="display: flex;justify-content: flex-end;margin: 25px 10px 15px 0">
+          <el-button @click="runCode">运行</el-button>
+          <el-button @click="submitCode">提交</el-button>
+        </div>
       </div>
+
       <div style="display: flex;">
         <div>
           <div class="put-text-tip-line">
@@ -85,10 +93,10 @@ import {autoTextarea} from "@/utils/utils";
 
 import {basicLight} from '@uiw/codemirror-theme-basic/light'
 import {Codemirror} from 'vue-codemirror'
-import {ElButton, ElInput} from "element-plus"
+import {ElButton, ElInput, ElOption, ElSelect} from "element-plus"
 
 export default {
-  components: {Codemirror, ElInput, ElButton},
+  components: {Codemirror, ElInput, ElButton, ElSelect, ElOption},
   data() {
     return {
       codemirrorExtensions: [cpp(), autocompletion(), basicLight],
@@ -97,18 +105,23 @@ export default {
       outputCase: '运行后会显示输出哦~~',
       problemInfo: {
         problemId: '',
-        title: 'A+B Problem',
-        content: '输入两个整数，求这两个整数的和是多少。\n### 输入格式\n输入两个整数$$A$$, $$B$$, 用空格隔开\n\n### 输出格式\n输出一个整数，表示这两个数的和\n\n### 数据范围\n$$0 <= A,B <= 10^8$$\n### 输入样例\n``` text\n3 4\n```\n### 输出样例\n ```text\n7\n```',
-        timeLimit: 1000,
-        memoryLimit: 256,
-        passCount: 100,
-        tryCount: 120,
-        hardLevel: 1,
+        title: '',
+        content: ''
       },
+      language: '',
+      languageOptions: [
+        {label: 'C++', value: 1,},
+        // {label: '其他语言', value: 2,},
+      ],
+      submitId: '',
     }
   },
-  mounted() {
+  created() {
     this.problemInfo.problemId = this.$route.params.problemId
+    this.problemInfo.title = sessionStorage.getItem('problemTitle.' + this.problemInfo.problemId)
+    this.getProblemInfo(this.problemInfo.problemId)
+  },
+  mounted() {
     const sourceTextElement = document.querySelector(".input-case-textarea")
     const targetTextElement = document.querySelector(".output-case-textarea")
     autoTextarea(sourceTextElement)
@@ -123,17 +136,76 @@ export default {
   },
   methods: {
     codeChange() {
-      console.log('change', this.inputCode)
+      // console.log('change', this.inputCode)
     },
     codeFocus() {
-      console.log('focus', this.inputCode)
+      // console.log('focus', this.inputCode)
     },
     codeBlur() {
-      console.log('blur', this.inputCode)
+      // console.log('blur', this.inputCode)
     },
     problemSubmission() {
       const path = `/problem/submission/${this.problemInfo.problemId}`
       this.$router.push(path)
+    },
+    getProblemInfo(problemId) {
+      const req = {
+        problemId: parseInt(problemId),
+      }
+      this.$axios.post('/problem/get', req).then((res) => {
+        const resp = res.data
+        if (resp.code !== 0) {
+          return
+        }
+        this.problemInfo.problemId = resp.data.problemId
+        this.problemInfo.title = resp.data.title
+        this.problemInfo.content = resp.data.description
+        this.problemInfo.timeLimit = resp.data.timeLimit
+        this.problemInfo.memoryLimit = resp.data.memoryLimit
+        this.problemInfo.passCount = resp.data.passCount
+        this.problemInfo.tryCount = resp.data.submitCount
+        this.problemInfo.hardLevel = resp.data.hardLevel
+        sessionStorage.setItem('problemTitle.' + this.problemInfo.problemId, this.problemInfo.title)
+      })
+    },
+    runCode() {
+      if (this.$store.state.loginStatus === false) {
+        this.$router.push('/login')
+        return
+      }
+      const req = {
+        code: this.inputCode,
+        language: 1,
+        input: this.inputCase,
+      }
+      this.$axios.post('/judge/onlineJudge', req).then((res) => {
+        const resp = res.data
+        if (resp.code !== 0) {
+          // todo
+          return
+        }
+        this.outputCase = resp.data
+      })
+    },
+    submitCode() {
+      if (this.$store.state.loginStatus === false) {
+        this.$router.push('/login')
+        return
+      }
+      const req = {
+        problemId: this.problemInfo.problemId,
+        userId: this.$store.state.userInfo.userId,
+        code: this.inputCode,
+        language: 1,
+      }
+      this.$axios.post('/problem/submit', req).then((res) => {
+        const resp = res.data
+        if (resp.code !== 0) {
+          // todo
+          return
+        }
+        this.submitId = resp.data
+      })
     }
   }
 }
@@ -150,8 +222,8 @@ export default {
 }
 
 .textarea-class {
-  width: calc(40vw - 20px);
-  min-height: 148px;
+  width: calc(40vw - 30px);
+  min-height: 150px;
   _height: 120px;
   margin: 0;
   outline: 0;
@@ -179,11 +251,10 @@ export default {
   display: flex;
   justify-content: space-between;
   padding: 20px 16px 20px 8px;
-  //margin: 10px 1px 10px 1px;
 }
 
 .problem-attach-info-0 {
-  background-color: #f0f0f0;
+  background-color: #D3D3D3;
   border-top: 1px #938c8c solid;
   border-bottom: 1px #938c8c solid;
 }
@@ -191,18 +262,17 @@ export default {
 .problem-submission-button:hover {
   cursor: pointer;
   color: blue;
-  //background-color: #938c8c;
 }
 
 .put-text-tip-line {
-  //padding-left: 5px;
+  padding-left: 1px;
   text-align: left;
-  border-left: red 1px solid;
-  background-color: #acacac;
+  border-left: #DCDCDC 1px solid;
+  background-color: #DCDCDC;
 }
 
 .put-text-tip-line-text {
-  border-top: #938c8c 1px solid;
+  border-top: #DCDCDC 1px solid;
   width: 100px;
   background-color: white;
 }

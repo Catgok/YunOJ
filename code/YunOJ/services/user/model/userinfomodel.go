@@ -31,7 +31,7 @@ func NewDefaultUserInfo() *UserInfo {
 		Email:    "",
 		Gender:   1,
 		UserType: 2,
-		Avatar:   "Avatar_hhh",
+		Avatar:   "",
 		Status:   1,
 	}
 }

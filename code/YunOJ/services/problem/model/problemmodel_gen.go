@@ -35,6 +35,7 @@ type (
 		Update(ctx context.Context, data *Problem) error
 		Delete(ctx context.Context, problemId int64) error
 		FindByPage(ctx context.Context, offset, limit int64) ([]Problem, error)
+		Count(ctx context.Context) (int64, error)
 	}
 
 	defaultProblemModel struct {
@@ -157,6 +158,13 @@ func (m *defaultProblemModel) FindByPage(ctx context.Context, offset, limit int6
 	default:
 		return nil, err
 	}
+}
+
+func (m *defaultProblemModel) Count(ctx context.Context) (int64, error) {
+	var count int64
+	query := fmt.Sprintf("select count(*) from %s where `is_delete` = 0", m.table)
+	err := m.QueryRowNoCache(&count, query)
+	return count, err
 }
 
 func (m *defaultProblemModel) formatPrimary(primary any) string {

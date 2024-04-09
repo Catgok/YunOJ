@@ -4,37 +4,51 @@ const routes = [{
     path: '/',
     name: 'main',
     component: () => import('@/views/main/main.vue'),
-    meta: {},
+    meta: {
+        title: 'YunOJ'
+    }
 }, {
     path: '/login',
     name: 'login',
     component: () => import('@/views/login/login.vue'),
-    meta: {},
+    meta: {
+        title: 'YunOJ'
+    },
 }, {
     path: '/problem',
     name: 'problem',
     component: () => import('@/views/problem/problemList.vue'),
-    meta: {},
+    meta: {
+        title: 'YunOj - 题库'
+    },
 }, {
     path: '/problem/:problemId',
     name: 'problemContent',
     component: () => import('@/views/problem/problemContent.vue'),
-    meta: {}
+    meta: {
+        title: 'YunOj - 题目'
+    }
 }, {
     path: '/problem/submission/:problemId',
     name: 'submitList',
     component: () => import('@/views/problem/submissionList.vue'),
-    meta: {}
+    meta: {
+        title: 'YunOj - 提交列表'
+    }
 }, {
     path: '/problem/submission/:problemId/:submissionId',
     name: 'submissionContent',
     component: () => import('@/views/problem/submissionContent.vue'),
-    meta: {}
+    meta: {
+        title: 'YunOj - 提交详情'
+    }
 }, {
     path: '/contest',
-    name: 'competition',
+    name: 'contest',
     component: () => import('@/views/contest/contest.vue'),
-    meta: {},
+    meta: {
+        title: 'YunOj - 竞赛'
+    },
 }, {
     path: '/announcement',
     name: 'announcement',
@@ -44,7 +58,9 @@ const routes = [{
     path: '/onlineIDE',
     name: 'onlineIDE',
     component: () => import('@/views/onlineIDE/onlineIDE.vue'),
-    meta: {},
+    meta: {
+        title: 'YunOj - 在线IDE'
+    },
 }
 ]
 const router = createRouter({

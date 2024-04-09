@@ -4,8 +4,8 @@
 package server
 
 import (
-	problem2 "YunOJ/services/problem/rpc/internal/logic/problem"
-	"YunOJ/services/problem/rpc/internal/logic/submit"
+	problemlogic "YunOJ/services/problem/rpc/internal/logic/problem"
+	submitlogic "YunOJ/services/problem/rpc/internal/logic/submit"
 	"context"
 
 	"YunOJ/services/problem/rpc/internal/svc"
@@ -24,46 +24,46 @@ func NewProblemServiceServer(svcCtx *svc.ServiceContext) *ProblemServiceServer {
 }
 
 func (s *ProblemServiceServer) GetProblemById(ctx context.Context, in *problem.GetProblemByIdRequest) (*problem.GetProblemByIdResponse, error) {
-	l := problem2.NewGetProblemByIdLogic(ctx, s.svcCtx)
+	l := problemlogic.NewGetProblemByIdLogic(ctx, s.svcCtx)
 	return l.GetProblemById(in)
 }
 
 func (s *ProblemServiceServer) GetProblemsByPage(ctx context.Context, in *problem.GetProblemsByPageRequest) (*problem.GetProblemsByPageResponse, error) {
-	l := problem2.NewGetProblemsByPageLogic(ctx, s.svcCtx)
+	l := problemlogic.NewGetProblemsByPageLogic(ctx, s.svcCtx)
 	return l.GetProblemsByPage(in)
 }
 
 func (s *ProblemServiceServer) CreateProblem(ctx context.Context, in *problem.CreateProblemRequest) (*problem.CreateProblemResponse, error) {
-	l := problem2.NewCreateProblemLogic(ctx, s.svcCtx)
+	l := problemlogic.NewCreateProblemLogic(ctx, s.svcCtx)
 	return l.CreateProblem(in)
 }
 
 func (s *ProblemServiceServer) UpdateProblem(ctx context.Context, in *problem.UpdateProblemRequest) (*problem.UpdateProblemResponse, error) {
-	l := problem2.NewUpdateProblemLogic(ctx, s.svcCtx)
+	l := problemlogic.NewUpdateProblemLogic(ctx, s.svcCtx)
 	return l.UpdateProblem(in)
 }
 
 func (s *ProblemServiceServer) DeleteProblem(ctx context.Context, in *problem.DeleteProblemRequest) (*problem.DeleteProblemResponse, error) {
-	l := problem2.NewDeleteProblemLogic(ctx, s.svcCtx)
+	l := problemlogic.NewDeleteProblemLogic(ctx, s.svcCtx)
 	return l.DeleteProblem(in)
 }
 
 func (s *ProblemServiceServer) CreateSubmit(ctx context.Context, in *problem.CreateSubmitRequest) (*problem.CreateSubmitResponse, error) {
-	l := submit.NewCreateSubmitLogic(ctx, s.svcCtx)
+	l := submitlogic.NewCreateSubmitLogic(ctx, s.svcCtx)
 	return l.CreateSubmit(in)
 }
 
 func (s *ProblemServiceServer) GetSubmitById(ctx context.Context, in *problem.GetSubmitByIdRequest) (*problem.GetSubmitByIdResponse, error) {
-	l := submit.NewGetSubmitByIdLogic(ctx, s.svcCtx)
+	l := submitlogic.NewGetSubmitByIdLogic(ctx, s.svcCtx)
 	return l.GetSubmitById(in)
 }
 
 func (s *ProblemServiceServer) GetSubmitByUserIdAndProblemId(ctx context.Context, in *problem.GetSubmitByUserIdAndProblemIdRequest) (*problem.GetSubmitByUserIdAndProblemIdResponse, error) {
-	l := submit.NewGetSubmitByUserIdAndProblemIdLogic(ctx, s.svcCtx)
+	l := submitlogic.NewGetSubmitByUserIdAndProblemIdLogic(ctx, s.svcCtx)
 	return l.GetSubmitByUserIdAndProblemId(in)
 }
 
 func (s *ProblemServiceServer) UpdateSubmit(ctx context.Context, in *problem.UpdateSubmitRequest) (*problem.UpdateSubmitResponse, error) {
-	l := submit.NewUpdateSubmitLogic(ctx, s.svcCtx)
+	l := submitlogic.NewUpdateSubmitLogic(ctx, s.svcCtx)
 	return l.UpdateSubmit(in)
 }

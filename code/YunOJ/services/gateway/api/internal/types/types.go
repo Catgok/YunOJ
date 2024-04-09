@@ -44,7 +44,8 @@ type GetProblemsByPageRequest struct {
 
 type GetProblemsByPageResponse struct {
 	BaseResponse
-	Data []Problem `json:"data"`
+	Data  []Problem `json:"data"`
+	Total int64     `json:"total"`
 }
 
 type GetSubmissionByProblemIdRequest struct {

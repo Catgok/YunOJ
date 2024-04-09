@@ -8,7 +8,7 @@ module.exports = {
             return args
         })
     },
-    productionSourceMap: false, //源码
+    // productionSourceMap: false, //源码
     configureWebpack: {
         plugins: [
             new CompressionPlugin({

@@ -5,6 +5,7 @@
 <script>
 
 import index from "@/views/index"
+
 export default {
   name: "App",
   components: {index},

@@ -1,12 +1,16 @@
 <template>
   <div>
-<!--    todo 宽度-->
-    <div style="display: flex;justify-content: space-between;margin: 20px 0 1px 0;background-color: #acacac">
-      <div>在线IDE</div>
+    <!--    todo 宽度-->
+    <div style="display: flex;justify-content: space-between;margin: 20px 0 1px 0;background-color: #DCDCDC">
+      <div style="display: flex;align-items: center;font-size: 20px;margin-left: 5px">
+        <div>在线IDE</div>
+      </div>
       <div style="margin-right: 15px;display: flex">
-        <div>C++</div>
-        <div>
-          <el-button type="text"> 运行</el-button>
+        <el-select v-model="language" placeholder="C++" style="width: 100px">
+          <el-option v-for="item in languageOptions" :key="item.value" :label="item.label" :value="item.value"/>
+        </el-select>
+        <div style="margin-left: 10px">
+          <el-button style="color:green" type="text" @click="onlineJudge"> > 运行</el-button>
         </div>
       </div>
     </div>
@@ -16,7 +20,6 @@
           class="code-editor-codemirror"
           style="height: 400px;"
           v-model="inputCode"
-          placeholder="打出你的代码吧！"
           :autofocus="true"
           :indent-with-tab="true"
           :tab-size="4"
@@ -27,11 +30,7 @@
       />
     </div>
 
-    <!--    <div style="display: flex;justify-content: flex-end;margin: 25px 10px 15px 0">-->
-    <!--      <el-button>运行</el-button>-->
-    <!--      <el-button>提交</el-button>-->
-    <!--    </div>-->
-    <div style="display: flex;">
+    <div style="display: flex;margin-top: 20px">
       <div>
         <div class="put-text-tip-line">
           <div class="put-text-tip-line-text"><\>输入</div>
@@ -61,11 +60,11 @@ import {autoTextarea} from "@/utils/utils";
 
 import {basicLight} from '@uiw/codemirror-theme-basic/light'
 import {Codemirror} from 'vue-codemirror'
-import {ElButton, ElInput} from "element-plus";
+import {ElButton, ElInput, ElOption, ElSelect} from "element-plus";
 
 export default {
   name: 'OnlineIDE',
-  components: {Codemirror, ElInput, ElButton},
+  components: {Codemirror, ElInput, ElButton, ElSelect, ElOption},
   data() {
     return {
       inputCode: `#include <iostream>
@@ -76,7 +75,12 @@ int main() {
 }`,
       codemirrorExtensions: [cpp(), autocompletion(), basicLight],
       inputCase: '',
-      outputCase: '2323',
+      outputCase: '',
+      language: '',
+      languageOptions: [
+        {label: 'C++', value: 1,},
+        // {label: '其他语言', value: 2,},
+      ],
     }
   },
   mounted() {
@@ -94,7 +98,23 @@ int main() {
     },
     codeBlur() {
       console.log('blur', this.inputCode)
-    }
+    },
+    onlineJudge() {
+      const req = {
+        code: this.inputCode,
+        language: 1,
+        input: this.inputCase,
+      }
+
+      this.$axios.post('/judge/onlineJudge', req).then((res) => {
+        const resp = res.data
+        if (resp.code !== 0) {
+          // todo
+          return
+        }
+        this.outputCase = resp.data
+      })
+    },
   },
 }
 </script>
@@ -109,8 +129,8 @@ int main() {
 }
 
 .textarea-class {
-  width: calc(40vw - 20px);
-  min-height: 148px;
+  width: calc(40vw - 30px);
+  min-height: 150px;
   _height: 120px;
   margin: 0;
   outline: 0;
@@ -134,14 +154,14 @@ int main() {
 }
 
 .put-text-tip-line {
-  //padding-left: 5px;
+  padding-left: 1px;
   text-align: left;
-  border-left: red 1px solid;
-  background-color: #acacac;
+  border-left: #DCDCDC 1px solid;
+  background-color: #DCDCDC;
 }
 
 .put-text-tip-line-text {
-  border-top: #938c8c 1px solid;
+  border-top: #DCDCDC 1px solid;
   width: 100px;
   background-color: white;
 }

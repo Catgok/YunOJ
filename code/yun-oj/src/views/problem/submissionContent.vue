@@ -1,15 +1,15 @@
 <template>
   <div>
     <div style="text-align:left; margin:0 15px 15px 5px;font-size: 30px;display: flex;justify-content: space-between">
-      <div>{{ problemId }}. A+B Problem</div>
+      <div>{{ problemId }}. {{ problemTitle }}</div>
       <div style="font-size: 20px;  display: flex;justify-content: center;align-items: flex-end;"
            @click="returnProblem()">
         返回题目
       </div>
     </div>
+    <!--    <div style="margin: 5px ">提交记录</div>-->
     <div style="border-top: 1px #938c8c solid;">
-      <div style="text-align:left;" v-html="renderedMarkdown"> </div>
-      <div class="code-editor">
+      <div class="code-editor" style="pointer-events: none;">
         <codemirror
             class="code-editor-codemirror"
             style="height: 400px;"
@@ -20,9 +20,6 @@
             :tab-size="4"
             :extensions="codemirrorExtensions"
             :options="{readOnly: true}"
-            @change="codeChange"
-            @focus="codeFocus"
-            @blur="codeBlur"
         />
       </div>
     </div>
@@ -31,11 +28,9 @@
 </template>
 
 <script>
-import {ElTable, ElTableColumn, ElButton} from "element-plus";
+import {ElButton, ElTable, ElTableColumn} from "element-plus";
 
 import {cpp} from '@codemirror/lang-cpp'
-import {autocompletion} from '@codemirror/autocomplete'
-
 import {basicLight} from '@uiw/codemirror-theme-basic/light'
 import {Codemirror} from 'vue-codemirror'
 
@@ -43,22 +38,36 @@ export default {
   components: {ElTable, ElTableColumn, ElButton, Codemirror},
   data() {
     return {
-      problemId: this.$route.params.problemId,
-      codemirrorExtensions: [cpp(), autocompletion(), basicLight],
-      submissionContent: '```cpp \n#include <iostream>\nusing namespace std;\nint main() {\n    int a, b;\n    cin >> a >> b;\n    cout << a + b << endl;\n    return 0;\n}\n```\n',
+      problemId: '',
+      problemTitle: '',
+      codemirrorExtensions: [cpp(), basicLight],
+      submissionContent: "",
     }
   },
-  computed: {
-    renderedMarkdown() {
-      const md = require('markdown-it')()
-      return md.render(this.submissionContent);
-    },
+  created() {
+    this.problemId = this.$route.params.problemId
+    this.problemTitle = sessionStorage.getItem('problemTitle.' + this.problemId)
+    this.loadSubmissionContent(this.$route.params.submissionId)
   },
   methods: {
     returnProblem() {
       const path = `/problem/${this.problemId}`;
       this.$router.push(path);
-    }
+    },
+    loadSubmissionContent(submissionId) {
+      const req = {
+        submitId: parseInt(submissionId)
+      }
+      this.$axios.post('/problem/getSubmit', req).then((res) => {
+        const resp = res.data
+        if (resp.code !== 0) {
+          // todo
+          return
+        }
+        this.submissionContent = resp.data.code
+
+      })
+    },
   },
 }
 </script>

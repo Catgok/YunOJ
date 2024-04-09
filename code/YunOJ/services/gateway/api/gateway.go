@@ -20,7 +20,8 @@ func main() {
 	conf.MustLoad(*configFile, &c)
 
 	time.Sleep(5 * time.Second)
-	server := rest.MustNewServer(c.RestConf)
+	//server := rest.MustNewServer(c.RestConf)
+	server := rest.MustNewServer(c.RestConf, rest.WithCors("*"))
 	defer server.Stop()
 
 	ctx := svc.NewServiceContext(c)

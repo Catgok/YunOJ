@@ -28,13 +28,19 @@ func (l *GetProblemsByPageLogic) GetProblemsByPage(in *problem.GetProblemsByPage
 		Code:    0,
 		Message: "success",
 	}
+	total, err := l.svcCtx.ProblemModel.Count(l.ctx)
+	if err != nil {
+		resp.Code, resp.Message = 5003, err.Error()
+		return resp, nil
+	}
+	resp.Total = total
+
 	limit, offset := in.PageSize, (in.PageNumber-1)*in.PageSize
 	problems, err := l.svcCtx.ProblemModel.FindByPage(l.ctx, offset, limit)
 	if err != nil {
 		resp.Code, resp.Message = 5003, err.Error()
 		return resp, nil
 	}
-
 	resp.Problems = []*problem.Problem{}
 	for _, p := range problems {
 		resp.Problems = append(resp.Problems, &problem.Problem{

@@ -53,5 +53,6 @@ func (l *GetProblemsByPageLogic) GetProblemsByPage(req *types.GetProblemsByPageR
 		})
 	}
 	resp.Data = data
+	resp.Total = res.GetTotal()
 	return resp, nil
 }

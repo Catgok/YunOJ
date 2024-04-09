@@ -1,10 +1,9 @@
 <template>
   <div>
     <div style="text-align:left; margin:0 15px 15px 5px;font-size: 30px;display: flex;justify-content: space-between">
-      <div>{{ problemId }}. A+B Problem</div>
+      <div>{{ problemId }}. {{ problemTitle }}</div>
       <div style="font-size: 20px;  display: flex;justify-content: center;align-items: flex-end;"
-           @click="returnProblem()">
-        返回题目
+           @click="returnProblem()"> 返回题目
       </div>
     </div>
     <div style="border-top: 1px #938c8c solid;">
@@ -21,7 +20,6 @@
             </template>
           </el-table-column>
         </el-table>
-
       </div>
     </div>
 
@@ -29,15 +27,23 @@
 </template>
 
 <script>
-import {ElTable, ElTableColumn, ElButton} from "element-plus";
+import {ElButton, ElTable, ElTableColumn} from "element-plus";
 
 export default {
   components: {ElTable, ElTableColumn, ElButton},
   data() {
     return {
       problemId: this.$route.params.problemId,
+      problemTitle: '',
       submissionData: []
     }
+  },
+  created() {
+    // console.log(this.$store.state)
+    this.problemId = this.$route.params.problemId
+    this.problemTitle = sessionStorage.getItem('problemTitle.' + this.problemId)
+
+    this.loadSubmissionData()
   },
   methods: {
     returnProblem() {
@@ -48,26 +54,39 @@ export default {
       const path = `/problem/submission/${this.problemId}/${submissionId}`;
       this.$router.push(path);
     },
+
     loadSubmissionData() {
-      for (let i = 1; i <= 10; i++) {
-        let item = {
-          submissionId: 1000000 + i,
-          problemId: 1000 + i,
-          problemName: '题目' + i,
-          submitTime: '2021-10-10 10:10:10',
-          status: 'Accepted',
-          language: 'C++',
-          runtime: '100ms',
-          memory: '100MB',
-          codeLength: '1000B',
-        }
-        this.submissionData.push(item)
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+      const req = {
+        userId: userInfo.userId,
+        problemId: parseInt(this.problemId)
       }
+
+      this.$axios.post('/problem/getSubmissionByProblemId', req).then((res) => {
+        const resp = res.data
+        if (resp.code !== 0) {
+          // todo
+          return
+        }
+        if (resp.data === null || resp.data.length === 0) {
+          return
+        }
+        resp.data.forEach((item) => {
+          this.submissionData.push({
+            submissionId: item.submitId,
+            problemId: item.problemId,
+            problemName: item.problemName,
+            submitTime: '2021-10-10 10:10:10', // todo
+            status: item.status,
+            language: item.language,
+            runtime: (item.time / 1000000).toFixed(3) + 'ms',
+            memory: (item.memory / 1024 / 1024).toFixed(3) + 'MB',
+            code: item.code,
+          })
+        })
+      })
     }
   },
-  created() {
-    this.loadSubmissionData()
-  }
 }
 </script>
 
