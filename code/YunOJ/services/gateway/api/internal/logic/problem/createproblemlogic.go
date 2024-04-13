@@ -26,6 +26,12 @@ func NewCreateProblemLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cre
 
 func (l *CreateProblemLogic) CreateProblem(req *types.CreateProblemRequest) (resp *types.CreateProblemResponse, err error) {
 	resp = &types.CreateProblemResponse{}
+
+	userType := l.ctx.Value("user_type").(int64)
+	if userType != 1 {
+		resp.Code, resp.Message = 403, "Permission denied"
+		return resp, nil
+	}
 	res, err := l.svcCtx.ProblemRpc.CreateProblem(l.ctx, &problem.CreateProblemRequest{
 		Problem: &problem.Problem{
 			Title:       req.Title,

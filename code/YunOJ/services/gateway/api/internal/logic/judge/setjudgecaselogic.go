@@ -26,6 +26,12 @@ func NewSetJudgeCaseLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SetJ
 
 func (l *SetJudgeCaseLogic) SetJudgeCase(req *types.SetJudgeCaseRequest) (resp *types.SetJudgeCaseResponse, err error) {
 	resp = &types.SetJudgeCaseResponse{}
+
+	userType := l.ctx.Value("user_type").(int64)
+	if userType != 1 {
+		resp.Code, resp.Message = 403, "Permission denied"
+		return resp, nil
+	}
 	_, err = l.svcCtx.JudgeRpc.DeleteJudgeCaseByProblemId(l.ctx, &judge.DeleteJudgeCaseByProblemIdRequest{
 		ProblemId: req.ProblemId,
 	})

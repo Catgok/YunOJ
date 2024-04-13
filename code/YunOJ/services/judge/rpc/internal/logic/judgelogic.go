@@ -35,7 +35,7 @@ func (l *JudgeLogic) Judge(in *judge.JudgeRequest) (*judge.JudgeResponse, error)
 		Code:    0,
 		Message: "success",
 	}
-	// 1、调用 problem.rpc 服务 查询时间限制
+	// 1、调用 problem.rpc 服务 查询时空限制
 	res, err := l.svcCtx.ProblemRpc.GetProblemById(l.ctx, &problem.GetProblemByIdRequest{
 		ProblemId: in.ProblemId,
 	})
@@ -45,7 +45,7 @@ func (l *JudgeLogic) Judge(in *judge.JudgeRequest) (*judge.JudgeResponse, error)
 	}
 	timeLimit, memLimit := res.GetProblem().GetTimeLimit(), res.GetProblem().GetMemoryLimit()
 
-	// 2、获取input、output case, 先查库获取url,再oss获取内容
+	// 2、获取input、output case
 	paths, err := l.svcCtx.OssConfig.GetDirectoryFilesByProblemId(in.ProblemId)
 	if err != nil {
 		resp.Code, resp.Message = 6001, err.Error()

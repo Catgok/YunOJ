@@ -26,6 +26,12 @@ func NewDeleteProblemLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Del
 
 func (l *DeleteProblemLogic) DeleteProblem(req *types.DeleteProblemRequest) (resp *types.DeleteProblemResponse, err error) {
 	resp = &types.DeleteProblemResponse{}
+
+	userType := l.ctx.Value("user_type").(int64)
+	if userType != 1 {
+		resp.Code, resp.Message = 403, "Permission denied"
+		return resp, nil
+	}
 	res, err := l.svcCtx.ProblemRpc.DeleteProblem(l.ctx, &problem.DeleteProblemRequest{
 		ProblemId: req.ProblemId,
 	})

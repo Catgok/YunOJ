@@ -89,7 +89,7 @@
 <script>
 import {cpp} from '@codemirror/lang-cpp'
 import {autocompletion} from '@codemirror/autocomplete'
-import {autoTextarea} from "@/utils/utils";
+import {autoTextarea, getLoginStatus} from "@/utils/utils";
 
 import {basicLight} from '@uiw/codemirror-theme-basic/light'
 import {Codemirror} from 'vue-codemirror'
@@ -169,7 +169,7 @@ export default {
       })
     },
     runCode() {
-      if (this.$store.state.loginStatus === false) {
+      if (getLoginStatus() === false) {
         this.$router.push('/login')
         return
       }
@@ -188,13 +188,14 @@ export default {
       })
     },
     submitCode() {
-      if (this.$store.state.loginStatus === false) {
+      if (getLoginStatus() === false) {
         this.$router.push('/login')
         return
       }
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'))
       const req = {
         problemId: this.problemInfo.problemId,
-        userId: this.$store.state.userInfo.userId,
+        userId: userInfo.userId,
         code: this.inputCode,
         language: 1,
       }

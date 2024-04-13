@@ -48,3 +48,7 @@ export function autoTextarea(elem, extra, maxHeight) {
     addEvent('focus', change);
     change();
 }
+
+export function getLoginStatus() {
+    return localStorage.getItem('userInfo') !== null
+}

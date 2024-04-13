@@ -79,7 +79,8 @@ type LoginRequest struct {
 
 type LoginResponse struct {
 	BaseResponse
-	Data User `json:"data"`
+	Data   User   `json:"data"`
+	Utoken string `json:"utoken"`
 }
 
 type OnlineJudgeRequest struct {

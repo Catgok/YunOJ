@@ -5,7 +5,7 @@ import (
 	"YunOJ/services/gateway/api/internal/types"
 	"YunOJ/services/user/rpc/user"
 	"context"
-
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -54,6 +54,27 @@ func (l *LoginLogic) Login(req *types.LoginRequest) (resp *types.LoginResponse, 
 	}
 	resp.Code, resp.Message = res.GetCode(), res.GetMessage()
 	resp.Data = userInfo
-
+	resp.Utoken, err = l.generateUToken(&userInfo)
+	if err != nil {
+		resp.Code, resp.Message = 500, err.Error()
+		return resp, nil
+	}
 	return resp, nil
+}
+
+func (l *LoginLogic) generateUToken(user *types.User) (string, error) {
+	token := jwt.New(jwt.SigningMethodHS256)
+	claims := token.Claims.(jwt.MapClaims)
+	nowTime := jwt.TimeFunc()
+	claims["user_id"] = user.UserId
+	claims["username"] = user.Username
+	claims["user_type"] = user.UserType
+	claims["status"] = user.Status
+	claims["iat"] = nowTime.Unix()
+	claims["exp"] = nowTime.Unix() + l.svcCtx.Config.Auth.AccessExpire
+	signedToken, err := token.SignedString([]byte(l.svcCtx.Config.Auth.AccessSecret))
+	if err != nil {
+		return "", err
+	}
+	return signedToken, nil
 }

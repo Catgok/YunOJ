@@ -19,7 +19,7 @@ func main() {
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
 
-	time.Sleep(5 * time.Second)
+	time.Sleep(1 * time.Second)
 	//server := rest.MustNewServer(c.RestConf)
 	server := rest.MustNewServer(c.RestConf, rest.WithCors("*"))
 	defer server.Stop()

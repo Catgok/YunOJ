@@ -2,6 +2,10 @@ Name: User
 Host: 0.0.0.0
 Port: 8888
 
+Auth:
+  AccessSecret: 6B$)*Us(nvOWLx2C
+  AccessExpire: 3600
+
 UserRpc:
   Etcd:
     Hosts:

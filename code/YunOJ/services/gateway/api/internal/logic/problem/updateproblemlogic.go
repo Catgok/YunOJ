@@ -26,6 +26,12 @@ func NewUpdateProblemLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Upd
 
 func (l *UpdateProblemLogic) UpdateProblem(req *types.UpdateProblemRequest) (resp *types.UpdateProblemResponse, err error) {
 	resp = &types.UpdateProblemResponse{}
+
+	userType := l.ctx.Value("user_type").(int64)
+	if userType != 1 {
+		resp.Code, resp.Message = 403, "Permission denied"
+		return resp, nil
+	}
 	res, err := l.svcCtx.ProblemRpc.UpdateProblem(l.ctx, &problem.UpdateProblemRequest{
 		Problem: &problem.Problem{
 			ProblemId:   req.ProblemId,

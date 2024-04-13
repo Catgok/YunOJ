@@ -29,7 +29,8 @@ type (
 	}
 	LoginResponse {
 		BaseResponse
-		Data User `json:"data"`
+		Data   User   `json:"data"`
+		Utoken string `json:"utoken"`
 	}
 	RegisterRequest {
 		Username string `json:"username"`
@@ -150,8 +151,9 @@ type (
 )
 
 @server (
-	group:  problem
-	prefix: /v1/problem
+	group:      problem
+	prefix:     /v1/problem
+	middleware: AuthInterceptor
 )
 service Gateway {
 	@handler GetProblemById
@@ -203,8 +205,9 @@ type (
 )
 
 @server (
-	group:  judge
-	prefix: /v1/judge
+	group:      judge
+	prefix:     /v1/judge
+	middleware: AuthInterceptor
 )
 service Gateway {
 	@handler SetJudgeCase
