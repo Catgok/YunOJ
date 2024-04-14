@@ -1,0 +1,116 @@
+syntax = "proto3";
+
+package contest;
+
+option go_package = "./contest";
+
+message Contest {
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+  int64 startTime = 4;
+  int64 endTime = 5;
+}
+
+message SubmitAnswerRequest {
+  int64 contest_id = 1;
+  int64 user_id = 2;
+  int64 problem_id = 3;
+  string code = 4;
+  int64 language = 5;
+}
+
+message SubmitAnswerResponse {
+  int64 code = 1;
+  string message = 2;
+  int64 submit_id = 3;
+}
+
+message ContestRankInfo {
+  int64 user_id = 1;
+  int64 problem_id = 2;
+  int64 try_times = 3;
+  int64 first_pass_time = 4;
+  int64 penalty = 5;
+}
+message Problem {
+  int64 problem_id = 1;
+  string title = 2;
+}
+
+
+message CreateContestRequest {
+  Contest contest = 1;
+}
+message CreateContestResponse {
+  int64 code = 1;
+  string message = 2;
+  bool success = 3;
+}
+
+message UpdateContestRequest {
+  Contest contest = 1;
+}
+message UpdateContestResponse {
+  int64 code = 1;
+  string message = 2;
+  bool success = 3;
+}
+
+message GetContestListByPageRequest{
+  int64 pageNo = 1;
+  int64 pageSize = 2;
+}
+message GetContestListByPageResponse{
+  int64 code = 1;
+  string message = 2;
+  repeated Contest contests = 3;
+}
+
+message AddProblemToContestRequest {
+  int64 contestId = 1;
+  repeated int64 problemIds = 2;
+}
+message AddProblemToContestResponse {
+  int64 code = 1;
+  string message = 2;
+  bool success = 3;
+}
+
+message GetContestProblemsRequest{
+  int64 contestId = 1;
+}
+message GetContestProblemsResponse{
+  int64 code = 1;
+  string message = 2;
+  repeated Problem problems = 3;
+}
+
+message GetContestRankingRequest {
+  int64 contestId = 1;
+}
+message GetContestRankingResponse {
+  int64 code = 1;
+  string message = 2;
+  repeated ContestRankInfo rankInfo = 3;
+}
+
+message SignUpContestRequest{
+  int64 contestId = 1;
+  int64 userId = 2;
+}
+message SignUpContestResponse{
+  int64 code = 1;
+  string message = 2;
+  bool success = 3;
+}
+service ContestService {
+  rpc CreateContest(CreateContestRequest) returns (CreateContestResponse);
+  rpc UpdateContest(UpdateContestRequest) returns (UpdateContestResponse);
+  rpc GetContestListByPage(GetContestListByPageRequest) returns (GetContestListByPageResponse);
+  rpc AddProblemToContest(AddProblemToContestRequest) returns (AddProblemToContestResponse);
+  rpc GetContestProblems(GetContestProblemsRequest) returns (GetContestProblemsResponse);
+  rpc SubmitAnswer(SubmitAnswerRequest) returns (SubmitAnswerResponse);
+  rpc GetContestRanking(GetContestRankingRequest) returns (GetContestRankingResponse);
+  rpc SignUpContest(SignUpContestRequest) returns (SignUpContestResponse);
+}

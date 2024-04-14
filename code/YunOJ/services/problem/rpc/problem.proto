@@ -18,18 +18,29 @@ message Problem {
 message GetProblemByIdRequest {
   int64 problem_id = 1;
 }
-
 message GetProblemByIdResponse {
   int64 code = 1;
   string message = 2;
   Problem problem = 3;
 }
 
+message  ProblemTitleInfo{
+  int64 problem_ids = 1;
+  string title = 2;
+}
+message GetProblemTitleByIdsRequest{
+  repeated int64 problem_ids = 1;
+}
+message GetProblemTitleByIdsResponse{
+  int64 code = 1;
+  string message = 2;
+  repeated ProblemTitleInfo problem_title_infos = 3;
+}
+
 message GetProblemsByPageRequest {
   int64 page_number = 1;
   int64 page_size = 2;
 }
-
 message GetProblemsByPageResponse {
   int64 code = 1;
   string message = 2;
@@ -40,7 +51,6 @@ message GetProblemsByPageResponse {
 message CreateProblemRequest {
   Problem problem = 1;
 }
-
 message CreateProblemResponse {
   int64 code = 1;
   string message = 2;
@@ -50,7 +60,6 @@ message CreateProblemResponse {
 message UpdateProblemRequest {
   Problem problem = 1;
 }
-
 message UpdateProblemResponse {
   int64 code = 1;
   string message = 2;
@@ -60,7 +69,6 @@ message UpdateProblemResponse {
 message DeleteProblemRequest {
   int64 problem_id = 1;
 }
-
 message DeleteProblemResponse {
   int64 code = 1;
   string message = 2;
@@ -126,6 +134,7 @@ message GetSubmitByUserIdAndProblemIdResponse {
 
 service ProblemService {
   rpc GetProblemById(GetProblemByIdRequest) returns (GetProblemByIdResponse);
+  rpc GetProblemTitleByIds(GetProblemTitleByIdsRequest) returns (GetProblemTitleByIdsResponse);
   rpc GetProblemsByPage(GetProblemsByPageRequest) returns (GetProblemsByPageResponse);
   rpc CreateProblem(CreateProblemRequest) returns (CreateProblemResponse);
   rpc UpdateProblem(UpdateProblemRequest) returns (UpdateProblemResponse);

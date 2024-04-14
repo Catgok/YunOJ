@@ -41,15 +41,13 @@ type (
 	}
 
 	ContestUserInfo struct {
-		Id                 int64     `db:"id"`                   // 竞赛用户信息ID
-		UserId             int64     `db:"user_id"`              // 用户ID
-		ContestId          int64     `db:"contest_id"`           // 竞赛ID
-		JoinStatus         int64     `db:"join_status"`          // 用户参加竞赛的状态 0:未参加 1:已参加 2:已结束
-		ContestRank        int64     `db:"contest_rank"`         // 用户在竞赛中的排名
-		ContestPassCount   int64     `db:"contest_pass_count"`   // 用户在竞赛中通过的题目数
-		ContestPenaltyTime int64     `db:"contest_penalty_time"` // 用户在竞赛中的罚时
-		CreatedAt          time.Time `db:"created_at"`           // 记录创建时间
-		UpdatedAt          time.Time `db:"updated_at"`           // 记录更新时间
+		Id          int64     `db:"id"`           // 竞赛用户信息ID
+		UserId      int64     `db:"user_id"`      // 用户ID
+		ContestId   int64     `db:"contest_id"`   // 竞赛ID
+		JoinStatus  int64     `db:"join_status"`  // 用户参加竞赛的状态 0:未参加 1:已参加 2:已结束
+		ContestRank int64     `db:"contest_rank"` // 用户在竞赛中的排名
+		CreatedAt   time.Time `db:"created_at"`   // 记录创建时间
+		UpdatedAt   time.Time `db:"updated_at"`   // 记录更新时间
 	}
 )
 
@@ -116,8 +114,8 @@ func (m *defaultContestUserInfoModel) Insert(ctx context.Context, data *ContestU
 	contestUserInfoContestIdUserIdKey := fmt.Sprintf("%s%v:%v", cacheContestUserInfoContestIdUserIdPrefix, data.ContestId, data.UserId)
 	contestUserInfoIdKey := fmt.Sprintf("%s%v", cacheContestUserInfoIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?)", m.table, contestUserInfoRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.UserId, data.ContestId, data.JoinStatus, data.ContestRank, data.ContestPassCount, data.ContestPenaltyTime)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?)", m.table, contestUserInfoRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.UserId, data.ContestId, data.JoinStatus, data.ContestRank)
 	}, contestUserInfoContestIdUserIdKey, contestUserInfoIdKey)
 	return ret, err
 }
@@ -132,7 +130,7 @@ func (m *defaultContestUserInfoModel) Update(ctx context.Context, newData *Conte
 	contestUserInfoIdKey := fmt.Sprintf("%s%v", cacheContestUserInfoIdPrefix, data.Id)
 	_, err = m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, contestUserInfoRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, newData.UserId, newData.ContestId, newData.JoinStatus, newData.ContestRank, newData.ContestPassCount, newData.ContestPenaltyTime, newData.Id)
+		return conn.ExecCtx(ctx, query, newData.UserId, newData.ContestId, newData.JoinStatus, newData.ContestRank, newData.Id)
 	}, contestUserInfoContestIdUserIdKey, contestUserInfoIdKey)
 	return err
 }

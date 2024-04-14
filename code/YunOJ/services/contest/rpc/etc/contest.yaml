@@ -1,0 +1,30 @@
+Name: contest.rpc
+ListenOn: 0.0.0.0:9040
+Etcd:
+  Hosts:
+    - serverhost:12379
+  Key: contest.rpc
+
+ProblemRpc:
+  Etcd:
+    Hosts:
+      - serverhost:12379
+    Key: problem.rpc
+
+Mysql:
+  DataSource: root:mysql_root@tcp(serverhost:13306)/YunOj?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+
+CacheRedis:
+  - Host: serverhost:16379
+    Type: node
+    Pass: redis1234
+
+SubmitChangeConsumerConf:
+  Name: submitChangeConsumer
+  Brokers:
+    - serverhost:9092
+  Group: ContestSubmitChangeNoticeConsumer
+  Topic: submit-change-notice
+  Offset: first
+  Consumers: 8
+  Processors: 8

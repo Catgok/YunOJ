@@ -41,13 +41,13 @@ type (
 	}
 
 	ContestInfo struct {
-		ContestId   int64          `db:"contest_id"`   // 竞赛ID
-		ContestName string         `db:"contest_name"` // 竞赛名称
-		Description sql.NullString `db:"description"`  // 竞赛描述
-		StartTime   time.Time      `db:"start_time"`   // 竞赛开始时间
-		EndTime     sql.NullTime   `db:"end_time"`     // 竞赛结束时间
-		CreateTime  time.Time      `db:"create_time"`  // 创建时间
-		UpdateTime  time.Time      `db:"update_time"`  // 更新时间
+		ContestId   int64     `db:"contest_id"`   // 竞赛ID
+		ContestName string    `db:"contest_name"` // 竞赛名称
+		Description string    `db:"description"`  // 竞赛描述
+		StartTime   time.Time `db:"start_time"`   // 竞赛开始时间
+		EndTime     time.Time `db:"end_time"`     // 竞赛结束时间
+		CreateTime  time.Time `db:"create_time"`  // 创建时间
+		UpdateTime  time.Time `db:"update_time"`  // 更新时间
 	}
 )
 

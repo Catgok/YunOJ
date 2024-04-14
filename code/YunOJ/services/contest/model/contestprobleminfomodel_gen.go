@@ -24,15 +24,15 @@ var (
 
 	cacheContestProblemInfoIdPrefix                 = "cache:contestProblemInfo:id:"
 	cacheContestProblemInfoContestIdProblemIdPrefix = "cache:contestProblemInfo:contestId:problemId:"
-	cacheContestProblemInfoProblemIdPrefix          = "cache:contestProblemInfo:problemId:"
 )
 
 type (
 	contestProblemInfoModel interface {
 		Insert(ctx context.Context, data *ContestProblemInfo) (sql.Result, error)
+		InsertBatch(ctx context.Context, data []*ContestProblemInfo) (sql.Result, error)
 		FindOne(ctx context.Context, id int64) (*ContestProblemInfo, error)
 		FindOneByContestIdProblemId(ctx context.Context, contestId int64, problemId int64) (*ContestProblemInfo, error)
-		FindOneByProblemId(ctx context.Context, problemId int64) (*ContestProblemInfo, error)
+		FindByContestId(ctx context.Context, contestId int64) ([]int64, error)
 		Update(ctx context.Context, data *ContestProblemInfo) error
 		Delete(ctx context.Context, id int64) error
 	}
@@ -44,8 +44,8 @@ type (
 
 	ContestProblemInfo struct {
 		Id        int64     `db:"id"`         // ID
-		ProblemId int64     `db:"problem_id"` // 题目ID
 		ContestId int64     `db:"contest_id"` // 竞赛ID
+		ProblemId int64     `db:"problem_id"` // 题目ID
 		CreatedAt time.Time `db:"created_at"` // 记录创建时间
 		UpdatedAt time.Time `db:"updated_at"` // 记录更新时间
 	}
@@ -66,11 +66,10 @@ func (m *defaultContestProblemInfoModel) Delete(ctx context.Context, id int64) e
 
 	contestProblemInfoContestIdProblemIdKey := fmt.Sprintf("%s%v:%v", cacheContestProblemInfoContestIdProblemIdPrefix, data.ContestId, data.ProblemId)
 	contestProblemInfoIdKey := fmt.Sprintf("%s%v", cacheContestProblemInfoIdPrefix, id)
-	contestProblemInfoProblemIdKey := fmt.Sprintf("%s%v", cacheContestProblemInfoProblemIdPrefix, data.ProblemId)
 	_, err = m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
 		return conn.ExecCtx(ctx, query, id)
-	}, contestProblemInfoContestIdProblemIdKey, contestProblemInfoIdKey, contestProblemInfoProblemIdKey)
+	}, contestProblemInfoContestIdProblemIdKey, contestProblemInfoIdKey)
 	return err
 }
 
@@ -84,6 +83,20 @@ func (m *defaultContestProblemInfoModel) FindOne(ctx context.Context, id int64) 
 	switch err {
 	case nil:
 		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
+
+func (m *defaultContestProblemInfoModel) FindByContestId(ctx context.Context, contestId int64) ([]int64, error) {
+	var resp []int64
+	query := fmt.Sprintf("select `problem_id` from %s where `contest_id` = ?", m.table)
+	err := m.QueryRowNoCacheCtx(ctx, &resp, query, contestId)
+	switch err {
+	case nil:
+		return resp, nil
 	case sqlc.ErrNotFound:
 		return nil, ErrNotFound
 	default:
@@ -111,35 +124,28 @@ func (m *defaultContestProblemInfoModel) FindOneByContestIdProblemId(ctx context
 	}
 }
 
-func (m *defaultContestProblemInfoModel) FindOneByProblemId(ctx context.Context, problemId int64) (*ContestProblemInfo, error) {
-	contestProblemInfoProblemIdKey := fmt.Sprintf("%s%v", cacheContestProblemInfoProblemIdPrefix, problemId)
-	var resp ContestProblemInfo
-	err := m.QueryRowIndexCtx(ctx, &resp, contestProblemInfoProblemIdKey, m.formatPrimary, func(ctx context.Context, conn sqlx.SqlConn, v any) (i any, e error) {
-		query := fmt.Sprintf("select %s from %s where `problem_id` = ? limit 1", contestProblemInfoRows, m.table)
-		if err := conn.QueryRowCtx(ctx, &resp, query, problemId); err != nil {
-			return nil, err
-		}
-		return resp.Id, nil
-	}, m.queryPrimary)
-	switch err {
-	case nil:
-		return &resp, nil
-	case sqlc.ErrNotFound:
-		return nil, ErrNotFound
-	default:
-		return nil, err
-	}
-}
-
 func (m *defaultContestProblemInfoModel) Insert(ctx context.Context, data *ContestProblemInfo) (sql.Result, error) {
 	contestProblemInfoContestIdProblemIdKey := fmt.Sprintf("%s%v:%v", cacheContestProblemInfoContestIdProblemIdPrefix, data.ContestId, data.ProblemId)
 	contestProblemInfoIdKey := fmt.Sprintf("%s%v", cacheContestProblemInfoIdPrefix, data.Id)
-	contestProblemInfoProblemIdKey := fmt.Sprintf("%s%v", cacheContestProblemInfoProblemIdPrefix, data.ProblemId)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("insert into %s (%s) values (?, ?)", m.table, contestProblemInfoRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.ProblemId, data.ContestId)
-	}, contestProblemInfoContestIdProblemIdKey, contestProblemInfoIdKey, contestProblemInfoProblemIdKey)
+		return conn.ExecCtx(ctx, query, data.ContestId, data.ProblemId)
+	}, contestProblemInfoContestIdProblemIdKey, contestProblemInfoIdKey)
 	return ret, err
+}
+
+func (m *defaultContestProblemInfoModel) InsertBatch(ctx context.Context, data []*ContestProblemInfo) (sql.Result, error) {
+	if len(data) == 0 {
+		return nil, nil
+	}
+	query := fmt.Sprintf("insert into %s (%s) values ", m.table, contestProblemInfoRowsExpectAutoSet)
+	vals := []interface{}{}
+	for _, item := range data {
+		vals = append(vals, item.ProblemId, item.ContestId)
+		query += "(?, ?),"
+	}
+	query = query[0 : len(query)-1]
+	return m.ExecNoCache(query, vals...)
 }
 
 func (m *defaultContestProblemInfoModel) Update(ctx context.Context, newData *ContestProblemInfo) error {
@@ -150,11 +156,10 @@ func (m *defaultContestProblemInfoModel) Update(ctx context.Context, newData *Co
 
 	contestProblemInfoContestIdProblemIdKey := fmt.Sprintf("%s%v:%v", cacheContestProblemInfoContestIdProblemIdPrefix, data.ContestId, data.ProblemId)
 	contestProblemInfoIdKey := fmt.Sprintf("%s%v", cacheContestProblemInfoIdPrefix, data.Id)
-	contestProblemInfoProblemIdKey := fmt.Sprintf("%s%v", cacheContestProblemInfoProblemIdPrefix, data.ProblemId)
 	_, err = m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, contestProblemInfoRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, newData.ProblemId, newData.ContestId, newData.Id)
-	}, contestProblemInfoContestIdProblemIdKey, contestProblemInfoIdKey, contestProblemInfoProblemIdKey)
+		return conn.ExecCtx(ctx, query, newData.ContestId, newData.ProblemId, newData.Id)
+	}, contestProblemInfoContestIdProblemIdKey, contestProblemInfoIdKey)
 	return err
 }
 

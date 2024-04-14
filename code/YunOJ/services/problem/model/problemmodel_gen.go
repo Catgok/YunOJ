@@ -32,6 +32,7 @@ type (
 		Insert(ctx context.Context, data *Problem) (sql.Result, error)
 		FindOne(ctx context.Context, problemId int64) (*Problem, error)
 		FindOneByTitle(ctx context.Context, title string) (*Problem, error)
+		FindTitlesByIds(ctx context.Context, ids []int64) ([]Title, error)
 		Update(ctx context.Context, data *Problem) error
 		Delete(ctx context.Context, problemId int64) error
 		FindByPage(ctx context.Context, offset, limit int64) ([]Problem, error)
@@ -56,6 +57,10 @@ type (
 		Solution    string    `db:"solution"`     // 题目解析
 		CreateTime  time.Time `db:"create_time"`  // 创建时间
 		UpdateTime  time.Time `db:"update_time"`  // 更新时间
+	}
+	Title struct {
+		ProblemId int64  `db:"problem_id"`
+		Title     string `db:"title"`
 	}
 )
 
@@ -91,6 +96,24 @@ func (m *defaultProblemModel) FindOne(ctx context.Context, problemId int64) (*Pr
 	switch err {
 	case nil:
 		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
+
+func (m *defaultProblemModel) FindTitlesByIds(ctx context.Context, ids []int64) ([]Title, error) {
+	var resp []Title
+	query := fmt.Sprintf("select `id, title` from %s where `problem_id` in (?)", m.table)
+	vals := []interface{}{}
+	for _, item := range ids {
+		vals = append(vals, item)
+	}
+	err := m.QueryRowNoCacheCtx(ctx, &resp, query, vals)
+	switch err {
+	case nil:
+		return resp, nil
 	case sqlc.ErrNotFound:
 		return nil, ErrNotFound
 	default:

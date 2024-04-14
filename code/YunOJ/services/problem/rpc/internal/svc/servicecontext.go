@@ -20,7 +20,7 @@ type ServiceContext struct {
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	conn := sqlx.NewMysql(c.Mysql.DataSource)
-	expiryConf := cache.WithExpiry(time.Second)
+	expiryConf := cache.WithExpiry(60 * time.Second)
 	return &ServiceContext{
 		Config:              c,
 		JudgePusher:         kq.NewPusher(c.JudgePusherConf.Brokers, c.JudgePusherConf.Topic),
