@@ -1,10 +1,10 @@
 package logic
 
 import (
-	"context"
-
+	"YunOJ/services/contest/model"
 	"YunOJ/services/contest/rpc/contest"
 	"YunOJ/services/contest/rpc/internal/svc"
+	"context"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -24,7 +24,20 @@ func NewSignUpContestLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Sig
 }
 
 func (l *SignUpContestLogic) SignUpContest(in *contest.SignUpContestRequest) (*contest.SignUpContestResponse, error) {
-	// todo: add your logic here and delete this line
-
-	return &contest.SignUpContestResponse{}, nil
+	resp := &contest.SignUpContestResponse{
+		Code:    0,
+		Message: "success",
+	}
+	data := &model.ContestUserInfo{
+		UserId:     in.GetUserId(),
+		ContestId:  in.GetContestId(),
+		JoinStatus: 1,
+	}
+	_, err := l.svcCtx.ContestUserInfoModel.Insert(l.ctx, data)
+	if err != nil {
+		resp.Code, resp.Message = 5003, err.Error()
+		return resp, nil
+	}
+	resp.Success = true
+	return resp, nil
 }

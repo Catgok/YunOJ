@@ -37,14 +37,9 @@ func (s *ContestServiceServer) GetContestListByPage(ctx context.Context, in *con
 	return l.GetContestListByPage(in)
 }
 
-func (s *ContestServiceServer) AddProblemToContest(ctx context.Context, in *contest.AddProblemToContestRequest) (*contest.AddProblemToContestResponse, error) {
-	l := logic.NewAddProblemToContestLogic(ctx, s.svcCtx)
-	return l.AddProblemToContest(in)
-}
-
-func (s *ContestServiceServer) GetContestProblems(ctx context.Context, in *contest.GetContestProblemsRequest) (*contest.GetContestProblemsResponse, error) {
-	l := logic.NewGetContestProblemsLogic(ctx, s.svcCtx)
-	return l.GetContestProblems(in)
+func (s *ContestServiceServer) SignUpContest(ctx context.Context, in *contest.SignUpContestRequest) (*contest.SignUpContestResponse, error) {
+	l := logic.NewSignUpContestLogic(ctx, s.svcCtx)
+	return l.SignUpContest(in)
 }
 
 func (s *ContestServiceServer) SubmitAnswer(ctx context.Context, in *contest.SubmitAnswerRequest) (*contest.SubmitAnswerResponse, error) {
@@ -57,7 +52,12 @@ func (s *ContestServiceServer) GetContestRanking(ctx context.Context, in *contes
 	return l.GetContestRanking(in)
 }
 
-func (s *ContestServiceServer) SignUpContest(ctx context.Context, in *contest.SignUpContestRequest) (*contest.SignUpContestResponse, error) {
-	l := logic.NewSignUpContestLogic(ctx, s.svcCtx)
-	return l.SignUpContest(in)
+func (s *ContestServiceServer) AddProblemToContest(ctx context.Context, in *contest.AddProblemToContestRequest) (*contest.AddProblemToContestResponse, error) {
+	l := logic.NewAddProblemToContestLogic(ctx, s.svcCtx)
+	return l.AddProblemToContest(in)
+}
+
+func (s *ContestServiceServer) GetContestProblems(ctx context.Context, in *contest.GetContestProblemsRequest) (*contest.GetContestProblemsResponse, error) {
+	l := logic.NewGetContestProblemsLogic(ctx, s.svcCtx)
+	return l.GetContestProblems(in)
 }

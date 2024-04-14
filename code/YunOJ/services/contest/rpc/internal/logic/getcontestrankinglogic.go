@@ -1,10 +1,10 @@
 package logic
 
 import (
-	"context"
-
 	"YunOJ/services/contest/rpc/contest"
 	"YunOJ/services/contest/rpc/internal/svc"
+	"context"
+	"database/sql"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -24,7 +24,32 @@ func NewGetContestRankingLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 }
 
 func (l *GetContestRankingLogic) GetContestRanking(in *contest.GetContestRankingRequest) (*contest.GetContestRankingResponse, error) {
-	// todo: add your logic here and delete this line
+	resp := &contest.GetContestRankingResponse{
+		Code:    0,
+		Message: "success",
+	}
+	data, err := l.svcCtx.ContestRankInfoModel.FindByContestId(l.ctx, in.GetContestId())
+	if err != nil {
+		resp.Code, resp.Message = 5003, err.Error()
+		return resp, nil
+	}
+	var rankInfoList []*contest.ContestRankInfo
+	for _, v := range data {
+		rankInfoList = append(rankInfoList, &contest.ContestRankInfo{
+			UserId:        v.UserId,
+			ProblemId:     v.ProblemId,
+			TryTimes:      v.TryTimes,
+			FirstPassTime: timeToTimestamp(v.FirstPassTime),
+		})
+	}
+	resp.RankInfo = rankInfoList
+	return resp, nil
+}
 
-	return &contest.GetContestRankingResponse{}, nil
+func timeToTimestamp(v sql.NullTime) int64 {
+	if v.Valid {
+		tm := v.Time
+		return tm.Unix()
+	}
+	return 0
 }

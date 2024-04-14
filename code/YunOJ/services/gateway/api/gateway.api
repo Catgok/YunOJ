@@ -125,7 +125,6 @@ type (
 	}
 	SubmitRequest {
 		ProblemId int64  `json:"problemId"`
-		UserId    int64  `json:"userId"`
 		Code      string `json:"code"`
 		Language  int64  `json:"language"`
 	}
@@ -141,7 +140,6 @@ type (
 		Data Submit `json:"data"`
 	}
 	GetSubmissionByProblemIdRequest {
-		UserId    int64 `json:"userId"`
 		ProblemId int64 `json:"problemId"`
 	}
 	GetSubmissionByProblemIdResponse {

@@ -20,5 +20,6 @@ func NewSubmitChange(ctx context.Context, svcCtx *svc.ServiceContext) *SubmitCha
 
 func (l *SubmitChange) Consume(key, val string) error {
 	logx.Infof("Consume key :%s , val :%s", key, val)
+	// todo 消费逻辑
 	return nil
 }

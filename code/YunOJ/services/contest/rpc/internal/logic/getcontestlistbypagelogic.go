@@ -24,7 +24,32 @@ func NewGetContestListByPageLogic(ctx context.Context, svcCtx *svc.ServiceContex
 }
 
 func (l *GetContestListByPageLogic) GetContestListByPage(in *contest.GetContestListByPageRequest) (*contest.GetContestListByPageResponse, error) {
-	// todo: add your logic here and delete this line
+	resp := &contest.GetContestListByPageResponse{
+		Code:    0,
+		Message: "success",
+	}
+	total, err := l.svcCtx.ContestInfoModel.Count(l.ctx)
+	if err != nil {
+		resp.Code, resp.Message = 5003, err.Error()
+		return resp, nil
+	}
+	resp.Total = total
 
-	return &contest.GetContestListByPageResponse{}, nil
+	limit, offset := in.PageSize, (in.PageNo-1)*in.PageSize
+	contests, err := l.svcCtx.ContestInfoModel.FindByPage(l.ctx, offset, limit)
+	if err != nil {
+		resp.Code, resp.Message = 5003, err.Error()
+		return resp, nil
+	}
+	resp.Contests = []*contest.Contest{}
+	for _, c := range contests {
+		resp.Contests = append(resp.Contests, &contest.Contest{
+			Id:          c.ContestId,
+			Name:        c.ContestName,
+			Description: c.Description,
+			StartTime:   c.StartTime.Unix(),
+			EndTime:     c.EndTime.Unix(),
+		})
+	}
+	return resp, nil
 }

@@ -49,7 +49,6 @@ type GetProblemsByPageResponse struct {
 }
 
 type GetSubmissionByProblemIdRequest struct {
-	UserId    int64 `json:"userId"`
 	ProblemId int64 `json:"problemId"`
 }
 
@@ -139,7 +138,6 @@ type Submit struct {
 
 type SubmitRequest struct {
 	ProblemId int64  `json:"problemId"`
-	UserId    int64  `json:"userId"`
 	Code      string `json:"code"`
 	Language  int64  `json:"language"`
 }

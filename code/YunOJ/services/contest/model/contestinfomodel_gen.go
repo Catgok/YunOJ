@@ -24,6 +24,7 @@ var (
 
 	cacheContestInfoContestIdPrefix   = "cache:contestInfo:contestId:"
 	cacheContestInfoContestNamePrefix = "cache:contestInfo:contestName:"
+	cacheContestInfoPagePrefix        = "cache:contestInfo:page:"
 )
 
 type (
@@ -33,6 +34,8 @@ type (
 		FindOneByContestName(ctx context.Context, contestName string) (*ContestInfo, error)
 		Update(ctx context.Context, data *ContestInfo) error
 		Delete(ctx context.Context, contestId int64) error
+		FindByPage(ctx context.Context, offset, limit int64) ([]ContestInfo, error)
+		Count(ctx context.Context) (int64, error)
 	}
 
 	defaultContestInfoModel struct {
@@ -108,6 +111,30 @@ func (m *defaultContestInfoModel) FindOneByContestName(ctx context.Context, cont
 	default:
 		return nil, err
 	}
+}
+
+func (m *defaultContestInfoModel) FindByPage(ctx context.Context, offset, limit int64) ([]ContestInfo, error) {
+	contestInfoPageKey := fmt.Sprintf("%s%v.%v", cacheContestInfoPagePrefix, offset, limit)
+	var resp []ContestInfo
+	err := m.QueryRowCtx(ctx, &resp, contestInfoPageKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
+		query := fmt.Sprintf("select %s from %s order by `contest_id` LIMIT ? OFFSET ?", contestInfoRows, m.table)
+		return conn.QueryRowsCtx(ctx, v, query, limit, offset)
+	})
+	switch err {
+	case nil:
+		return resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
+
+func (m *defaultContestInfoModel) Count(ctx context.Context) (int64, error) {
+	var count int64
+	query := fmt.Sprintf("select count(*) from %s ", m.table)
+	err := m.QueryRowNoCache(&count, query)
+	return count, err
 }
 
 func (m *defaultContestInfoModel) Insert(ctx context.Context, data *ContestInfo) (sql.Result, error) {

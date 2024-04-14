@@ -26,9 +26,11 @@ func (m *AuthInterceptor) Handle(next http.HandlerFunc) http.HandlerFunc {
 		if !ok || !token.Valid {
 			http.Error(w, "Invalid or missing utoken", http.StatusUnauthorized)
 		}
-		var userType int64
-		userType = int64(claims["user_type"].(float64))
+
+		var userType, userId int64
+		userType, userId = int64(claims["user_type"].(float64)), int64(claims["user_id"].(float64))
 		ctx := context.WithValue(r.Context(), "user_type", userType)
+		ctx = context.WithValue(ctx, "user_id", userId)
 		next(w, r.WithContext(ctx))
 	}
 }

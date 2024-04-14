@@ -31,7 +31,6 @@ message ContestRankInfo {
   int64 problem_id = 2;
   int64 try_times = 3;
   int64 first_pass_time = 4;
-  int64 penalty = 5;
 }
 message Problem {
   int64 problem_id = 1;
@@ -57,14 +56,15 @@ message UpdateContestResponse {
   bool success = 3;
 }
 
-message GetContestListByPageRequest{
+message GetContestListByPageRequest {
   int64 pageNo = 1;
   int64 pageSize = 2;
 }
-message GetContestListByPageResponse{
+message GetContestListByPageResponse {
   int64 code = 1;
   string message = 2;
-  repeated Contest contests = 3;
+  int64 total = 3;
+  repeated Contest contests = 4;
 }
 
 message AddProblemToContestRequest {
@@ -108,9 +108,11 @@ service ContestService {
   rpc CreateContest(CreateContestRequest) returns (CreateContestResponse);
   rpc UpdateContest(UpdateContestRequest) returns (UpdateContestResponse);
   rpc GetContestListByPage(GetContestListByPageRequest) returns (GetContestListByPageResponse);
-  rpc AddProblemToContest(AddProblemToContestRequest) returns (AddProblemToContestResponse);
-  rpc GetContestProblems(GetContestProblemsRequest) returns (GetContestProblemsResponse);
+
+  rpc SignUpContest(SignUpContestRequest) returns (SignUpContestResponse);
   rpc SubmitAnswer(SubmitAnswerRequest) returns (SubmitAnswerResponse);
   rpc GetContestRanking(GetContestRankingRequest) returns (GetContestRankingResponse);
-  rpc SignUpContest(SignUpContestRequest) returns (SignUpContestResponse);
+
+  rpc AddProblemToContest(AddProblemToContestRequest) returns (AddProblemToContestResponse);
+  rpc GetContestProblems(GetContestProblemsRequest) returns (GetContestProblemsResponse);
 }

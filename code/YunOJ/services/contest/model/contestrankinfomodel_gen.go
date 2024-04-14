@@ -24,12 +24,14 @@ var (
 
 	cacheContestRankInfoIdPrefix                       = "cache:contestRankInfo:id:"
 	cacheContestRankInfoContestIdUserIdProblemIdPrefix = "cache:contestRankInfo:contestId:userId:problemId:"
+	cacheContestRankInfoContestIdPrefix                = "cache:contestRankInfo:contestId:userId:problemId:"
 )
 
 type (
 	contestRankInfoModel interface {
 		Insert(ctx context.Context, data *ContestRankInfo) (sql.Result, error)
 		FindOne(ctx context.Context, id int64) (*ContestRankInfo, error)
+		FindByContestId(ctx context.Context, contestId int64) ([]ContestRankInfo, error)
 		FindOneByContestIdUserIdProblemId(ctx context.Context, contestId int64, userId int64, problemId int64) (*ContestRankInfo, error)
 		Update(ctx context.Context, data *ContestRankInfo) error
 		Delete(ctx context.Context, id int64) error
@@ -92,6 +94,23 @@ func (m *defaultContestRankInfoModel) FindOne(ctx context.Context, id int64) (*C
 	}
 }
 
+func (m *defaultContestRankInfoModel) FindByContestId(ctx context.Context, contestId int64) ([]ContestRankInfo, error) {
+	contestRankInfoContestIdKey := fmt.Sprintf("%s%v", cacheContestInfoContestIdPrefix, contestId)
+	var resp []ContestRankInfo
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, contestRankInfoContestIdKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
+		query := fmt.Sprintf("select %s from %s where `contest_id` = ? limit 1", contestRankInfoRows, m.table)
+		return conn.QueryRowCtx(ctx, v, query, contestId)
+	})
+	switch err {
+	case nil:
+		return resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
+
 func (m *defaultContestRankInfoModel) FindOneByContestIdUserIdProblemId(ctx context.Context, contestId int64, userId int64, problemId int64) (*ContestRankInfo, error) {
 	contestRankInfoContestIdUserIdProblemIdKey := fmt.Sprintf("%s%v:%v:%v", cacheContestRankInfoContestIdUserIdProblemIdPrefix, contestId, userId, problemId)
 	var resp ContestRankInfo
@@ -116,7 +135,7 @@ func (m *defaultContestRankInfoModel) Insert(ctx context.Context, data *ContestR
 	contestRankInfoContestIdUserIdProblemIdKey := fmt.Sprintf("%s%v:%v:%v", cacheContestRankInfoContestIdUserIdProblemIdPrefix, data.ContestId, data.UserId, data.ProblemId)
 	contestRankInfoIdKey := fmt.Sprintf("%s%v", cacheContestRankInfoIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?)", m.table, contestRankInfoRowsExpectAutoSet)
+		query := fmt.Sprintf("insert in %s (%s) values (?, ?, ?, ?, ?, ?)", m.table, contestRankInfoRowsExpectAutoSet)
 		return conn.ExecCtx(ctx, query, data.ContestId, data.UserId, data.ProblemId, data.TryTimes, data.IsPass, data.FirstPassTime)
 	}, contestRankInfoContestIdUserIdProblemIdKey, contestRankInfoIdKey)
 	return ret, err

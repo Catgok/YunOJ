@@ -22,11 +22,11 @@ const (
 	ContestService_CreateContest_FullMethodName        = "/contest.ContestService/CreateContest"
 	ContestService_UpdateContest_FullMethodName        = "/contest.ContestService/UpdateContest"
 	ContestService_GetContestListByPage_FullMethodName = "/contest.ContestService/GetContestListByPage"
-	ContestService_AddProblemToContest_FullMethodName  = "/contest.ContestService/AddProblemToContest"
-	ContestService_GetContestProblems_FullMethodName   = "/contest.ContestService/GetContestProblems"
+	ContestService_SignUpContest_FullMethodName        = "/contest.ContestService/SignUpContest"
 	ContestService_SubmitAnswer_FullMethodName         = "/contest.ContestService/SubmitAnswer"
 	ContestService_GetContestRanking_FullMethodName    = "/contest.ContestService/GetContestRanking"
-	ContestService_SignUpContest_FullMethodName        = "/contest.ContestService/SignUpContest"
+	ContestService_AddProblemToContest_FullMethodName  = "/contest.ContestService/AddProblemToContest"
+	ContestService_GetContestProblems_FullMethodName   = "/contest.ContestService/GetContestProblems"
 )
 
 // ContestServiceClient is the client API for ContestService service.
@@ -36,11 +36,11 @@ type ContestServiceClient interface {
 	CreateContest(ctx context.Context, in *CreateContestRequest, opts ...grpc.CallOption) (*CreateContestResponse, error)
 	UpdateContest(ctx context.Context, in *UpdateContestRequest, opts ...grpc.CallOption) (*UpdateContestResponse, error)
 	GetContestListByPage(ctx context.Context, in *GetContestListByPageRequest, opts ...grpc.CallOption) (*GetContestListByPageResponse, error)
-	AddProblemToContest(ctx context.Context, in *AddProblemToContestRequest, opts ...grpc.CallOption) (*AddProblemToContestResponse, error)
-	GetContestProblems(ctx context.Context, in *GetContestProblemsRequest, opts ...grpc.CallOption) (*GetContestProblemsResponse, error)
+	SignUpContest(ctx context.Context, in *SignUpContestRequest, opts ...grpc.CallOption) (*SignUpContestResponse, error)
 	SubmitAnswer(ctx context.Context, in *SubmitAnswerRequest, opts ...grpc.CallOption) (*SubmitAnswerResponse, error)
 	GetContestRanking(ctx context.Context, in *GetContestRankingRequest, opts ...grpc.CallOption) (*GetContestRankingResponse, error)
-	SignUpContest(ctx context.Context, in *SignUpContestRequest, opts ...grpc.CallOption) (*SignUpContestResponse, error)
+	AddProblemToContest(ctx context.Context, in *AddProblemToContestRequest, opts ...grpc.CallOption) (*AddProblemToContestResponse, error)
+	GetContestProblems(ctx context.Context, in *GetContestProblemsRequest, opts ...grpc.CallOption) (*GetContestProblemsResponse, error)
 }
 
 type contestServiceClient struct {
@@ -78,18 +78,9 @@ func (c *contestServiceClient) GetContestListByPage(ctx context.Context, in *Get
 	return out, nil
 }
 
-func (c *contestServiceClient) AddProblemToContest(ctx context.Context, in *AddProblemToContestRequest, opts ...grpc.CallOption) (*AddProblemToContestResponse, error) {
-	out := new(AddProblemToContestResponse)
-	err := c.cc.Invoke(ctx, ContestService_AddProblemToContest_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *contestServiceClient) GetContestProblems(ctx context.Context, in *GetContestProblemsRequest, opts ...grpc.CallOption) (*GetContestProblemsResponse, error) {
-	out := new(GetContestProblemsResponse)
-	err := c.cc.Invoke(ctx, ContestService_GetContestProblems_FullMethodName, in, out, opts...)
+func (c *contestServiceClient) SignUpContest(ctx context.Context, in *SignUpContestRequest, opts ...grpc.CallOption) (*SignUpContestResponse, error) {
+	out := new(SignUpContestResponse)
+	err := c.cc.Invoke(ctx, ContestService_SignUpContest_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -114,9 +105,18 @@ func (c *contestServiceClient) GetContestRanking(ctx context.Context, in *GetCon
 	return out, nil
 }
 
-func (c *contestServiceClient) SignUpContest(ctx context.Context, in *SignUpContestRequest, opts ...grpc.CallOption) (*SignUpContestResponse, error) {
-	out := new(SignUpContestResponse)
-	err := c.cc.Invoke(ctx, ContestService_SignUpContest_FullMethodName, in, out, opts...)
+func (c *contestServiceClient) AddProblemToContest(ctx context.Context, in *AddProblemToContestRequest, opts ...grpc.CallOption) (*AddProblemToContestResponse, error) {
+	out := new(AddProblemToContestResponse)
+	err := c.cc.Invoke(ctx, ContestService_AddProblemToContest_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *contestServiceClient) GetContestProblems(ctx context.Context, in *GetContestProblemsRequest, opts ...grpc.CallOption) (*GetContestProblemsResponse, error) {
+	out := new(GetContestProblemsResponse)
+	err := c.cc.Invoke(ctx, ContestService_GetContestProblems_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -130,11 +130,11 @@ type ContestServiceServer interface {
 	CreateContest(context.Context, *CreateContestRequest) (*CreateContestResponse, error)
 	UpdateContest(context.Context, *UpdateContestRequest) (*UpdateContestResponse, error)
 	GetContestListByPage(context.Context, *GetContestListByPageRequest) (*GetContestListByPageResponse, error)
-	AddProblemToContest(context.Context, *AddProblemToContestRequest) (*AddProblemToContestResponse, error)
-	GetContestProblems(context.Context, *GetContestProblemsRequest) (*GetContestProblemsResponse, error)
+	SignUpContest(context.Context, *SignUpContestRequest) (*SignUpContestResponse, error)
 	SubmitAnswer(context.Context, *SubmitAnswerRequest) (*SubmitAnswerResponse, error)
 	GetContestRanking(context.Context, *GetContestRankingRequest) (*GetContestRankingResponse, error)
-	SignUpContest(context.Context, *SignUpContestRequest) (*SignUpContestResponse, error)
+	AddProblemToContest(context.Context, *AddProblemToContestRequest) (*AddProblemToContestResponse, error)
+	GetContestProblems(context.Context, *GetContestProblemsRequest) (*GetContestProblemsResponse, error)
 	mustEmbedUnimplementedContestServiceServer()
 }
 
@@ -151,11 +151,8 @@ func (UnimplementedContestServiceServer) UpdateContest(context.Context, *UpdateC
 func (UnimplementedContestServiceServer) GetContestListByPage(context.Context, *GetContestListByPageRequest) (*GetContestListByPageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetContestListByPage not implemented")
 }
-func (UnimplementedContestServiceServer) AddProblemToContest(context.Context, *AddProblemToContestRequest) (*AddProblemToContestResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddProblemToContest not implemented")
-}
-func (UnimplementedContestServiceServer) GetContestProblems(context.Context, *GetContestProblemsRequest) (*GetContestProblemsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetContestProblems not implemented")
+func (UnimplementedContestServiceServer) SignUpContest(context.Context, *SignUpContestRequest) (*SignUpContestResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SignUpContest not implemented")
 }
 func (UnimplementedContestServiceServer) SubmitAnswer(context.Context, *SubmitAnswerRequest) (*SubmitAnswerResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SubmitAnswer not implemented")
@@ -163,8 +160,11 @@ func (UnimplementedContestServiceServer) SubmitAnswer(context.Context, *SubmitAn
 func (UnimplementedContestServiceServer) GetContestRanking(context.Context, *GetContestRankingRequest) (*GetContestRankingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetContestRanking not implemented")
 }
-func (UnimplementedContestServiceServer) SignUpContest(context.Context, *SignUpContestRequest) (*SignUpContestResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SignUpContest not implemented")
+func (UnimplementedContestServiceServer) AddProblemToContest(context.Context, *AddProblemToContestRequest) (*AddProblemToContestResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddProblemToContest not implemented")
+}
+func (UnimplementedContestServiceServer) GetContestProblems(context.Context, *GetContestProblemsRequest) (*GetContestProblemsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetContestProblems not implemented")
 }
 func (UnimplementedContestServiceServer) mustEmbedUnimplementedContestServiceServer() {}
 
@@ -233,38 +233,20 @@ func _ContestService_GetContestListByPage_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ContestService_AddProblemToContest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddProblemToContestRequest)
+func _ContestService_SignUpContest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SignUpContestRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ContestServiceServer).AddProblemToContest(ctx, in)
+		return srv.(ContestServiceServer).SignUpContest(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ContestService_AddProblemToContest_FullMethodName,
+		FullMethod: ContestService_SignUpContest_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ContestServiceServer).AddProblemToContest(ctx, req.(*AddProblemToContestRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ContestService_GetContestProblems_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetContestProblemsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ContestServiceServer).GetContestProblems(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ContestService_GetContestProblems_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ContestServiceServer).GetContestProblems(ctx, req.(*GetContestProblemsRequest))
+		return srv.(ContestServiceServer).SignUpContest(ctx, req.(*SignUpContestRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -305,20 +287,38 @@ func _ContestService_GetContestRanking_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ContestService_SignUpContest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SignUpContestRequest)
+func _ContestService_AddProblemToContest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddProblemToContestRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ContestServiceServer).SignUpContest(ctx, in)
+		return srv.(ContestServiceServer).AddProblemToContest(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ContestService_SignUpContest_FullMethodName,
+		FullMethod: ContestService_AddProblemToContest_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ContestServiceServer).SignUpContest(ctx, req.(*SignUpContestRequest))
+		return srv.(ContestServiceServer).AddProblemToContest(ctx, req.(*AddProblemToContestRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ContestService_GetContestProblems_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetContestProblemsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContestServiceServer).GetContestProblems(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ContestService_GetContestProblems_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContestServiceServer).GetContestProblems(ctx, req.(*GetContestProblemsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -343,12 +343,8 @@ var ContestService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ContestService_GetContestListByPage_Handler,
 		},
 		{
-			MethodName: "AddProblemToContest",
-			Handler:    _ContestService_AddProblemToContest_Handler,
-		},
-		{
-			MethodName: "GetContestProblems",
-			Handler:    _ContestService_GetContestProblems_Handler,
+			MethodName: "SignUpContest",
+			Handler:    _ContestService_SignUpContest_Handler,
 		},
 		{
 			MethodName: "SubmitAnswer",
@@ -359,8 +355,12 @@ var ContestService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ContestService_GetContestRanking_Handler,
 		},
 		{
-			MethodName: "SignUpContest",
-			Handler:    _ContestService_SignUpContest_Handler,
+			MethodName: "AddProblemToContest",
+			Handler:    _ContestService_AddProblemToContest_Handler,
+		},
+		{
+			MethodName: "GetContestProblems",
+			Handler:    _ContestService_GetContestProblems_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

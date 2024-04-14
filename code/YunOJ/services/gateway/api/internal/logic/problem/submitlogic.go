@@ -26,9 +26,10 @@ func NewSubmitLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SubmitLogi
 
 func (l *SubmitLogic) Submit(req *types.SubmitRequest) (resp *types.SubmitResponse, err error) {
 	resp = &types.SubmitResponse{}
+	userId := l.ctx.Value("userId").(int64)
 	res, err := l.svcCtx.ProblemRpc.CreateSubmit(l.ctx, &problem.CreateSubmitRequest{
 		ProblemId: req.ProblemId,
-		UserId:    req.UserId,
+		UserId:    userId,
 		Language:  req.Language,
 		Code:      req.Code,
 	})

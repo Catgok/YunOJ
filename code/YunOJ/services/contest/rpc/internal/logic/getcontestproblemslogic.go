@@ -35,7 +35,7 @@ func (l *GetContestProblemsLogic) GetContestProblems(in *contest.GetContestProbl
 	}
 	problemTitleInfosResp, err := l.svcCtx.ProblemRpc.GetProblemTitleByIds(l.ctx, &problem.GetProblemTitleByIdsRequest{ProblemIds: problemIds})
 	if err != nil {
-		resp.Code, resp.Message = 5003, err.Error()
+		resp.Code, resp.Message = 6001, err.Error()
 		return resp, nil
 	}
 	var data []*contest.Problem
@@ -44,7 +44,6 @@ func (l *GetContestProblemsLogic) GetContestProblems(in *contest.GetContestProbl
 			ProblemId: v.GetProblemIds(),
 			Title:     v.GetTitle(),
 		})
-
 	}
 	resp.Problems = data
 	return resp, nil

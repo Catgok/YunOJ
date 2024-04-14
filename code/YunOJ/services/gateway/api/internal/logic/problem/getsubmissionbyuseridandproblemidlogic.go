@@ -26,9 +26,10 @@ func NewGetSubmissionByUserIdAndProblemIdLogic(ctx context.Context, svcCtx *svc.
 
 func (l *GetSubmissionByUserIdAndProblemIdLogic) GetSubmissionByUserIdAndProblemId(req *types.GetSubmissionByProblemIdRequest) (resp *types.GetSubmissionByProblemIdResponse, err error) {
 	resp = &types.GetSubmissionByProblemIdResponse{}
+	userId := l.ctx.Value("user_id").(int64)
 	res, err := l.svcCtx.ProblemRpc.GetSubmitByUserIdAndProblemId(l.ctx, &problem.GetSubmitByUserIdAndProblemIdRequest{
 		ProblemId: req.ProblemId,
-		UserId:    req.UserId,
+		UserId:    userId,
 	})
 	if err != nil {
 		resp.Code, resp.Message = 500, err.Error()

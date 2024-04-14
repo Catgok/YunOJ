@@ -37,11 +37,11 @@ type (
 		CreateContest(ctx context.Context, in *CreateContestRequest, opts ...grpc.CallOption) (*CreateContestResponse, error)
 		UpdateContest(ctx context.Context, in *UpdateContestRequest, opts ...grpc.CallOption) (*UpdateContestResponse, error)
 		GetContestListByPage(ctx context.Context, in *GetContestListByPageRequest, opts ...grpc.CallOption) (*GetContestListByPageResponse, error)
-		AddProblemToContest(ctx context.Context, in *AddProblemToContestRequest, opts ...grpc.CallOption) (*AddProblemToContestResponse, error)
-		GetContestProblems(ctx context.Context, in *GetContestProblemsRequest, opts ...grpc.CallOption) (*GetContestProblemsResponse, error)
+		SignUpContest(ctx context.Context, in *SignUpContestRequest, opts ...grpc.CallOption) (*SignUpContestResponse, error)
 		SubmitAnswer(ctx context.Context, in *SubmitAnswerRequest, opts ...grpc.CallOption) (*SubmitAnswerResponse, error)
 		GetContestRanking(ctx context.Context, in *GetContestRankingRequest, opts ...grpc.CallOption) (*GetContestRankingResponse, error)
-		SignUpContest(ctx context.Context, in *SignUpContestRequest, opts ...grpc.CallOption) (*SignUpContestResponse, error)
+		AddProblemToContest(ctx context.Context, in *AddProblemToContestRequest, opts ...grpc.CallOption) (*AddProblemToContestResponse, error)
+		GetContestProblems(ctx context.Context, in *GetContestProblemsRequest, opts ...grpc.CallOption) (*GetContestProblemsResponse, error)
 	}
 
 	defaultContestService struct {
@@ -70,14 +70,9 @@ func (m *defaultContestService) GetContestListByPage(ctx context.Context, in *Ge
 	return client.GetContestListByPage(ctx, in, opts...)
 }
 
-func (m *defaultContestService) AddProblemToContest(ctx context.Context, in *AddProblemToContestRequest, opts ...grpc.CallOption) (*AddProblemToContestResponse, error) {
+func (m *defaultContestService) SignUpContest(ctx context.Context, in *SignUpContestRequest, opts ...grpc.CallOption) (*SignUpContestResponse, error) {
 	client := contest.NewContestServiceClient(m.cli.Conn())
-	return client.AddProblemToContest(ctx, in, opts...)
-}
-
-func (m *defaultContestService) GetContestProblems(ctx context.Context, in *GetContestProblemsRequest, opts ...grpc.CallOption) (*GetContestProblemsResponse, error) {
-	client := contest.NewContestServiceClient(m.cli.Conn())
-	return client.GetContestProblems(ctx, in, opts...)
+	return client.SignUpContest(ctx, in, opts...)
 }
 
 func (m *defaultContestService) SubmitAnswer(ctx context.Context, in *SubmitAnswerRequest, opts ...grpc.CallOption) (*SubmitAnswerResponse, error) {
@@ -90,7 +85,12 @@ func (m *defaultContestService) GetContestRanking(ctx context.Context, in *GetCo
 	return client.GetContestRanking(ctx, in, opts...)
 }
 
-func (m *defaultContestService) SignUpContest(ctx context.Context, in *SignUpContestRequest, opts ...grpc.CallOption) (*SignUpContestResponse, error) {
+func (m *defaultContestService) AddProblemToContest(ctx context.Context, in *AddProblemToContestRequest, opts ...grpc.CallOption) (*AddProblemToContestResponse, error) {
 	client := contest.NewContestServiceClient(m.cli.Conn())
-	return client.SignUpContest(ctx, in, opts...)
+	return client.AddProblemToContest(ctx, in, opts...)
+}
+
+func (m *defaultContestService) GetContestProblems(ctx context.Context, in *GetContestProblemsRequest, opts ...grpc.CallOption) (*GetContestProblemsResponse, error) {
+	client := contest.NewContestServiceClient(m.cli.Conn())
+	return client.GetContestProblems(ctx, in, opts...)
 }
