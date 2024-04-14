@@ -47,9 +47,9 @@ func (s *ContestServiceServer) SubmitAnswer(ctx context.Context, in *contest.Sub
 	return l.SubmitAnswer(in)
 }
 
-func (s *ContestServiceServer) GetContestRanking(ctx context.Context, in *contest.GetContestRankingRequest) (*contest.GetContestRankingResponse, error) {
-	l := logic.NewGetContestRankingLogic(ctx, s.svcCtx)
-	return l.GetContestRanking(in)
+func (s *ContestServiceServer) GetContestRank(ctx context.Context, in *contest.GetContestRankRequest) (*contest.GetContestRankResponse, error) {
+	l := logic.NewGetContestRankLogic(ctx, s.svcCtx)
+	return l.GetContestRank(in)
 }
 
 func (s *ContestServiceServer) AddProblemToContest(ctx context.Context, in *contest.AddProblemToContestRequest) (*contest.AddProblemToContestResponse, error) {

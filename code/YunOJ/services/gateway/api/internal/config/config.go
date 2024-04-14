@@ -10,6 +10,7 @@ type Config struct {
 	UserRpc    zrpc.RpcClientConf
 	ProblemRpc zrpc.RpcClientConf
 	JudgeRpc   zrpc.RpcClientConf
+	ContestRpc zrpc.RpcClientConf
 	Auth       struct {
 		AccessSecret string
 		AccessExpire int64

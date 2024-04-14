@@ -1,30 +1,31 @@
 package logic
 
 import (
-	"YunOJ/services/contest/rpc/contest"
-	"YunOJ/services/contest/rpc/internal/svc"
 	"context"
 	"database/sql"
+
+	"YunOJ/services/contest/rpc/contest"
+	"YunOJ/services/contest/rpc/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetContestRankingLogic struct {
+type GetContestRankLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewGetContestRankingLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetContestRankingLogic {
-	return &GetContestRankingLogic{
+func NewGetContestRankLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetContestRankLogic {
+	return &GetContestRankLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *GetContestRankingLogic) GetContestRanking(in *contest.GetContestRankingRequest) (*contest.GetContestRankingResponse, error) {
-	resp := &contest.GetContestRankingResponse{
+func (l *GetContestRankLogic) GetContestRank(in *contest.GetContestRankRequest) (*contest.GetContestRankResponse, error) {
+	resp := &contest.GetContestRankResponse{
 		Code:    0,
 		Message: "success",
 	}
@@ -39,6 +40,7 @@ func (l *GetContestRankingLogic) GetContestRanking(in *contest.GetContestRanking
 			UserId:        v.UserId,
 			ProblemId:     v.ProblemId,
 			TryTimes:      v.TryTimes,
+			SubmitTime:    v.SubmitTimes,
 			FirstPassTime: timeToTimestamp(v.FirstPassTime),
 		})
 	}

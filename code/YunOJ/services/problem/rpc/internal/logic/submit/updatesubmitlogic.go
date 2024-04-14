@@ -47,7 +47,7 @@ func (l *UpdateSubmitLogic) UpdateSubmit(in *problem.UpdateSubmitRequest) (*prob
 		return resp, nil
 	}
 	resp.Success = true
-	message, _ := json.Marshal(in.Submit)
+	message, _ := json.Marshal(res)
 	if l.svcCtx.SubmitChangeNoticer.Push(string(message)) != nil {
 		logx.Errorf("SubmitChangeNoticer Push Error , err :%v", err)
 	}

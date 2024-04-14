@@ -4,6 +4,7 @@ package handler
 import (
 	"net/http"
 
+	contest "YunOJ/services/gateway/api/internal/handler/contest"
 	judge "YunOJ/services/gateway/api/internal/handler/judge"
 	problem "YunOJ/services/gateway/api/internal/handler/problem"
 	user "YunOJ/services/gateway/api/internal/handler/user"
@@ -13,6 +14,55 @@ import (
 )
 
 func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.AuthInterceptor},
+			[]rest.Route{
+				{
+					Method:  http.MethodPost,
+					Path:    "/addProblem",
+					Handler: contest.AddProblemHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/createContest",
+					Handler: contest.CreateContestHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/getContestByPage",
+					Handler: contest.GetContestByPageHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/getContestProblems",
+					Handler: contest.GetContestProblemsHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/getContestRank",
+					Handler: contest.GetContestRankHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/signUpContest",
+					Handler: contest.SignUpContestHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/submitAnswer",
+					Handler: contest.SubmitAnswerHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/updateContest",
+					Handler: contest.UpdateContestHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/v1/contest"),
+	)
+
 	server.AddRoutes(
 		rest.WithMiddlewares(
 			[]rest.Middleware{serverCtx.AuthInterceptor},
