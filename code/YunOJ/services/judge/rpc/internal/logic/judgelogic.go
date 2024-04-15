@@ -88,24 +88,25 @@ func (l *JudgeLogic) Judge(in *judge.JudgeRequest) (*judge.JudgeResponse, error)
 			updateSubmitResult, err := l.svcCtx.ProblemRpc.UpdateSubmit(l.ctx, &problem.UpdateSubmitRequest{
 				Submit: &problem.Submit{
 					SubmitId: in.SubmitId,
-					Status:   int64(res),
 					Time:     timeTotUsed,
 					Memory:   memTotUsed,
+					Result:   int64(res),
 				},
 			})
 			if err != nil || updateSubmitResult.Success == false {
 				resp.Code, resp.Message = 500, err.Error()
 				return resp, nil
 			}
+			return resp, nil
 		}
 	}
 
 	updateSubmitResult, err := l.svcCtx.ProblemRpc.UpdateSubmit(l.ctx, &problem.UpdateSubmitRequest{
 		Submit: &problem.Submit{
 			SubmitId: in.SubmitId,
-			Status:   int64(Accepted),
 			Time:     timeTotUsed,
 			Memory:   memTotUsed,
+			Result:   int64(Accepted),
 		},
 	})
 	if err != nil || updateSubmitResult.Success == false {

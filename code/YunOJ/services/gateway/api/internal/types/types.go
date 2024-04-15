@@ -38,7 +38,10 @@ type ContestRankInfo struct {
 }
 
 type CreateContestRequest struct {
-	Contest Contest `json:"contest"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	StartTime   int64  `json:"startTime"`
+	EndTime     int64  `json:"endTime"`
 }
 
 type CreateContestResponse struct {
@@ -68,15 +71,13 @@ type DeleteProblemResponse struct {
 	Data bool `json:"data"`
 }
 
-type GetContestByPageRequest struct {
-	PageNo   int64 `json:"pageNo"`
-	PageSize int64 `json:"pageSize"`
+type GetContestByIdRequest struct {
+	ContestId int64 `json:"contestId"`
 }
 
-type GetContestByPageResponse struct {
+type GetContestByIdResponse struct {
 	BaseResponse
-	Total int64     `json:"total"`
-	Data  []Contest `json:"data"`
+	Data Contest `json:"data"`
 }
 
 type GetContestProblemsRequest struct {
@@ -97,6 +98,17 @@ type GetContestRankResponse struct {
 	Data []ContestRankInfo `json:"data"`
 }
 
+type GetContestsByPageRequest struct {
+	PageNo   int64 `json:"pageNo"`
+	PageSize int64 `json:"pageSize"`
+}
+
+type GetContestsByPageResponse struct {
+	BaseResponse
+	Total int64     `json:"total"`
+	Data  []Contest `json:"data"`
+}
+
 type GetProblemByIdRequest struct {
 	ProblemId int64 `json:"problemId"`
 }
@@ -115,6 +127,11 @@ type GetProblemsByPageResponse struct {
 	BaseResponse
 	Data  []Problem `json:"data"`
 	Total int64     `json:"total"`
+}
+
+type GetSignUpContestsResponse struct {
+	BaseResponse
+	Data []int64 `json:"data"`
 }
 
 type GetSubmissionByProblemIdRequest struct {

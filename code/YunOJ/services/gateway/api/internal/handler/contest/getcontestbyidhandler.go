@@ -9,16 +9,16 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func GetContestByPageHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func GetContestByIdHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.GetContestByPageRequest
+		var req types.GetContestByIdRequest
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := contest.NewGetContestByPageLogic(r.Context(), svcCtx)
-		resp, err := l.GetContestByPage(&req)
+		l := contest.NewGetContestByIdLogic(r.Context(), svcCtx)
+		resp, err := l.GetContestById(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {

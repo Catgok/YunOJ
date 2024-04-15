@@ -105,12 +105,15 @@ func (m *defaultProblemModel) FindOne(ctx context.Context, problemId int64) (*Pr
 
 func (m *defaultProblemModel) FindTitlesByIds(ctx context.Context, ids []int64) ([]Title, error) {
 	var resp []Title
-	query := fmt.Sprintf("select `id, title` from %s where `problem_id` in (?)", m.table)
+	query := fmt.Sprintf("select problem_id, title from %s where `problem_id` in (", m.table)
+
 	vals := []interface{}{}
 	for _, item := range ids {
 		vals = append(vals, item)
+		query += "?,"
 	}
-	err := m.QueryRowNoCacheCtx(ctx, &resp, query, vals)
+	query = query[:len(query)-1] + ")"
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, vals...)
 	switch err {
 	case nil:
 		return resp, nil

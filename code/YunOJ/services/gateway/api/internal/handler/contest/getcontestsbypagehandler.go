@@ -9,16 +9,16 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func AddProblemToContestHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func GetContestsByPageHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.AddProblemToContestRequest
+		var req types.GetContestsByPageRequest
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := contest.NewAddProblemToContestLogic(r.Context(), svcCtx)
-		resp, err := l.AddProblemToContest(&req)
+		l := contest.NewGetContestsByPageLogic(r.Context(), svcCtx)
+		resp, err := l.GetContestsByPage(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {

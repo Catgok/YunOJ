@@ -37,9 +37,19 @@ func (s *ContestServiceServer) GetContestListByPage(ctx context.Context, in *con
 	return l.GetContestListByPage(in)
 }
 
+func (s *ContestServiceServer) GetContestById(ctx context.Context, in *contest.GetContestByIdRequest) (*contest.GetContestByIdResponse, error) {
+	l := logic.NewGetContestByIdLogic(ctx, s.svcCtx)
+	return l.GetContestById(in)
+}
+
 func (s *ContestServiceServer) SignUpContest(ctx context.Context, in *contest.SignUpContestRequest) (*contest.SignUpContestResponse, error) {
 	l := logic.NewSignUpContestLogic(ctx, s.svcCtx)
 	return l.SignUpContest(in)
+}
+
+func (s *ContestServiceServer) GetSignUpContests(ctx context.Context, in *contest.GetSignUpContestsRequest) (*contest.GetSignUpContestsResponse, error) {
+	l := logic.NewGetSignUpContestsLogic(ctx, s.svcCtx)
+	return l.GetSignUpContests(in)
 }
 
 func (s *ContestServiceServer) SubmitAnswer(ctx context.Context, in *contest.SubmitAnswerRequest) (*contest.SubmitAnswerResponse, error) {

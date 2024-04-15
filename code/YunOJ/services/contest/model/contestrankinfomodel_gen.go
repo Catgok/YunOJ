@@ -42,16 +42,16 @@ type (
 	}
 
 	ContestRankInfo struct {
-		Id            int64        `db:"id"`              // 竞赛排名信息ID
-		ContestId     int64        `db:"contest_id"`      // 竞赛ID
-		UserId        int64        `db:"user_id"`         // 用户ID
-		ProblemId     int64        `db:"problem_id"`      // 题目ID
-		SubmitTimes   int64        `db:"submit_times"`    // 提交次数
-		TryTimes      int64        `db:"try_times"`       // 尝试次数
-		IsPass        bool         `db:"is_pass"`         // 是否通过
-		FirstPassTime sql.NullTime `db:"first_pass_time"` // 首次通过时间
-		CreatedAt     time.Time    `db:"created_at"`      // 记录创建时间
-		UpdatedAt     time.Time    `db:"updated_at"`      // 记录更新时间
+		Id            int64         `db:"id"`              // 竞赛排名信息ID
+		ContestId     int64         `db:"contest_id"`      // 竞赛ID
+		UserId        int64         `db:"user_id"`         // 用户ID
+		ProblemId     int64         `db:"problem_id"`      // 题目ID
+		SubmitTimes   int64         `db:"submit_times"`    // 提交次数
+		TryTimes      int64         `db:"try_times"`       // 尝试次数
+		IsPass        bool          `db:"is_pass"`         // 是否通过
+		FirstPassTime sql.NullInt64 `db:"first_pass_time"` // 首次通过时间(s)
+		CreatedAt     time.Time     `db:"created_at"`      // 记录创建时间
+		UpdatedAt     time.Time     `db:"updated_at"`      // 记录更新时间
 	}
 )
 
@@ -95,12 +95,9 @@ func (m *defaultContestRankInfoModel) FindOne(ctx context.Context, id int64) (*C
 }
 
 func (m *defaultContestRankInfoModel) FindByContestId(ctx context.Context, contestId int64) ([]ContestRankInfo, error) {
-	contestRankInfoContestIdKey := fmt.Sprintf("%s%v", cacheContestInfoContestIdPrefix, contestId)
 	var resp []ContestRankInfo
-	err := m.QueryRowsNoCacheCtx(ctx, &resp, contestRankInfoContestIdKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
-		query := fmt.Sprintf("select %s from %s where `contest_id` = ? limit 1", contestRankInfoRows, m.table)
-		return conn.QueryRowCtx(ctx, v, query, contestId)
-	})
+	query := fmt.Sprintf("select %s from %s where `contest_id` = ?", contestRankInfoRows, m.table)
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, contestId)
 	switch err {
 	case nil:
 		return resp, nil

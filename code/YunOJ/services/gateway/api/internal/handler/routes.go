@@ -15,6 +15,32 @@ import (
 
 func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/getContestById",
+				Handler: contest.GetContestByIdHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/getContestProblems",
+				Handler: contest.GetContestProblemsHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/getContestRank",
+				Handler: contest.GetContestRankHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/getContestsByPage",
+				Handler: contest.GetContestsByPageHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/v1/contest"),
+	)
+
+	server.AddRoutes(
 		rest.WithMiddlewares(
 			[]rest.Middleware{serverCtx.AuthInterceptor},
 			[]rest.Route{
@@ -30,18 +56,8 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				},
 				{
 					Method:  http.MethodPost,
-					Path:    "/getContestByPage",
-					Handler: contest.GetContestByPageHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/getContestProblems",
-					Handler: contest.GetContestProblemsHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/getContestRank",
-					Handler: contest.GetContestRankHandler(serverCtx),
+					Path:    "/getSignUpContests",
+					Handler: contest.GetSignUpContestsHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
@@ -64,14 +80,20 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	)
 
 	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/onlineJudge",
+				Handler: judge.OnlineJudgeHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/v1/judge"),
+	)
+
+	server.AddRoutes(
 		rest.WithMiddlewares(
 			[]rest.Middleware{serverCtx.AuthInterceptor},
 			[]rest.Route{
-				{
-					Method:  http.MethodPost,
-					Path:    "/onlineJudge",
-					Handler: judge.OnlineJudgeHandler(serverCtx),
-				},
 				{
 					Method:  http.MethodPost,
 					Path:    "/setJudgeCase",
@@ -80,6 +102,37 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			}...,
 		),
 		rest.WithPrefix("/v1/judge"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/get",
+				Handler: problem.GetProblemByIdHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/getByPage",
+				Handler: problem.GetProblemsByPageHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/getSubmissionByProblemId",
+				Handler: problem.GetSubmissionByUserIdAndProblemIdHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/getSubmit",
+				Handler: problem.GetSubmitByIdHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/submit",
+				Handler: problem.SubmitHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/v1/problem"),
 	)
 
 	server.AddRoutes(
@@ -95,31 +148,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Method:  http.MethodPost,
 					Path:    "/delete",
 					Handler: problem.DeleteProblemHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/get",
-					Handler: problem.GetProblemByIdHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/getByPage",
-					Handler: problem.GetProblemsByPageHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/getSubmissionByProblemId",
-					Handler: problem.GetSubmissionByUserIdAndProblemIdHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/getSubmit",
-					Handler: problem.GetSubmitByIdHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/submit",
-					Handler: problem.SubmitHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,

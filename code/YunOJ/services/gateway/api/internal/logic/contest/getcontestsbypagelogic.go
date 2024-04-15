@@ -10,22 +10,22 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetContestByPageLogic struct {
+type GetContestsByPageLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewGetContestByPageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetContestByPageLogic {
-	return &GetContestByPageLogic{
+func NewGetContestsByPageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetContestsByPageLogic {
+	return &GetContestsByPageLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *GetContestByPageLogic) GetContestByPage(req *types.GetContestByPageRequest) (resp *types.GetContestByPageResponse, err error) {
-	resp = &types.GetContestByPageResponse{}
+func (l *GetContestsByPageLogic) GetContestsByPage(req *types.GetContestsByPageRequest) (resp *types.GetContestsByPageResponse, err error) {
+	resp = &types.GetContestsByPageResponse{}
 
 	res, err := l.svcCtx.ContestRpc.GetContestListByPage(l.ctx, &contest.GetContestListByPageRequest{
 		PageNo:   req.PageNo,
@@ -46,6 +46,7 @@ func (l *GetContestByPageLogic) GetContestByPage(req *types.GetContestByPageRequ
 		})
 	}
 	resp.Code, resp.Message = res.GetCode(), res.GetMessage()
+	resp.Total = res.GetTotal()
 	resp.Data = data
 	return resp, nil
 }

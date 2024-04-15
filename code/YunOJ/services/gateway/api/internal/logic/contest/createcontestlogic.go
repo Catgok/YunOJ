@@ -34,10 +34,10 @@ func (l *CreateContestLogic) CreateContest(req *types.CreateContestRequest) (res
 	}
 	res, err := l.svcCtx.ContestRpc.CreateContest(l.ctx, &contest.CreateContestRequest{
 		Contest: &contest.Contest{
-			Name:        req.Contest.Name,
-			Description: req.Contest.Description,
-			StartTime:   req.Contest.StartTime,
-			EndTime:     req.Contest.EndTime,
+			Name:        req.Name,
+			Description: req.Description,
+			StartTime:   req.StartTime,
+			EndTime:     req.EndTime,
 		},
 	})
 	if err != nil {

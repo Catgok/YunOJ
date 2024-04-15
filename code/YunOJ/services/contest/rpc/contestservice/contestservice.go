@@ -19,12 +19,16 @@ type (
 	ContestRankInfo              = contest.ContestRankInfo
 	CreateContestRequest         = contest.CreateContestRequest
 	CreateContestResponse        = contest.CreateContestResponse
+	GetContestByIdRequest        = contest.GetContestByIdRequest
+	GetContestByIdResponse       = contest.GetContestByIdResponse
 	GetContestListByPageRequest  = contest.GetContestListByPageRequest
 	GetContestListByPageResponse = contest.GetContestListByPageResponse
 	GetContestProblemsRequest    = contest.GetContestProblemsRequest
 	GetContestProblemsResponse   = contest.GetContestProblemsResponse
 	GetContestRankRequest        = contest.GetContestRankRequest
 	GetContestRankResponse       = contest.GetContestRankResponse
+	GetSignUpContestsRequest     = contest.GetSignUpContestsRequest
+	GetSignUpContestsResponse    = contest.GetSignUpContestsResponse
 	Problem                      = contest.Problem
 	SignUpContestRequest         = contest.SignUpContestRequest
 	SignUpContestResponse        = contest.SignUpContestResponse
@@ -37,7 +41,9 @@ type (
 		CreateContest(ctx context.Context, in *CreateContestRequest, opts ...grpc.CallOption) (*CreateContestResponse, error)
 		UpdateContest(ctx context.Context, in *UpdateContestRequest, opts ...grpc.CallOption) (*UpdateContestResponse, error)
 		GetContestListByPage(ctx context.Context, in *GetContestListByPageRequest, opts ...grpc.CallOption) (*GetContestListByPageResponse, error)
+		GetContestById(ctx context.Context, in *GetContestByIdRequest, opts ...grpc.CallOption) (*GetContestByIdResponse, error)
 		SignUpContest(ctx context.Context, in *SignUpContestRequest, opts ...grpc.CallOption) (*SignUpContestResponse, error)
+		GetSignUpContests(ctx context.Context, in *GetSignUpContestsRequest, opts ...grpc.CallOption) (*GetSignUpContestsResponse, error)
 		SubmitAnswer(ctx context.Context, in *SubmitAnswerRequest, opts ...grpc.CallOption) (*SubmitAnswerResponse, error)
 		GetContestRank(ctx context.Context, in *GetContestRankRequest, opts ...grpc.CallOption) (*GetContestRankResponse, error)
 		AddProblemToContest(ctx context.Context, in *AddProblemToContestRequest, opts ...grpc.CallOption) (*AddProblemToContestResponse, error)
@@ -70,9 +76,19 @@ func (m *defaultContestService) GetContestListByPage(ctx context.Context, in *Ge
 	return client.GetContestListByPage(ctx, in, opts...)
 }
 
+func (m *defaultContestService) GetContestById(ctx context.Context, in *GetContestByIdRequest, opts ...grpc.CallOption) (*GetContestByIdResponse, error) {
+	client := contest.NewContestServiceClient(m.cli.Conn())
+	return client.GetContestById(ctx, in, opts...)
+}
+
 func (m *defaultContestService) SignUpContest(ctx context.Context, in *SignUpContestRequest, opts ...grpc.CallOption) (*SignUpContestResponse, error) {
 	client := contest.NewContestServiceClient(m.cli.Conn())
 	return client.SignUpContest(ctx, in, opts...)
+}
+
+func (m *defaultContestService) GetSignUpContests(ctx context.Context, in *GetSignUpContestsRequest, opts ...grpc.CallOption) (*GetSignUpContestsResponse, error) {
+	client := contest.NewContestServiceClient(m.cli.Conn())
+	return client.GetSignUpContests(ctx, in, opts...)
 }
 
 func (m *defaultContestService) SubmitAnswer(ctx context.Context, in *SubmitAnswerRequest, opts ...grpc.CallOption) (*SubmitAnswerResponse, error) {

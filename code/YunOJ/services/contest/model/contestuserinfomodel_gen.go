@@ -23,6 +23,7 @@ var (
 	contestUserInfoRowsWithPlaceHolder = strings.Join(stringx.Remove(contestUserInfoFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 
 	cacheContestUserInfoIdPrefix              = "cache:contestUserInfo:id:"
+	cacheContestUserInfoUserIdPrefix          = "cache:contestUserInfo:userId:"
 	cacheContestUserInfoContestIdUserIdPrefix = "cache:contestUserInfo:contestId:userId:"
 )
 
@@ -33,6 +34,7 @@ type (
 		FindOneByContestIdUserId(ctx context.Context, contestId int64, userId int64) (*ContestUserInfo, error)
 		Update(ctx context.Context, data *ContestUserInfo) error
 		Delete(ctx context.Context, id int64) error
+		FindContestIdsByUserId(ctx context.Context, userId int64) ([]int64, error)
 	}
 
 	defaultContestUserInfoModel struct {
@@ -103,6 +105,20 @@ func (m *defaultContestUserInfoModel) FindOneByContestIdUserId(ctx context.Conte
 	switch err {
 	case nil:
 		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
+
+func (m *defaultContestUserInfoModel) FindContestIdsByUserId(ctx context.Context, userId int64) ([]int64, error) {
+	var resp []int64
+	query := fmt.Sprintf("select contest_id from %s where `user_id` = ?", m.table)
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, userId)
+	switch err {
+	case nil:
+		return resp, nil
 	case sqlc.ErrNotFound:
 		return nil, ErrNotFound
 	default:

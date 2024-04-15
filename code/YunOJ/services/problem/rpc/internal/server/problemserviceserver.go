@@ -28,6 +28,11 @@ func (s *ProblemServiceServer) GetProblemById(ctx context.Context, in *problem.G
 	return l.GetProblemById(in)
 }
 
+func (s *ProblemServiceServer) GetProblemTitleByIds(ctx context.Context, in *problem.GetProblemTitleByIdsRequest) (*problem.GetProblemTitleByIdsResponse, error) {
+	l := problemlogic.NewGetProblemTitleByIdsLogic(ctx, s.svcCtx)
+	return l.GetProblemTitleByIds(in)
+}
+
 func (s *ProblemServiceServer) GetProblemsByPage(ctx context.Context, in *problem.GetProblemsByPageRequest) (*problem.GetProblemsByPageResponse, error) {
 	l := problemlogic.NewGetProblemsByPageLogic(ctx, s.svcCtx)
 	return l.GetProblemsByPage(in)

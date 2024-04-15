@@ -1,11 +1,9 @@
 package logic
 
 import (
-	"context"
-	"database/sql"
-
 	"YunOJ/services/contest/rpc/contest"
 	"YunOJ/services/contest/rpc/internal/svc"
+	"context"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -41,17 +39,9 @@ func (l *GetContestRankLogic) GetContestRank(in *contest.GetContestRankRequest) 
 			ProblemId:     v.ProblemId,
 			TryTimes:      v.TryTimes,
 			SubmitTime:    v.SubmitTimes,
-			FirstPassTime: timeToTimestamp(v.FirstPassTime),
+			FirstPassTime: v.FirstPassTime.Int64,
 		})
 	}
 	resp.RankInfo = rankInfoList
 	return resp, nil
-}
-
-func timeToTimestamp(v sql.NullTime) int64 {
-	if v.Valid {
-		tm := v.Time
-		return tm.Unix()
-	}
-	return 0
 }

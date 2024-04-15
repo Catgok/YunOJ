@@ -48,6 +48,14 @@ message CreateContestResponse {
   bool success = 3;
 }
 
+message GetContestByIdRequest {
+  int64 contestId = 1;
+}
+message GetContestByIdResponse {
+  int64 code = 1;
+  string message = 2;
+  Contest contest = 3;
+}
 message UpdateContestRequest {
   Contest contest = 1;
 }
@@ -105,12 +113,23 @@ message SignUpContestResponse{
   string message = 2;
   bool success = 3;
 }
+
+message GetSignUpContestsRequest{
+  int64 userId = 1;
+}
+message GetSignUpContestsResponse{
+  int64 code = 1;
+  string message = 2;
+  repeated int64 contestIds = 3;
+}
 service ContestService {
   rpc CreateContest(CreateContestRequest) returns (CreateContestResponse);
   rpc UpdateContest(UpdateContestRequest) returns (UpdateContestResponse);
   rpc GetContestListByPage(GetContestListByPageRequest) returns (GetContestListByPageResponse);
+  rpc GetContestById(GetContestByIdRequest) returns (GetContestByIdResponse);
 
   rpc SignUpContest(SignUpContestRequest) returns (SignUpContestResponse);
+  rpc GetSignUpContests(GetSignUpContestsRequest) returns (GetSignUpContestsResponse);
   rpc SubmitAnswer(SubmitAnswerRequest) returns (SubmitAnswerResponse);
   rpc GetContestRank(GetContestRankRequest) returns (GetContestRankResponse);
 

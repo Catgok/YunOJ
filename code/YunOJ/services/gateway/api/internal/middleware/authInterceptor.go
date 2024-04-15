@@ -21,10 +21,12 @@ func (m *AuthInterceptor) Handle(next http.HandlerFunc) http.HandlerFunc {
 		})
 		if err != nil {
 			http.Error(w, "Invalid or missing utoken", http.StatusUnauthorized)
+			return
 		}
 		claims, ok := token.Claims.(jwt.MapClaims)
 		if !ok || !token.Valid {
 			http.Error(w, "Invalid or missing utoken", http.StatusUnauthorized)
+			return
 		}
 
 		var userType, userId int64

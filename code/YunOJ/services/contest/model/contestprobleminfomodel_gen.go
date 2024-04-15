@@ -92,8 +92,8 @@ func (m *defaultContestProblemInfoModel) FindOne(ctx context.Context, id int64) 
 
 func (m *defaultContestProblemInfoModel) FindByContestId(ctx context.Context, contestId int64) ([]int64, error) {
 	var resp []int64
-	query := fmt.Sprintf("select `problem_id` from %s where `contest_id` = ?", m.table)
-	err := m.QueryRowNoCacheCtx(ctx, &resp, query, contestId)
+	query := fmt.Sprintf("select problem_id from %s where `contest_id` = ?", m.table)
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, contestId)
 	switch err {
 	case nil:
 		return resp, nil
@@ -141,7 +141,7 @@ func (m *defaultContestProblemInfoModel) InsertBatch(ctx context.Context, data [
 	query := fmt.Sprintf("insert into %s (%s) values ", m.table, contestProblemInfoRowsExpectAutoSet)
 	vals := []interface{}{}
 	for _, item := range data {
-		vals = append(vals, item.ProblemId, item.ContestId)
+		vals = append(vals, item.ContestId, item.ProblemId)
 		query += "(?, ?),"
 	}
 	query = query[0 : len(query)-1]

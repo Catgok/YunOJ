@@ -149,9 +149,8 @@ type (
 )
 
 @server (
-	group:      problem
-	prefix:     /v1/problem
-	middleware: AuthInterceptor
+	group:  problem
+	prefix: /v1/problem
 )
 service Gateway {
 	@handler GetProblemById
@@ -159,15 +158,6 @@ service Gateway {
 
 	@handler GetProblemsByPage
 	post /getByPage (GetProblemsByPageRequest) returns (GetProblemsByPageResponse)
-
-	@handler CreateProblem
-	post /create (CreateProblemRequest) returns (CreateProblemResponse)
-
-	@handler UpdateProblem
-	post /update (UpdateProblemRequest) returns (UpdateProblemResponse)
-
-	@handler DeleteProblem
-	post /delete (DeleteProblemRequest) returns (DeleteProblemResponse)
 
 	@handler Submit
 	post /submit (SubmitRequest) returns (SubmitResponse)
@@ -177,6 +167,22 @@ service Gateway {
 
 	@handler GetSubmissionByUserIdAndProblemId
 	post /getSubmissionByProblemId (GetSubmissionByProblemIdRequest) returns (GetSubmissionByProblemIdResponse)
+}
+
+@server (
+	group:      problem
+	prefix:     /v1/problem
+	middleware: AuthInterceptor
+)
+service Gateway {
+	@handler CreateProblem
+	post /create (CreateProblemRequest) returns (CreateProblemResponse)
+
+	@handler UpdateProblem
+	post /update (UpdateProblemRequest) returns (UpdateProblemResponse)
+
+	@handler DeleteProblem
+	post /delete (DeleteProblemRequest) returns (DeleteProblemResponse)
 }
 
 type (
@@ -203,6 +209,15 @@ type (
 )
 
 @server (
+	group:  judge
+	prefix: /v1/judge
+)
+service Gateway {
+	@handler OnlineJudge
+	post /onlineJudge (OnlineJudgeRequest) returns (OnlineJudgeResponse)
+}
+
+@server (
 	group:      judge
 	prefix:     /v1/judge
 	middleware: AuthInterceptor
@@ -210,9 +225,6 @@ type (
 service Gateway {
 	@handler SetJudgeCase
 	post /setJudgeCase (SetJudgeCaseRequest) returns (SetJudgeCaseResponse)
-
-	@handler OnlineJudge
-	post /onlineJudge (OnlineJudgeRequest) returns (OnlineJudgeResponse)
 }
 
 type (
@@ -227,6 +239,34 @@ type (
 		ProblemId int64  `json:"problemId"`
 		Title     string `json:"title"`
 	}
+	SignUpContestRequest {
+		ContestId int64 `json:"contestId"`
+	}
+	SignUpContestResponse {
+		BaseResponse
+		Data bool `json:"data"`
+	}
+	GetSignUpContestsResponse {
+		BaseResponse
+		Data []int64 `json:"data"`
+	}
+	SubmitAnswerRequest {
+		ContestId int64  `json:"contestId"`
+		ProblemId int64  `json:"problemId"`
+		Code      string `json:"code"`
+		Language  int64  `json:"language"`
+	}
+	SubmitAnswerResponse {
+		BaseResponse
+		Data int64 `json:"data"`
+	}
+	GetContestRankRequest {
+		ContestId int64 `json:"contestId"`
+	}
+	GetContestRankResponse {
+		BaseResponse
+		Data []ContestRankInfo `json:"data"`
+	}
 	ContestRankInfo {
 		UserId        int64 `json:"userId"`
 		ProblemId     int64 `json:"problemId"`
@@ -235,7 +275,10 @@ type (
 		FirstPassTime int64 `json:"firstPassTime"`
 	}
 	CreateContestRequest {
-		Contest Contest `json:"contest"`
+		Name        string `json:"name"`
+		Description string `json:"description"`
+		StartTime   int64  `json:"startTime"`
+		EndTime     int64  `json:"endTime"`
 	}
 	CreateContestResponse {
 		BaseResponse
@@ -248,11 +291,18 @@ type (
 		BaseResponse
 		Data bool `json:"data"`
 	}
-	GetContestByPageRequest {
+	GetContestByIdRequest {
+		ContestId int64 `json:"contestId"`
+	}
+	GetContestByIdResponse {
+		BaseResponse
+		Data Contest `json:"data"`
+	}
+	GetContestsByPageRequest {
 		PageNo   int64 `json:"pageNo"`
 		PageSize int64 `json:"pageSize"`
 	}
-	GetContestByPageResponse {
+	GetContestsByPageResponse {
 		BaseResponse
 		Total int64     `json:"total"`
 		Data  []Contest `json:"data"`
@@ -272,31 +322,25 @@ type (
 		BaseResponse
 		Data []ContestProblemInfo `json:"data"`
 	}
-	SignUpContestRequest {
-		ContestId int64 `json:"contestId"`
-	}
-	SignUpContestResponse {
-		BaseResponse
-		Data bool `json:"data"`
-	}
-	SubmitAnswerRequest {
-		ContestId int64  `json:"contestId"`
-		ProblemId int64  `json:"problemId"`
-		Code      string `json:"code"`
-		Language  int64  `json:"language"`
-	}
-	SubmitAnswerResponse {
-		BaseResponse
-		Data int64 `json:"data"`
-	}
-	GetContestRankRequest {
-		ContestId int64 `json:"contestId"`
-	}
-	GetContestRankResponse {
-		BaseResponse
-		Data []ContestRankInfo `json:"data"`
-	}
 )
+
+@server (
+	group:  contest
+	prefix: /v1/contest
+)
+service Gateway {
+	@handler GetContestById
+	post /getContestById (GetContestByIdRequest) returns (GetContestByIdResponse)
+
+	@handler GetContestsByPage
+	post /getContestsByPage (GetContestsByPageRequest) returns (GetContestsByPageResponse)
+
+	@handler GetContestProblems
+	post /getContestProblems (GetContestProblemsRequest) returns (GetContestProblemsResponse)
+
+	@handler GetContestRank
+	post /getContestRank (GetContestRankRequest) returns (GetContestRankResponse)
+}
 
 @server (
 	group:      contest
@@ -304,28 +348,22 @@ type (
 	middleware: AuthInterceptor
 )
 service Gateway {
+	@handler SignUpContest
+	post /signUpContest (SignUpContestRequest) returns (SignUpContestResponse)
+
+	@handler GetSignUpContests
+	post /getSignUpContests returns (GetSignUpContestsResponse)
+
+	@handler SubmitAnswer
+	post /submitAnswer (SubmitAnswerRequest) returns (SubmitAnswerResponse)
+
 	@handler CreateContest
 	post /createContest (CreateContestRequest) returns (CreateContestResponse)
 
 	@handler UpdateContest
 	post /updateContest (UpdateContestRequest) returns (UpdateContestResponse)
 
-	@handler GetContestByPage
-	post /getContestByPage (GetContestByPageRequest) returns (GetContestByPageResponse)
-
 	@handler AddProblem
 	post /addProblem (AddProblemRequest) returns (AddProblemResponse)
-
-	@handler GetContestProblems
-	post /getContestProblems (GetContestProblemsRequest) returns (GetContestProblemsResponse)
-
-	@handler SignUpContest
-	post /signUpContest (SignUpContestRequest) returns (SignUpContestResponse)
-
-	@handler SubmitAnswer
-	post /submitAnswer (SubmitAnswerRequest) returns (SubmitAnswerResponse)
-
-	@handler GetContestRank
-	post /getContestRank (GetContestRankRequest) returns (GetContestRankResponse)
 }
 

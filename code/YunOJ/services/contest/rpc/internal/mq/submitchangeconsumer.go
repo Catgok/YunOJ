@@ -54,9 +54,15 @@ func (l *SubmitChange) Consume(key, val string) error {
 			ProblemId:     problemId,
 			TryTimes:      0,
 			IsPass:        false,
-			FirstPassTime: sql.NullTime{},
+			FirstPassTime: sql.NullInt64{},
 		}
+		insertRes, err := l.svcCtx.ContestRankInfoModel.Insert(l.ctx, contestRankInfo)
+		if err != nil || insertRes == nil {
+			return nil
+		}
+		contestRankInfo.Id, err = insertRes.LastInsertId()
 	}
+	contestInfo, _ := l.svcCtx.ContestInfoModel.FindOne(l.ctx, contestId)
 	// 非AC
 	if submitChangeMessage.Result != 0 {
 		contestRankInfo.SubmitTimes++
@@ -65,8 +71,8 @@ func (l *SubmitChange) Consume(key, val string) error {
 	} else {
 		contestRankInfo.SubmitTimes++
 		contestRankInfo.IsPass = true
-		contestRankInfo.FirstPassTime = sql.NullTime{
-			Time:  submitTime,
+		contestRankInfo.FirstPassTime = sql.NullInt64{
+			Int64: submitTime.Unix() - contestInfo.StartTime.Unix(),
 			Valid: true,
 		}
 		_ = l.svcCtx.ContestRankInfoModel.Update(l.ctx, contestRankInfo)
@@ -75,15 +81,15 @@ func (l *SubmitChange) Consume(key, val string) error {
 }
 
 type userSubmit struct {
-	SubmitId   int64     `json:"submit_id"`
-	UserId     int64     `json:"user_id"`
-	ProblemId  int64     `json:"problem_id"`
-	Code       string    `json:"code"`
-	Status     int64     `json:"status"`
-	Language   int64     `json:"language"`
-	Result     int64     `json:"result"`
-	Time       int64     `json:"time"`
-	Memory     int64     `json:"memory"`
-	CreateTime time.Time `json:"create_time"`
-	UpdateTime time.Time `json:"update_time"`
+	SubmitId   int64     `json:"SubmitId"`
+	UserId     int64     `json:"UserId"`
+	ProblemId  int64     `json:"ProblemId"`
+	Code       string    `json:"Code"`
+	Status     int64     `json:"Status"`
+	Language   int64     `json:"Language"`
+	Result     int64     `json:"Result"`
+	Time       int64     `json:"Time"`
+	Memory     int64     `json:"Memory"`
+	CreateTime time.Time `json:"CreateTime"`
+	UpdateTime time.Time `json:"UpdateTime"`
 }
