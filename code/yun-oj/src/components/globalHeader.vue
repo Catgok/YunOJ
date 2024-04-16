@@ -43,7 +43,7 @@ export default {
     }
   },
   created() {
-    eventBus.on('globalHeaderLoadUserInfo', this.loadUserInfo)
+    eventBus.on('globalHeaderLoadUserInfoEvent', this.loadUserInfo)
   },
   mounted() {
     this.loadUserInfo()
@@ -66,8 +66,8 @@ export default {
       this.$router.push('/login')
     },
     logout() {
-      localStorage.removeItem('userInfo')
-      localStorage.removeItem('loginStatus')
+      localStorage.clear();
+      window.location.reload();
       this.loginStatus = false
       this.username = ''
     }
@@ -85,7 +85,6 @@ export default {
 .logo {
   //border: 1px solid red;
 }
-
 .functional-blocks {
   margin-left: 30px;
   display: flex;

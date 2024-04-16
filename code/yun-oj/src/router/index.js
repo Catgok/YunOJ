@@ -45,23 +45,38 @@ const routes = [{
 }, {
     path: '/contest',
     name: 'contest',
-    component: () => import('@/views/contest/contest.vue'),
+    component: () => import('@/views/contest/contestList.vue'),
     meta: {
         title: 'YunOj - 竞赛'
     },
 }, {
-    path: '/announcement',
-    name: 'announcement',
-    component: () => import('@/views/announcement/announcement.vue'),
-    meta: {},
-}, {
-    path: '/onlineIDE',
-    name: 'onlineIDE',
-    component: () => import('@/views/onlineIDE/onlineIDE.vue'),
+    path: '/contest/:contestId',
+    name: 'contestContest',
+    component: () => import('@/views/contest/contestContent.vue'),
     meta: {
-        title: 'YunOj - 在线IDE'
+        title: 'YunOj - 竞赛'
     },
-}
+}, {
+    path: '/contest/:contestId/problem/:problemId',
+    name: 'contestProblemContent',
+    component: () => import('@/views/contest/detail/contestProblemContent.vue'),
+    meta: {
+        title: 'YunOj - 竞赛'
+    },
+},
+    {
+        path: '/announcement',
+        name: 'announcement',
+        component: () => import('@/views/announcement/announcement.vue'),
+        meta: {},
+    }, {
+        path: '/onlineIDE',
+        name: 'onlineIDE',
+        component: () => import('@/views/onlineIDE/onlineIDE.vue'),
+        meta: {
+            title: 'YunOj - 在线IDE'
+        },
+    }
 ]
 const router = createRouter({
     history: createWebHistory(),

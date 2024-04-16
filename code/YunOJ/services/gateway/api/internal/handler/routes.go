@@ -118,11 +118,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/getSubmissionByProblemId",
-				Handler: problem.GetSubmissionByUserIdAndProblemIdHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
 				Path:    "/getSubmit",
 				Handler: problem.GetSubmitByIdHandler(serverCtx),
 			},
@@ -148,6 +143,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Method:  http.MethodPost,
 					Path:    "/delete",
 					Handler: problem.DeleteProblemHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/getSubmissionByProblemId",
+					Handler: problem.GetSubmissionByUserIdAndProblemIdHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,

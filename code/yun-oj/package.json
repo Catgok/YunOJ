@@ -23,6 +23,7 @@
     "markdown-it": "^14.1.0",
     "markdown-it-math": "^4.1.1",
     "mitt": "^3.0.1",
+    "moment": "^2.30.1",
     "qrcode": "^1.5.3",
     "qrcode-parser": "^2.1.3",
     "vue": "^3.2.13",

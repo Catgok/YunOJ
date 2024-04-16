@@ -28,14 +28,12 @@
 </template>
 
 <script>
-import {ElButton, ElTable, ElTableColumn} from "element-plus";
-
 import {cpp} from '@codemirror/lang-cpp'
 import {basicLight} from '@uiw/codemirror-theme-basic/light'
 import {Codemirror} from 'vue-codemirror'
 
 export default {
-  components: {ElTable, ElTableColumn, ElButton, Codemirror},
+  components: {Codemirror},
   data() {
     return {
       problemId: '',

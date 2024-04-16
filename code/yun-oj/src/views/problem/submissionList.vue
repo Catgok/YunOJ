@@ -16,7 +16,7 @@
           <el-table-column prop="language" label="语言" width="100"/>
           <el-table-column width="100">
             <template #default="scope">
-              <el-button type="text" @click="showCode(scope.row.submissionId)">查看代码</el-button>
+              <el-button text @click="showCode(scope.row.submissionId)">查看代码</el-button>
             </template>
           </el-table-column>
         </el-table>

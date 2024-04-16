@@ -49,6 +49,29 @@ export function autoTextarea(elem, extra, maxHeight) {
     change();
 }
 
+
+const debounce = (fn, delay) => {
+    let timer = null;
+    return function () {
+        let context = this;
+        let args = arguments;
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+            fn.apply(context, args);
+        }, delay);
+    }
+}
+
+export const _ResizeObserver = window.ResizeObserver;
+window.ResizeObserver = class ResizeObserver extends _ResizeObserver {
+    constructor(callback) {
+        callback = debounce(callback, 16);
+        super(callback);
+    }
+}
+
+
 export function getLoginStatus() {
-    return localStorage.getItem('userInfo') !== null
+    return localStorage.getItem('U-Token') !== null
+    // return localStorage.getItem('userInfo') !== null
 }

@@ -7,7 +7,7 @@
     </div>
 
     <el-table :data="problemData" stripe style="width: 100%;">
-      <el-table-column prop="id" label="ID" width="70"/>
+      <el-table-column type="index" label="#" width="70" :index="ProblemListIndexMethod"/>
       <el-table-column prop="problemName" label="题目名称">
         <template #default="scope">
           <div @click="handleProblemClick(scope.row)" class="problem-item">{{ scope.row.problemName }}</div>
@@ -46,6 +46,9 @@ export default {
     this.loadProblemData(1)
   },
   methods: {
+    ProblemListIndexMethod(index) {
+      return (this.currentPage - 1) * this.pageSize + index + 1
+    },
     handleProblemClick(row) {
       const url = `/problem/${row.id}`;
       sessionStorage.setItem('problemTitle.' + row.id, row.problemName)

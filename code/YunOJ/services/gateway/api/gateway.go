@@ -3,6 +3,7 @@ package main
 import (
 	"YunOJ/services/gateway/api/internal/config"
 	"YunOJ/services/gateway/api/internal/handler"
+	"YunOJ/services/gateway/api/internal/middleware"
 	"YunOJ/services/gateway/api/internal/svc"
 	"flag"
 	"fmt"
@@ -21,8 +22,10 @@ func main() {
 
 	time.Sleep(1 * time.Second)
 	//server := rest.MustNewServer(c.RestConf)
-	server := rest.MustNewServer(c.RestConf, rest.WithCors("*"))
+	//server := rest.MustNewServer(c.RestConf, rest.WithCors("*"))
+	server := rest.MustNewServer(c.RestConf, rest.WithNotAllowedHandler(middleware.NewCorsMiddleware().Handler()))
 	defer server.Stop()
+	server.Use(middleware.NewCorsMiddleware().Handle)
 
 	ctx := svc.NewServiceContext(c)
 	handler.RegisterHandlers(server, ctx)

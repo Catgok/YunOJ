@@ -164,9 +164,6 @@ service Gateway {
 
 	@handler getSubmitById
 	post /getSubmit (GetSubmitByIdRequest) returns (GetSubmitByIdResponse)
-
-	@handler GetSubmissionByUserIdAndProblemId
-	post /getSubmissionByProblemId (GetSubmissionByProblemIdRequest) returns (GetSubmissionByProblemIdResponse)
 }
 
 @server (
@@ -183,6 +180,9 @@ service Gateway {
 
 	@handler DeleteProblem
 	post /delete (DeleteProblemRequest) returns (DeleteProblemResponse)
+
+	@handler GetSubmissionByUserIdAndProblemId
+	post /getSubmissionByProblemId (GetSubmissionByProblemIdRequest) returns (GetSubmissionByProblemIdResponse)
 }
 
 type (

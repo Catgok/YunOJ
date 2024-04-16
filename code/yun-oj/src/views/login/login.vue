@@ -68,8 +68,9 @@ export default {
           return
         }
         localStorage.setItem('userInfo', JSON.stringify(resp.data))
+        localStorage.setItem('U-Token', resp.utoken);
         localStorage.setItem('loginStatus', 'true')
-        eventBus.emit('globalHeaderLoadUserInfo')
+        eventBus.emit('globalHeaderLoadUserInfoEvent')
         this.$router.go(-1)
       })
     },
