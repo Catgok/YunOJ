@@ -37,11 +37,8 @@ func (l *GetUserInfoByIdLogic) GetUserInfoById(in *user.GetUserInfoByIdRequest) 
 	resp.User = &user.User{
 		Userid:   res.Userid,
 		Username: res.Username,
-		Email:    res.Email,
 		Phone:    res.Phone,
 		UserType: res.UserType,
-		Avatar:   res.Avatar,
-		Status:   res.Status,
 	}
 	return resp, nil
 }

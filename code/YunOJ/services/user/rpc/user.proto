@@ -7,11 +7,8 @@ option go_package = "./user";
 message User {
   int64 userid = 1;
   string username = 2;
-  string email = 3;
-  string phone = 4;
-  int64 user_type = 5;
-  string avatar = 6;
-  int64 status = 7;
+  string phone = 3;
+  int64 user_type = 4;
 }
 
 message RegisterRequest {

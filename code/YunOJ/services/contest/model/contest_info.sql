@@ -7,5 +7,7 @@ CREATE TABLE contest_info
     end_time     DATETIME     NOT NULL COMMENT '竞赛结束时间',
     create_time  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_time  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (contest_id)
+    PRIMARY KEY (contest_id),
+    INDEX (start_time),
+    INDEX (create_time)
 ) COMMENT '竞赛信息表';

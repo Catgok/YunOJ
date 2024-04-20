@@ -42,11 +42,8 @@ func (l *LoginByUserKeyLogic) LoginByUserKey(in *user.LoginByUserKeyRequest) (*u
 	resp.User = &user.User{
 		Userid:   res.Userid,
 		Username: res.Username,
-		Email:    res.Email,
 		Phone:    res.Phone,
 		UserType: res.UserType,
-		Avatar:   res.Avatar,
-		Status:   res.Status,
 	}
 	return resp, nil
 }
@@ -57,10 +54,6 @@ func (l *LoginByUserKeyLogic) loginByUserKey(in *user.LoginByUserKeyRequest) (*m
 		return res, nil
 	}
 	res, err = l.svcCtx.UserInfoModel.FindOneByUsername(l.ctx, in.UserKey)
-	if err == nil {
-		return res, nil
-	}
-	res, err = l.svcCtx.UserInfoModel.FindOneByEmail(l.ctx, in.UserKey)
 	if err == nil {
 		return res, nil
 	}

@@ -9,8 +9,9 @@ CREATE TABLE problem
     is_delete    TINYINT     NOT NULL DEFAULT 0 COMMENT '是否删除 0-否,1-是',
     submit_count INT         NOT NULL DEFAULT 0 COMMENT '提交次数',
     pass_count   INT         NOT NULL DEFAULT 0 COMMENT '通过次数',
-    solution     TEXT        NOT NULL COMMENT '题目解析',
     create_time  TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_time  TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (problem_id)
+    PRIMARY KEY (problem_id),
+    INDEX (title),
+    INDEX (create_time)
 ) COMMENT '题目信息表' AUTO_INCREMENT = 1001;

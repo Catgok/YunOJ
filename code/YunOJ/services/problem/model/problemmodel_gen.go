@@ -54,7 +54,6 @@ type (
 		IsDelete    int64     `db:"is_delete"`    // 是否删除 0-否,1-是
 		SubmitCount int64     `db:"submit_count"` // 提交次数
 		PassCount   int64     `db:"pass_count"`   // 通过次数
-		Solution    string    `db:"solution"`     // 题目解析
 		CreateTime  time.Time `db:"create_time"`  // 创建时间
 		UpdateTime  time.Time `db:"update_time"`  // 更新时间
 	}
@@ -148,8 +147,8 @@ func (m *defaultProblemModel) Insert(ctx context.Context, data *Problem) (sql.Re
 	problemProblemIdKey := fmt.Sprintf("%s%v", cacheProblemProblemIdPrefix, data.ProblemId)
 	problemTitleKey := fmt.Sprintf("%s%v", cacheProblemTitlePrefix, data.Title)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, problemRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.Title, data.TimeLimit, data.MemoryLimit, data.Description, data.HardLevel, data.IsDelete, data.SubmitCount, data.PassCount, data.Solution)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?)", m.table, problemRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.Title, data.TimeLimit, data.MemoryLimit, data.Description, data.HardLevel, data.IsDelete, data.SubmitCount, data.PassCount)
 	}, problemProblemIdKey, problemTitleKey)
 	return ret, err
 }
@@ -164,7 +163,7 @@ func (m *defaultProblemModel) Update(ctx context.Context, newData *Problem) erro
 	problemTitleKey := fmt.Sprintf("%s%v", cacheProblemTitlePrefix, data.Title)
 	_, err = m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `problem_id` = ?", m.table, problemRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, newData.Title, newData.TimeLimit, newData.MemoryLimit, newData.Description, newData.HardLevel, newData.IsDelete, newData.SubmitCount, newData.PassCount, newData.Solution, newData.ProblemId)
+		return conn.ExecCtx(ctx, query, newData.Title, newData.TimeLimit, newData.MemoryLimit, newData.Description, newData.HardLevel, newData.IsDelete, newData.SubmitCount, newData.PassCount, newData.ProblemId)
 	}, problemProblemIdKey, problemTitleKey)
 	return err
 }

@@ -19,22 +19,20 @@ import (
 var (
 	contestUserInfoFieldNames          = builder.RawFieldNames(&ContestUserInfo{})
 	contestUserInfoRows                = strings.Join(contestUserInfoFieldNames, ",")
-	contestUserInfoRowsExpectAutoSet   = strings.Join(stringx.Remove(contestUserInfoFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
-	contestUserInfoRowsWithPlaceHolder = strings.Join(stringx.Remove(contestUserInfoFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
+	contestUserInfoRowsExpectAutoSet   = strings.Join(stringx.Remove(contestUserInfoFieldNames, "`contest_user_id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
+	contestUserInfoRowsWithPlaceHolder = strings.Join(stringx.Remove(contestUserInfoFieldNames, "`contest_user_id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 
-	cacheContestUserInfoIdPrefix              = "cache:contestUserInfo:id:"
-	cacheContestUserInfoUserIdPrefix          = "cache:contestUserInfo:userId:"
+	cacheContestUserInfoContestUserIdPrefix   = "cache:contestUserInfo:contestUserId:"
 	cacheContestUserInfoContestIdUserIdPrefix = "cache:contestUserInfo:contestId:userId:"
 )
 
 type (
 	contestUserInfoModel interface {
 		Insert(ctx context.Context, data *ContestUserInfo) (sql.Result, error)
-		FindOne(ctx context.Context, id int64) (*ContestUserInfo, error)
+		FindOne(ctx context.Context, contestUserId int64) (*ContestUserInfo, error)
 		FindOneByContestIdUserId(ctx context.Context, contestId int64, userId int64) (*ContestUserInfo, error)
 		Update(ctx context.Context, data *ContestUserInfo) error
-		Delete(ctx context.Context, id int64) error
-		FindContestIdsByUserId(ctx context.Context, userId int64) ([]int64, error)
+		Delete(ctx context.Context, contestUserId int64) error
 	}
 
 	defaultContestUserInfoModel struct {
@@ -43,13 +41,13 @@ type (
 	}
 
 	ContestUserInfo struct {
-		Id          int64     `db:"id"`           // 竞赛用户信息ID
-		UserId      int64     `db:"user_id"`      // 用户ID
-		ContestId   int64     `db:"contest_id"`   // 竞赛ID
-		JoinStatus  int64     `db:"join_status"`  // 用户参加竞赛的状态 0:未参加 1:已参加 2:已结束
-		ContestRank int64     `db:"contest_rank"` // 用户在竞赛中的排名
-		CreatedAt   time.Time `db:"created_at"`   // 记录创建时间
-		UpdatedAt   time.Time `db:"updated_at"`   // 记录更新时间
+		ContestUserId int64     `db:"contest_user_id"` // 竞赛用户信息ID
+		UserId        int64     `db:"user_id"`         // 用户ID
+		ContestId     int64     `db:"contest_id"`      // 竞赛ID
+		JoinStatus    int64     `db:"join_status"`     // 用户参加竞赛的状态 0:未参加 1:已参加 2:已结束
+		ContestRank   int64     `db:"contest_rank"`    // 用户在竞赛中的排名
+		CreatedAt     time.Time `db:"created_at"`      // 记录创建时间
+		UpdatedAt     time.Time `db:"updated_at"`      // 记录更新时间
 	}
 )
 
@@ -60,27 +58,27 @@ func newContestUserInfoModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache
 	}
 }
 
-func (m *defaultContestUserInfoModel) Delete(ctx context.Context, id int64) error {
-	data, err := m.FindOne(ctx, id)
+func (m *defaultContestUserInfoModel) Delete(ctx context.Context, contestUserId int64) error {
+	data, err := m.FindOne(ctx, contestUserId)
 	if err != nil {
 		return err
 	}
 
 	contestUserInfoContestIdUserIdKey := fmt.Sprintf("%s%v:%v", cacheContestUserInfoContestIdUserIdPrefix, data.ContestId, data.UserId)
-	contestUserInfoIdKey := fmt.Sprintf("%s%v", cacheContestUserInfoIdPrefix, id)
+	contestUserInfoContestUserIdKey := fmt.Sprintf("%s%v", cacheContestUserInfoContestUserIdPrefix, contestUserId)
 	_, err = m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
-		return conn.ExecCtx(ctx, query, id)
-	}, contestUserInfoContestIdUserIdKey, contestUserInfoIdKey)
+		query := fmt.Sprintf("delete from %s where `contest_user_id` = ?", m.table)
+		return conn.ExecCtx(ctx, query, contestUserId)
+	}, contestUserInfoContestIdUserIdKey, contestUserInfoContestUserIdKey)
 	return err
 }
 
-func (m *defaultContestUserInfoModel) FindOne(ctx context.Context, id int64) (*ContestUserInfo, error) {
-	contestUserInfoIdKey := fmt.Sprintf("%s%v", cacheContestUserInfoIdPrefix, id)
+func (m *defaultContestUserInfoModel) FindOne(ctx context.Context, contestUserId int64) (*ContestUserInfo, error) {
+	contestUserInfoContestUserIdKey := fmt.Sprintf("%s%v", cacheContestUserInfoContestUserIdPrefix, contestUserId)
 	var resp ContestUserInfo
-	err := m.QueryRowCtx(ctx, &resp, contestUserInfoIdKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
-		query := fmt.Sprintf("select %s from %s where `id` = ? limit 1", contestUserInfoRows, m.table)
-		return conn.QueryRowCtx(ctx, v, query, id)
+	err := m.QueryRowCtx(ctx, &resp, contestUserInfoContestUserIdKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
+		query := fmt.Sprintf("select %s from %s where `contest_user_id` = ? limit 1", contestUserInfoRows, m.table)
+		return conn.QueryRowCtx(ctx, v, query, contestUserId)
 	})
 	switch err {
 	case nil:
@@ -100,7 +98,7 @@ func (m *defaultContestUserInfoModel) FindOneByContestIdUserId(ctx context.Conte
 		if err := conn.QueryRowCtx(ctx, &resp, query, contestId, userId); err != nil {
 			return nil, err
 		}
-		return resp.Id, nil
+		return resp.ContestUserId, nil
 	}, m.queryPrimary)
 	switch err {
 	case nil:
@@ -112,51 +110,37 @@ func (m *defaultContestUserInfoModel) FindOneByContestIdUserId(ctx context.Conte
 	}
 }
 
-func (m *defaultContestUserInfoModel) FindContestIdsByUserId(ctx context.Context, userId int64) ([]int64, error) {
-	var resp []int64
-	query := fmt.Sprintf("select contest_id from %s where `user_id` = ?", m.table)
-	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, userId)
-	switch err {
-	case nil:
-		return resp, nil
-	case sqlc.ErrNotFound:
-		return nil, ErrNotFound
-	default:
-		return nil, err
-	}
-}
-
 func (m *defaultContestUserInfoModel) Insert(ctx context.Context, data *ContestUserInfo) (sql.Result, error) {
 	contestUserInfoContestIdUserIdKey := fmt.Sprintf("%s%v:%v", cacheContestUserInfoContestIdUserIdPrefix, data.ContestId, data.UserId)
-	contestUserInfoIdKey := fmt.Sprintf("%s%v", cacheContestUserInfoIdPrefix, data.Id)
+	contestUserInfoContestUserIdKey := fmt.Sprintf("%s%v", cacheContestUserInfoContestUserIdPrefix, data.ContestUserId)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?)", m.table, contestUserInfoRowsExpectAutoSet)
 		return conn.ExecCtx(ctx, query, data.UserId, data.ContestId, data.JoinStatus, data.ContestRank)
-	}, contestUserInfoContestIdUserIdKey, contestUserInfoIdKey)
+	}, contestUserInfoContestIdUserIdKey, contestUserInfoContestUserIdKey)
 	return ret, err
 }
 
 func (m *defaultContestUserInfoModel) Update(ctx context.Context, newData *ContestUserInfo) error {
-	data, err := m.FindOne(ctx, newData.Id)
+	data, err := m.FindOne(ctx, newData.ContestUserId)
 	if err != nil {
 		return err
 	}
 
 	contestUserInfoContestIdUserIdKey := fmt.Sprintf("%s%v:%v", cacheContestUserInfoContestIdUserIdPrefix, data.ContestId, data.UserId)
-	contestUserInfoIdKey := fmt.Sprintf("%s%v", cacheContestUserInfoIdPrefix, data.Id)
+	contestUserInfoContestUserIdKey := fmt.Sprintf("%s%v", cacheContestUserInfoContestUserIdPrefix, data.ContestUserId)
 	_, err = m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, contestUserInfoRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, newData.UserId, newData.ContestId, newData.JoinStatus, newData.ContestRank, newData.Id)
-	}, contestUserInfoContestIdUserIdKey, contestUserInfoIdKey)
+		query := fmt.Sprintf("update %s set %s where `contest_user_id` = ?", m.table, contestUserInfoRowsWithPlaceHolder)
+		return conn.ExecCtx(ctx, query, newData.UserId, newData.ContestId, newData.JoinStatus, newData.ContestRank, newData.ContestUserId)
+	}, contestUserInfoContestIdUserIdKey, contestUserInfoContestUserIdKey)
 	return err
 }
 
 func (m *defaultContestUserInfoModel) formatPrimary(primary any) string {
-	return fmt.Sprintf("%s%v", cacheContestUserInfoIdPrefix, primary)
+	return fmt.Sprintf("%s%v", cacheContestUserInfoContestUserIdPrefix, primary)
 }
 
 func (m *defaultContestUserInfoModel) queryPrimary(ctx context.Context, conn sqlx.SqlConn, v, primary any) error {
-	query := fmt.Sprintf("select %s from %s where `id` = ? limit 1", contestUserInfoRows, m.table)
+	query := fmt.Sprintf("select %s from %s where `contest_user_id` = ? limit 1", contestUserInfoRows, m.table)
 	return conn.QueryRowCtx(ctx, v, query, primary)
 }
 

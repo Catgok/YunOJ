@@ -60,7 +60,7 @@ func (l *SubmitChange) Consume(key, val string) error {
 		if err != nil || insertRes == nil {
 			return nil
 		}
-		contestRankInfo.Id, err = insertRes.LastInsertId()
+		contestRankInfo.ContestRankId, err = insertRes.LastInsertId()
 	}
 	contestInfo, _ := l.svcCtx.ContestInfoModel.FindOne(l.ctx, contestId)
 	// 非AC
