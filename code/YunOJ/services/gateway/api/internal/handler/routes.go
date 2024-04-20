@@ -3,6 +3,7 @@ package handler
 
 import (
 	"net/http"
+	"time"
 
 	contest "YunOJ/services/gateway/api/internal/handler/contest"
 	judge "YunOJ/services/gateway/api/internal/handler/judge"
@@ -38,6 +39,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithPrefix("/v1/contest"),
+		rest.WithTimeout(3000*time.Millisecond),
 	)
 
 	server.AddRoutes(
@@ -77,6 +79,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			}...,
 		),
 		rest.WithPrefix("/v1/contest"),
+		rest.WithTimeout(3000*time.Millisecond),
 	)
 
 	server.AddRoutes(
@@ -88,6 +91,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithPrefix("/v1/judge"),
+		rest.WithTimeout(3000*time.Millisecond),
 	)
 
 	server.AddRoutes(
@@ -102,6 +106,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			}...,
 		),
 		rest.WithPrefix("/v1/judge"),
+		rest.WithTimeout(3000*time.Millisecond),
 	)
 
 	server.AddRoutes(
@@ -116,18 +121,9 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/getByPage",
 				Handler: problem.GetProblemsByPageHandler(serverCtx),
 			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/getSubmit",
-				Handler: problem.GetSubmitByIdHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/submit",
-				Handler: problem.SubmitHandler(serverCtx),
-			},
 		},
 		rest.WithPrefix("/v1/problem"),
+		rest.WithTimeout(3000*time.Millisecond),
 	)
 
 	server.AddRoutes(
@@ -151,12 +147,23 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				},
 				{
 					Method:  http.MethodPost,
+					Path:    "/getSubmit",
+					Handler: problem.GetSubmitByIdHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/submit",
+					Handler: problem.SubmitHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
 					Path:    "/update",
 					Handler: problem.UpdateProblemHandler(serverCtx),
 				},
 			}...,
 		),
 		rest.WithPrefix("/v1/problem"),
+		rest.WithTimeout(3000*time.Millisecond),
 	)
 
 	server.AddRoutes(
@@ -173,5 +180,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithPrefix("/v1/user"),
+		rest.WithTimeout(3000*time.Millisecond),
 	)
 }

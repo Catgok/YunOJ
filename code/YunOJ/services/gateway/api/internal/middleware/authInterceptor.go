@@ -20,12 +20,12 @@ func (m *AuthInterceptor) Handle(next http.HandlerFunc) http.HandlerFunc {
 			return []byte("6B$)*Us(nvOWLx2C"), nil
 		})
 		if err != nil {
-			http.Error(w, "Invalid or missing u-token", http.StatusUnauthorized)
+			http.Error(w, "Invalid or missing U-Token", http.StatusUnauthorized)
 			return
 		}
 		claims, ok := token.Claims.(jwt.MapClaims)
 		if !ok || !token.Valid {
-			http.Error(w, "Invalid or missing u-token", http.StatusUnauthorized)
+			http.Error(w, "Invalid or missing U-Token", http.StatusUnauthorized)
 			return
 		}
 

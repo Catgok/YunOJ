@@ -44,8 +44,9 @@ type (
 )
 
 @server (
-	group:  user
-	prefix: /v1/user
+	group:   user
+	prefix:  /v1/user
+	timeout: 3s
 )
 service Gateway {
 	@handler Login
@@ -149,8 +150,9 @@ type (
 )
 
 @server (
-	group:  problem
-	prefix: /v1/problem
+	group:   problem
+	prefix:  /v1/problem
+	timeout: 3s
 )
 service Gateway {
 	@handler GetProblemById
@@ -158,18 +160,13 @@ service Gateway {
 
 	@handler GetProblemsByPage
 	post /getByPage (GetProblemsByPageRequest) returns (GetProblemsByPageResponse)
-
-	@handler Submit
-	post /submit (SubmitRequest) returns (SubmitResponse)
-
-	@handler getSubmitById
-	post /getSubmit (GetSubmitByIdRequest) returns (GetSubmitByIdResponse)
 }
 
 @server (
 	group:      problem
 	prefix:     /v1/problem
 	middleware: AuthInterceptor
+	timeout:    3s
 )
 service Gateway {
 	@handler CreateProblem
@@ -183,6 +180,12 @@ service Gateway {
 
 	@handler GetSubmissionByUserIdAndProblemId
 	post /getSubmissionByProblemId (GetSubmissionByProblemIdRequest) returns (GetSubmissionByProblemIdResponse)
+
+	@handler Submit
+	post /submit (SubmitRequest) returns (SubmitResponse)
+
+	@handler getSubmitById
+	post /getSubmit (GetSubmitByIdRequest) returns (GetSubmitByIdResponse)
 }
 
 type (
@@ -209,8 +212,9 @@ type (
 )
 
 @server (
-	group:  judge
-	prefix: /v1/judge
+	group:   judge
+	prefix:  /v1/judge
+	timeout: 3s
 )
 service Gateway {
 	@handler OnlineJudge
@@ -221,6 +225,7 @@ service Gateway {
 	group:      judge
 	prefix:     /v1/judge
 	middleware: AuthInterceptor
+	timeout:    3s
 )
 service Gateway {
 	@handler SetJudgeCase
@@ -325,8 +330,9 @@ type (
 )
 
 @server (
-	group:  contest
-	prefix: /v1/contest
+	group:   contest
+	prefix:  /v1/contest
+	timeout: 3s
 )
 service Gateway {
 	@handler GetContestById
@@ -346,6 +352,7 @@ service Gateway {
 	group:      contest
 	prefix:     /v1/contest
 	middleware: AuthInterceptor
+	timeout:    3s
 )
 service Gateway {
 	@handler SignUpContest
