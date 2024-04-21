@@ -4,7 +4,7 @@ Port: 8888
 
 Auth:
   AccessSecret: 6B$)*Us(nvOWLx2C
-  AccessExpire: 3600
+  AccessExpire: 7200
 
 UserRpc:
   Etcd:

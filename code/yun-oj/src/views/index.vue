@@ -1,8 +1,9 @@
 <template>
   <div class="common-layout">
+    <global-notice></global-notice>
     <el-container>
       <el-header class="global-header">
-        <GlobalHeader/>
+        <global-header/>
       </el-header>
       <el-scrollbar class="main-content">
         <el-main class="global-main">
@@ -20,10 +21,11 @@
 
 import {ElContainer, ElFooter, ElHeader, ElMain, ElScrollbar} from "element-plus";
 import GlobalHeader from "@/components/globalHeader.vue";
+import GlobalNotice from "@/components/globalNotice.vue";
 
 export default {
   name: "AppIndex",
-  components: {ElContainer, ElHeader, ElMain, ElFooter, ElScrollbar, GlobalHeader},
+  components: {ElContainer, ElHeader, ElMain, ElFooter, ElScrollbar, GlobalHeader, GlobalNotice},
 }
 </script>
 

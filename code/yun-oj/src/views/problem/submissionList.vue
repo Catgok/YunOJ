@@ -56,9 +56,7 @@ export default {
     },
 
     loadSubmissionData() {
-      const userInfo = JSON.parse(localStorage.getItem('userInfo'))
       const req = {
-        userId: userInfo.userId,
         problemId: parseInt(this.problemId)
       }
 

@@ -99,10 +99,12 @@ export default {
   components: {Codemirror, ElInput, ElButton, ElSelect, ElOption},
   data() {
     return {
+      inContest: false,
+      contestId: '',
       codemirrorExtensions: [cpp(), autocompletion(), basicLight],
       inputCode: '',
       inputCase: '',
-      outputCase: '运行后会显示输出哦~~',
+      outputCase: '运行后会显示输出',
       problemInfo: {
         problemId: '',
         title: '',
@@ -118,6 +120,8 @@ export default {
   },
   created() {
     this.problemInfo.problemId = this.$route.params.problemId
+    this.inContest = this.$route.params.contestId !== undefined
+    if (this.inContest) this.contestId = this.$route.params.contestId
     this.problemInfo.title = sessionStorage.getItem('problemTitle.' + this.problemInfo.problemId)
     this.getProblemInfo(this.problemInfo.problemId)
   },
@@ -192,14 +196,17 @@ export default {
         this.$router.push('/login')
         return
       }
-      const userInfo = JSON.parse(localStorage.getItem('userInfo'))
-      const req = {
+      let req = {
         problemId: this.problemInfo.problemId,
-        userId: userInfo.userId,
         code: this.inputCode,
         language: 1,
       }
-      this.$axios.post('/problem/submit', req).then((res) => {
+      let uri = '/problem/submit'
+      if (this.inContest) {
+        req.contestId = this.contestId
+        uri = '/contest/submitAnswer'
+      }
+      this.$axios.post(uri, req).then((res) => {
         const resp = res.data
         if (resp.code !== 0) {
           // todo

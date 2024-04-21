@@ -59,7 +59,7 @@ const routes = [{
 }, {
     path: '/contest/:contestId/problem/:problemId',
     name: 'contestProblemContent',
-    component: () => import('@/views/contest/detail/contestProblemContent.vue'),
+    component: () => import('@/views/problem/problemContent.vue'),
     meta: {
         title: 'YunOj - 竞赛'
     },

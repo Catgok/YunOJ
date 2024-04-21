@@ -61,16 +61,19 @@ export default {
         userKey: this.username,
         password: this.password
       }
+      let noticeData = {type: "success", message: "登录成功", duration: 1300}
       this.$axios.post('/user/login', req).then((res) => {
         const resp = res.data
         if (resp.code !== 0) {
-          // todo toast 密码错误
+          noticeData = {type: "error", message: "用户名密码错误", duration: 2500}
+          eventBus.emit('globalNotice', noticeData)
           return
         }
-        localStorage.setItem('userInfo', JSON.stringify(resp.data))
+        // localStorage.setItem('userInfo', JSON.stringify(resp.data))
         localStorage.setItem('U-Token', resp.utoken);
-        localStorage.setItem('loginStatus', 'true')
+        // localStorage.setItem('loginStatus', 'true')
         eventBus.emit('globalHeaderLoadUserInfoEvent')
+        eventBus.emit('globalNotice', noticeData)
         this.$router.go(-1)
       })
     },
@@ -86,13 +89,14 @@ export default {
           // todo toast 注册失败 resp.message
           return
         }
-        if (resp.code === 0 && resp.data) {
+        if (resp.data) {
           this.login()
         }
       })
     },
     forgetPass() {
-      // tos提示
+      const noticeData = {type: "info", message: "请联系管理员", duration: 1300}
+      eventBus.emit('globalNotice', noticeData)
     }
   }
 }
