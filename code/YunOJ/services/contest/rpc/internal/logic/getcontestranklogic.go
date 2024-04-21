@@ -39,6 +39,7 @@ func (l *GetContestRankLogic) GetContestRank(in *contest.GetContestRankRequest) 
 			ProblemId:     v.ProblemId,
 			TryTimes:      v.TryTimes,
 			SubmitTime:    v.SubmitTimes,
+			IsPass:        v.IsPass,
 			FirstPassTime: v.FirstPassTime.Int64,
 		})
 	}

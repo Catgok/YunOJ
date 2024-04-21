@@ -46,11 +46,8 @@ func (l *LoginLogic) Login(req *types.LoginRequest) (resp *types.LoginResponse, 
 	userInfo := types.User{
 		UserId:   res.GetUser().GetUserid(),
 		Username: res.GetUser().GetUsername(),
-		Email:    res.GetUser().GetEmail(),
 		Phone:    res.GetUser().GetPhone(),
 		UserType: res.GetUser().GetUserType(),
-		Avatar:   res.GetUser().GetAvatar(),
-		Status:   res.GetUser().GetStatus(),
 	}
 	resp.Code, resp.Message = res.GetCode(), res.GetMessage()
 	resp.Data = userInfo
@@ -69,7 +66,6 @@ func (l *LoginLogic) generateUToken(user *types.User) (string, error) {
 	claims["user_id"] = user.UserId
 	claims["username"] = user.Username
 	claims["user_type"] = user.UserType
-	claims["status"] = user.Status
 	claims["iat"] = nowTime.Unix()
 	claims["exp"] = nowTime.Unix() + l.svcCtx.Config.Auth.AccessExpire
 	signedToken, err := token.SignedString([]byte(l.svcCtx.Config.Auth.AccessSecret))

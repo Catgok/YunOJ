@@ -71,17 +71,17 @@ export default {
         if (resp.data === null || resp.data.length === 0) {
           return
         }
-        resp.data.forEach((item) => {
+        resp.data.forEach((submitInfo) => {
           this.submissionData.push({
-            submissionId: item.submitId,
-            problemId: item.problemId,
-            problemName: item.problemName,
+            submissionId: submitInfo.submitId,
+            problemId: submitInfo.problemId,
+            problemName: submitInfo.problemName,
             submitTime: '2021-10-10 10:10:10', // todo
-            status: item.status,
-            language: item.language,
-            runtime: (item.time / 1000000).toFixed(3) + 'ms',
-            memory: (item.memory / 1024 / 1024).toFixed(3) + 'MB',
-            code: item.code,
+            status: submitInfo.status,
+            language: submitInfo.language,
+            runtime: (submitInfo.time / 1000000).toFixed(3) + 'ms',
+            memory: (submitInfo.memory / 1024 / 1024).toFixed(3) + 'MB',
+            code: submitInfo.code,
           })
         })
       })

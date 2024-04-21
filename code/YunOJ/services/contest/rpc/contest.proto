@@ -31,7 +31,8 @@ message ContestRankInfo {
   int64 problem_id = 2;
   int64 try_times = 3;
   int64 submit_time = 4;
-  int64 first_pass_time = 5;
+  bool is_pass = 5;
+  int64 first_pass_time = 6;
 }
 message Problem {
   int64 problem_id = 1;

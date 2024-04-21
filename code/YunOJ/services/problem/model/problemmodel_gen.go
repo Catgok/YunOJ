@@ -107,8 +107,8 @@ func (m *defaultProblemModel) FindTitlesByIds(ctx context.Context, ids []int64) 
 	query := fmt.Sprintf("select problem_id, title from %s where `problem_id` in (", m.table)
 
 	vals := []interface{}{}
-	for _, item := range ids {
-		vals = append(vals, item)
+	for _, id := range ids {
+		vals = append(vals, id)
 		query += "?,"
 	}
 	query = query[:len(query)-1] + ")"

@@ -22,13 +22,15 @@ var (
 	userSubmitRowsExpectAutoSet   = strings.Join(stringx.Remove(userSubmitFieldNames, "`submit_id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
 	userSubmitRowsWithPlaceHolder = strings.Join(stringx.Remove(userSubmitFieldNames, "`submit_id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 
-	cacheUserSubmitSubmitIdPrefix = "cache:userSubmit:submitId:"
+	cacheUserSubmitSubmitIdPrefix           = "cache:userSubmit:submitId:"
+	cacheUserSubmitUserIdAndProblemIdPrefix = "cache:userSubmit:userIdAndProblemId:"
 )
 
 type (
 	userSubmitModel interface {
 		Insert(ctx context.Context, data *UserSubmit) (sql.Result, error)
 		FindOne(ctx context.Context, submitId int64) (*UserSubmit, error)
+		FindByUserIdAndProblemId(ctx context.Context, userId, problemId int64) ([]UserSubmit, error)
 		Update(ctx context.Context, data *UserSubmit) error
 		Delete(ctx context.Context, submitId int64) error
 	}
@@ -69,6 +71,22 @@ func (m *defaultUserSubmitModel) Delete(ctx context.Context, submitId int64) err
 	return err
 }
 
+func (m *defaultUserSubmitModel) FindByUserIdAndProblemId(ctx context.Context, userId, problemId int64) ([]UserSubmit, error) {
+	userSubmitUserIdAndProblemIdKey := fmt.Sprintf("%s%v%v", cacheUserSubmitUserIdAndProblemIdPrefix, userId, problemId)
+	var resp []UserSubmit
+	err := m.QueryRowCtx(ctx, &resp, userSubmitUserIdAndProblemIdKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
+		query := fmt.Sprintf("select %s from %s where `user_id` = ? and `problem_id` = ? order by `update_time` ", userSubmitRows, m.table)
+		return conn.QueryRowsCtx(ctx, v, query, userId, problemId)
+	})
+	switch err {
+	case nil:
+		return resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
 func (m *defaultUserSubmitModel) FindOne(ctx context.Context, submitId int64) (*UserSubmit, error) {
 	userSubmitSubmitIdKey := fmt.Sprintf("%s%v", cacheUserSubmitSubmitIdPrefix, submitId)
 	var resp UserSubmit

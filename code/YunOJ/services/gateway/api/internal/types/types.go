@@ -34,6 +34,7 @@ type ContestRankInfo struct {
 	ProblemId     int64 `json:"problemId"`
 	TryTimes      int64 `json:"tryTimes"`
 	SubmitTimes   int64 `json:"submitTimes"`
+	IsPass        bool  `json:"isPass"`
 	FirstPassTime int64 `json:"firstPassTime"`
 }
 
@@ -280,9 +281,6 @@ type UpdateProblemResponse struct {
 type User struct {
 	UserId   int64  `json:"userId"`
 	Username string `json:"username"`
-	Email    string `json:"email"`
 	Phone    string `json:"phone"`
 	UserType int64  `json:"userType"`
-	Avatar   string `json:"avatar"`
-	Status   int64  `json:"status"`
 }

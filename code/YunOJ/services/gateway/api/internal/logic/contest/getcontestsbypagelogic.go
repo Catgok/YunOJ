@@ -36,13 +36,13 @@ func (l *GetContestsByPageLogic) GetContestsByPage(req *types.GetContestsByPageR
 		return resp, nil
 	}
 	var data []types.Contest
-	for _, item := range res.GetContests() {
+	for _, contestInfo := range res.GetContests() {
 		data = append(data, types.Contest{
-			Id:          item.GetId(),
-			Name:        item.GetName(),
-			Description: item.GetDescription(),
-			StartTime:   item.GetStartTime(),
-			EndTime:     item.GetEndTime(),
+			Id:          contestInfo.GetId(),
+			Name:        contestInfo.GetName(),
+			Description: contestInfo.GetDescription(),
+			StartTime:   contestInfo.GetStartTime(),
+			EndTime:     contestInfo.GetEndTime(),
 		})
 	}
 	resp.Code, resp.Message = res.GetCode(), res.GetMessage()

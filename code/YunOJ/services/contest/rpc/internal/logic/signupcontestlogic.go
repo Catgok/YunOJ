@@ -5,6 +5,7 @@ import (
 	"YunOJ/services/contest/rpc/contest"
 	"YunOJ/services/contest/rpc/internal/svc"
 	"context"
+	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -28,12 +29,22 @@ func (l *SignUpContestLogic) SignUpContest(in *contest.SignUpContestRequest) (*c
 		Code:    0,
 		Message: "success",
 	}
+	contestInfo, err := l.svcCtx.ContestInfoModel.FindOne(l.ctx, in.GetContestId())
+	if err != nil {
+		resp.Code, resp.Message = 5003, err.Error()
+		return resp, nil
+	}
+	currentTime := time.Now()
+	if currentTime.After(contestInfo.EndTime) || currentTime.Before(contestInfo.StartTime) {
+		resp.Code, resp.Message = 10301, "The contest is not in progress"
+		return resp, nil
+	}
 	data := &model.ContestUserInfo{
 		UserId:     in.GetUserId(),
 		ContestId:  in.GetContestId(),
 		JoinStatus: 1,
 	}
-	_, err := l.svcCtx.ContestUserInfoModel.Insert(l.ctx, data)
+	_, err = l.svcCtx.ContestUserInfoModel.Insert(l.ctx, data)
 	if err != nil {
 		resp.Code, resp.Message = 5003, err.Error()
 		return resp, nil

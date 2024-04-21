@@ -35,10 +35,10 @@ func (l *GetContestProblemsLogic) GetContestProblems(req *types.GetContestProble
 		return resp, nil
 	}
 	var data []types.ContestProblemInfo
-	for _, item := range res.GetProblems() {
+	for _, problemInfo := range res.GetProblems() {
 		data = append(data, types.ContestProblemInfo{
-			ProblemId: item.GetProblemId(),
-			Title:     item.GetTitle(),
+			ProblemId: problemInfo.GetProblemId(),
+			Title:     problemInfo.GetTitle(),
 		})
 
 	}

@@ -31,14 +31,14 @@ func (l *SubmitAnswerLogic) SubmitAnswer(in *contest.SubmitAnswerRequest) (*cont
 		Code:    0,
 		Message: "success",
 	}
-	nowTime := time.Now().Unix()
 	contestInfo, err := l.svcCtx.ContestInfoModel.FindOne(l.ctx, in.GetContestId())
 	if err != nil {
 		resp.Code, resp.Message = 5003, err.Error()
 		return resp, nil
 	}
-	if nowTime > contestInfo.EndTime.Unix() {
-		resp.Code, resp.Message = 10301, "Contest has ended"
+	currentTime := time.Now()
+	if currentTime.After(contestInfo.EndTime) || currentTime.Before(contestInfo.StartTime) {
+		resp.Code, resp.Message = 10301, "The contest is not in progress"
 		return resp, nil
 	}
 	createSubmitResp, err := l.svcCtx.ProblemRpc.CreateSubmit(l.ctx, &problem.CreateSubmitRequest{

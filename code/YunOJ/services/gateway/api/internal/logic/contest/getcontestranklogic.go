@@ -35,13 +35,14 @@ func (l *GetContestRankLogic) GetContestRank(req *types.GetContestRankRequest) (
 		return resp, nil
 	}
 	var data []types.ContestRankInfo
-	for _, item := range res.GetRankInfo() {
+	for _, rankInfo := range res.GetRankInfo() {
 		data = append(data, types.ContestRankInfo{
-			UserId:        item.GetUserId(),
-			ProblemId:     item.GetProblemId(),
-			TryTimes:      item.GetTryTimes(),
-			SubmitTimes:   item.GetSubmitTime(),
-			FirstPassTime: item.GetFirstPassTime(),
+			UserId:        rankInfo.GetUserId(),
+			ProblemId:     rankInfo.GetProblemId(),
+			TryTimes:      rankInfo.GetTryTimes(),
+			SubmitTimes:   rankInfo.GetSubmitTime(),
+			IsPass:        rankInfo.GetIsPass(),
+			FirstPassTime: rankInfo.GetFirstPassTime(),
 		})
 	}
 	resp.Code, resp.Message = res.GetCode(), res.GetMessage()
