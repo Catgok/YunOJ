@@ -38,15 +38,16 @@ func (l *GetSubmitByUserIdAndProblemIdLogic) GetSubmitByUserIdAndProblemId(in *p
 	resp.Submits = []*problem.Submit{}
 	for _, submit := range res {
 		resp.Submits = append(resp.Submits, &problem.Submit{
-			SubmitId:  submit.SubmitId,
-			ProblemId: submit.ProblemId,
-			UserId:    submit.UserId,
-			Language:  submit.Language,
-			Code:      submit.Code,
-			Status:    submit.Status,
-			Result:    submit.Result,
-			Time:      submit.Time,
-			Memory:    submit.Memory,
+			SubmitId:   submit.SubmitId,
+			ProblemId:  submit.ProblemId,
+			UserId:     submit.UserId,
+			Language:   submit.Language,
+			Code:       submit.Code,
+			Status:     submit.Status,
+			Result:     submit.Result,
+			Time:       submit.Time,
+			Memory:     submit.Memory,
+			CreateTime: submit.CreateTime.Unix(),
 		})
 	}
 	return resp, nil

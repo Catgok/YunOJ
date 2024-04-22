@@ -182,4 +182,19 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		rest.WithPrefix("/v1/user"),
 		rest.WithTimeout(3000*time.Millisecond),
 	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.AuthInterceptor},
+			[]rest.Route{
+				{
+					Method:  http.MethodPost,
+					Path:    "/getUserInfoByUToken",
+					Handler: user.GetUserInfoByUTokenHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/v1/user"),
+		rest.WithTimeout(3000*time.Millisecond),
+	)
 }

@@ -206,9 +206,9 @@ func (util *OSSUtil) GetDirectoryFilesByProblemId(problemId int64) ([]string, er
 
 func (util *OSSUtil) Upload(cases []*judge.JudgeCase, problemId int64) (err error) {
 	var inputs, outputs []string
-	for _, v := range cases {
-		inputs = append(inputs, v.Input)
-		outputs = append(outputs, v.Output)
+	for _, caseInfo := range cases {
+		inputs = append(inputs, caseInfo.Input)
+		outputs = append(outputs, caseInfo.Output)
 	}
 	err = util.uploadStrings(util.getInFilePaths(problemId, len(inputs)), inputs)
 	if err != nil {

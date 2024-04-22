@@ -38,6 +38,11 @@ type (
 		BaseResponse
 		Data bool `json:"data"`
 	}
+	GetUserInfoByUTokenRequest  {}
+	GetUserInfoByUTokenResponse {
+		BaseResponse
+		Data User `json:"data"`
+	}
 )
 
 @server (
@@ -53,6 +58,17 @@ service Gateway {
 	post /register (RegisterRequest) returns (RegisterResponse)
 }
 
+@server (
+	group:      user
+	prefix:     /v1/user
+	middleware: AuthInterceptor
+	timeout:    3s
+)
+service Gateway {
+	@handler GetUserInfoByUToken
+	post /getUserInfoByUToken (GetUserInfoByUTokenRequest) returns (GetUserInfoByUTokenResponse)
+}
+
 type (
 	Problem {
 		ProblemId   int64  `json:"problemId"`
@@ -65,15 +81,16 @@ type (
 		PassCount   int64  `json:"passCount"`
 	}
 	Submit {
-		SubmitId  int64  `json:"submitId"`
-		UserId    int64  `json:"userId"`
-		ProblemId int64  `json:"problemId"`
-		Code      string `json:"code"`
-		Status    int64  `json:"status"`
-		Language  int64  `json:"language"`
-		Result    int64  `json:"result"`
-		Time      int64  `json:"time"`
-		Memory    int64  `json:"memory"`
+		SubmitId   int64  `json:"submitId"`
+		UserId     int64  `json:"userId"`
+		ProblemId  int64  `json:"problemId"`
+		Code       string `json:"code"`
+		Status     int64  `json:"status"`
+		Language   int64  `json:"language"`
+		Result     int64  `json:"result"`
+		Time       int64  `json:"time"`
+		Memory     int64  `json:"memory"`
+		CreateTime int64  `json:"createTime"`
 	}
 	GetProblemByIdRequest {
 		ProblemId int64 `json:"problemId"`

@@ -35,10 +35,10 @@ func (l *GetProblemTitleByIdsLogic) GetProblemTitleByIds(in *problem.GetProblemT
 		return resp, nil
 	}
 	var data []*problem.ProblemTitleInfo
-	for _, v := range res {
+	for _, problemTitleInfo := range res {
 		data = append(data, &problem.ProblemTitleInfo{
-			ProblemIds: v.ProblemId,
-			Title:      v.Title,
+			ProblemIds: problemTitleInfo.ProblemId,
+			Title:      problemTitleInfo.Title,
 		})
 	}
 	resp.ProblemTitleInfos = data

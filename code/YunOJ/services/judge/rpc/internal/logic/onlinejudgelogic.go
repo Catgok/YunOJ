@@ -75,15 +75,25 @@ func onlineJudgeOne(code, input string, submitId, timeLimit, memLimit int64) (re
 	if err != nil {
 		return SystemError, ""
 	}
-	if runData[0].ExitStatus != 0 {
-		return RuntimeError, ""
+	if runData[0].Status == MemoryLimitExceeded.GetMsg() {
+		return MemoryLimitExceeded, ""
 	}
+	if runData[0].Status == TimeLimitExceeded.GetMsg() {
+		return TimeLimitExceeded, ""
+	}
+	if runData[0].Status == OutputLimitExceeded.GetMsg() {
+		return OutputLimitExceeded, ""
+	}
+
 	output = runData[0].Files.Stdout
 	if runData[0].RunTime > timeLimitNs {
 		return TimeLimitExceeded, output
 	}
 	if runData[0].Memory > memLimitB {
 		return MemoryLimitExceeded, output
+	}
+	if runData[0].ExitStatus != 0 {
+		return RuntimeError, ""
 	}
 	return Accepted, output
 }

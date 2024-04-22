@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export function autoTextarea(elem, extra, maxHeight) {
     extra = extra || 0;
     let isFirefox = !!document.getBoxObjectFor || 'mozInnerScreenX' in window,
@@ -74,4 +76,13 @@ window.ResizeObserver = class ResizeObserver extends _ResizeObserver {
 export function getLoginStatus() {
     return localStorage.getItem('U-Token') !== null
     // return localStorage.getItem('userInfo') !== null
+}
+
+export function formDate(time) {
+    return moment(time * 1000).format('YYYY-MM-DD HH:mm')
+}
+
+export function isCoach() {
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    return userInfo.userType === 1
 }

@@ -52,11 +52,11 @@ func (l *JudgeLogic) Judge(in *judge.JudgeRequest) (*judge.JudgeResponse, error)
 		return resp, nil
 	}
 	var inputs, outputs []string
-	for _, v := range paths {
-		if strings.HasSuffix(v, "in") {
-			inputs = append(inputs, v)
-		} else if strings.HasSuffix(v, "out") {
-			outputs = append(outputs, v)
+	for _, path := range paths {
+		if strings.HasSuffix(path, "in") {
+			inputs = append(inputs, path)
+		} else if strings.HasSuffix(path, "out") {
+			outputs = append(outputs, path)
 		}
 	}
 	if len(inputs) != len(outputs) {
@@ -149,17 +149,25 @@ func judgeOne(code, input, output string, submitId, timeLimit, memLimit int64) (
 	if err != nil {
 		return SystemError, 0, 0
 	}
-
-	if runData[0].ExitStatus != 0 {
-		return RuntimeError, 0, 0
+	if runData[0].Status == MemoryLimitExceeded.GetMsg() {
+		return MemoryLimitExceeded, 0, 0
 	}
+	if runData[0].Status == TimeLimitExceeded.GetMsg() {
+		return TimeLimitExceeded, 0, 0
+	}
+	if runData[0].Status == OutputLimitExceeded.GetMsg() {
+		return OutputLimitExceeded, 0, 0
+	}
+
 	if runData[0].RunTime > timeLimitNs {
 		return TimeLimitExceeded, runData[0].RunTime, runData[0].Memory
 	}
 	if runData[0].Memory > memLimitB {
 		return MemoryLimitExceeded, runData[0].RunTime, runData[0].Memory
 	}
-
+	if runData[0].ExitStatus != 0 {
+		return RuntimeError, 0, 0
+	}
 	reg := regexp.MustCompile(`[[:cntrl:]]`)
 	cleanStdout := reg.ReplaceAllString(runData[0].Files.Stdout, "")
 	cleanOutput := reg.ReplaceAllString(output, "")

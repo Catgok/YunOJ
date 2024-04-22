@@ -29,7 +29,7 @@
 import ContestProblemList from "@/views/contest/detail/contestProblemList.vue";
 import ContestRankInfo from "@/views/contest/detail/contestRankInfo.vue";
 import {eventBus} from "@/utils/eventBus";
-import moment from "moment/moment";
+import {formDate} from "@/utils/utils";
 
 export default {
   name: 'contestContent',
@@ -84,8 +84,8 @@ export default {
           return
         }
         this.contestInfo = resp.data
-        this.contestInfo.startTime = moment(resp.data.startTime * 1000).format('YYYY-MM-DD HH:mm')
-        this.contestInfo.endTime = moment(resp.data.endTime * 1000).format('YYYY-MM-DD HH:mm')
+        this.contestInfo.startTime = formDate(resp.data.startTime)
+        this.contestInfo.endTime = formDate(resp.data.endTime)
       })
     }
   }

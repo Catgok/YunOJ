@@ -30,7 +30,8 @@
     "vue-clipboard3": "^2.0.0",
     "vue-codemirror": "^6.1.1",
     "vue-router": "^4.2.4",
-    "vuex": "^4.1.0"
+    "vuex": "^4.1.0",
+    "ws": "^8.16.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

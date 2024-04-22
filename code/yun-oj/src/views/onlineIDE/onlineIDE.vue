@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!--    todo 宽度-->
     <div style="display: flex;justify-content: space-between;margin: 20px 0 1px 0;background-color: #DCDCDC">
       <div style="display: flex;align-items: center;font-size: 20px;margin-left: 5px">
         <div>在线IDE</div>
@@ -24,11 +23,10 @@
           :indent-with-tab="true"
           :tab-size="4"
           :extensions="codemirrorExtensions"
-          @change="codeChange"
-          @focus="codeFocus"
-          @blur="codeBlur"
       />
     </div>
+
+<!--    <div> {{ runResult }}</div>-->
 
     <div style="display: flex;margin-top: 20px">
       <div>
@@ -81,6 +79,7 @@ int main() {
         {label: 'C++', value: 1,},
         // {label: '其他语言', value: 2,},
       ],
+      runResult: ''
     }
   },
   mounted() {
@@ -90,16 +89,8 @@ int main() {
     autoTextarea(targetTextElement)
   },
   methods: {
-    codeChange() {
-      console.log('change', this.inputCode)
-    },
-    codeFocus() {
-      console.log('focus', this.inputCode)
-    },
-    codeBlur() {
-      console.log('blur', this.inputCode)
-    },
     onlineJudge() {
+      this.outputCase = '运行中.....'
       const req = {
         code: this.inputCode,
         language: 1,
@@ -109,10 +100,11 @@ int main() {
       this.$axios.post('/judge/onlineJudge', req).then((res) => {
         const resp = res.data
         if (resp.code !== 0) {
-          // todo
+          this.outputCase = resp.message
           return
         }
         this.outputCase = resp.data
+        // this.runResult = "运行成功"
       })
     },
   },

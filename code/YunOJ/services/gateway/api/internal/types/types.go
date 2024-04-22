@@ -153,6 +153,14 @@ type GetSubmitByIdResponse struct {
 	Data Submit `json:"data"`
 }
 
+type GetUserInfoByUTokenRequest struct {
+}
+
+type GetUserInfoByUTokenResponse struct {
+	BaseResponse
+	Data User `json:"data"`
+}
+
 type JudgeCase struct {
 	Input  string `json:"input"`
 	Output string `json:"output"`
@@ -221,15 +229,16 @@ type SignUpContestResponse struct {
 }
 
 type Submit struct {
-	SubmitId  int64  `json:"submitId"`
-	UserId    int64  `json:"userId"`
-	ProblemId int64  `json:"problemId"`
-	Code      string `json:"code"`
-	Status    int64  `json:"status"`
-	Language  int64  `json:"language"`
-	Result    int64  `json:"result"`
-	Time      int64  `json:"time"`
-	Memory    int64  `json:"memory"`
+	SubmitId   int64  `json:"submitId"`
+	UserId     int64  `json:"userId"`
+	ProblemId  int64  `json:"problemId"`
+	Code       string `json:"code"`
+	Status     int64  `json:"status"`
+	Language   int64  `json:"language"`
+	Result     int64  `json:"result"`
+	Time       int64  `json:"time"`
+	Memory     int64  `json:"memory"`
+	CreateTime int64  `json:"createTime"`
 }
 
 type SubmitAnswerRequest struct {

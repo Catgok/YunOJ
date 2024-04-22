@@ -41,17 +41,18 @@ func (l *GetSubmissionByUserIdAndProblemIdLogic) GetSubmissionByUserIdAndProblem
 	}
 	resp.Code, resp.Message = res.GetCode(), res.GetMessage()
 	var data []types.Submit
-	for _, v := range res.GetSubmits() {
+	for _, submitInfo := range res.GetSubmits() {
 		data = append(data, types.Submit{
-			SubmitId:  v.GetSubmitId(),
-			UserId:    v.GetUserId(),
-			ProblemId: v.GetProblemId(),
-			Code:      v.GetCode(),
-			Status:    v.GetStatus(),
-			Language:  v.GetLanguage(),
-			Result:    v.GetResult(),
-			Time:      v.GetTime(),
-			Memory:    v.GetMemory(),
+			SubmitId:   submitInfo.GetSubmitId(),
+			UserId:     submitInfo.GetUserId(),
+			ProblemId:  submitInfo.GetProblemId(),
+			Code:       submitInfo.GetCode(),
+			Status:     submitInfo.GetStatus(),
+			Language:   submitInfo.GetLanguage(),
+			Result:     submitInfo.GetResult(),
+			Time:       submitInfo.GetTime(),
+			Memory:     submitInfo.GetMemory(),
+			CreateTime: submitInfo.GetCreateTime(),
 		})
 	}
 	resp.Data = data

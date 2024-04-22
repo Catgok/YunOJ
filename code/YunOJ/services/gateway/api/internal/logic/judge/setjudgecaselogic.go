@@ -40,16 +40,16 @@ func (l *SetJudgeCaseLogic) SetJudgeCase(req *types.SetJudgeCaseRequest) (resp *
 		return resp, nil
 	}
 
-	var judgeCase []*judge.JudgeCase
-	for _, v := range req.Cases {
-		judgeCase = append(judgeCase, &judge.JudgeCase{
-			Input:  v.Input,
-			Output: v.Output,
+	var judgeCases []*judge.JudgeCase
+	for _, judgeCase := range req.Cases {
+		judgeCases = append(judgeCases, &judge.JudgeCase{
+			Input:  judgeCase.Input,
+			Output: judgeCase.Output,
 		})
 	}
 	res, err := l.svcCtx.JudgeRpc.AddJudgeCases(l.ctx, &judge.AddJudgeCasesRequest{
 		ProblemId: req.ProblemId,
-		Cases:     judgeCase,
+		Cases:     judgeCases,
 	})
 	if err != nil {
 		resp.Code, resp.Message = 500, err.Error()

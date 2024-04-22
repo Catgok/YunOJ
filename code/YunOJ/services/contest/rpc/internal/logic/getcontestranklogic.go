@@ -33,14 +33,14 @@ func (l *GetContestRankLogic) GetContestRank(in *contest.GetContestRankRequest) 
 		return resp, nil
 	}
 	var rankInfoList []*contest.ContestRankInfo
-	for _, v := range data {
+	for _, contestRankInfo := range data {
 		rankInfoList = append(rankInfoList, &contest.ContestRankInfo{
-			UserId:        v.UserId,
-			ProblemId:     v.ProblemId,
-			TryTimes:      v.TryTimes,
-			SubmitTime:    v.SubmitTimes,
-			IsPass:        v.IsPass,
-			FirstPassTime: v.FirstPassTime.Int64,
+			UserId:        contestRankInfo.UserId,
+			ProblemId:     contestRankInfo.ProblemId,
+			TryTimes:      contestRankInfo.TryTimes,
+			SubmitTime:    contestRankInfo.SubmitTimes,
+			IsPass:        contestRankInfo.IsPass,
+			FirstPassTime: contestRankInfo.FirstPassTime.Int64,
 		})
 	}
 	resp.RankInfo = rankInfoList

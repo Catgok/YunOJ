@@ -28,6 +28,8 @@
 
 <script>
 import {ElButton, ElTable, ElTableColumn} from "element-plus";
+import {codeRunResultMap, languageMap} from "@/utils/globalStaticData";
+import {formDate} from "@/utils/utils";
 
 export default {
   components: {ElTable, ElTableColumn, ElButton},
@@ -74,9 +76,9 @@ export default {
             submissionId: submitInfo.submitId,
             problemId: submitInfo.problemId,
             problemName: submitInfo.problemName,
-            submitTime: '2021-10-10 10:10:10', // todo
-            status: submitInfo.status,
-            language: submitInfo.language,
+            submitTime: formDate(submitInfo.createTime),
+            status: codeRunResultMap[submitInfo.result],
+            language: languageMap[submitInfo.language],
             runtime: (submitInfo.time / 1000000).toFixed(3) + 'ms',
             memory: (submitInfo.memory / 1024 / 1024).toFixed(3) + 'MB',
             code: submitInfo.code,

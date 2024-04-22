@@ -39,10 +39,10 @@ func (l *GetContestProblemsLogic) GetContestProblems(in *contest.GetContestProbl
 		return resp, nil
 	}
 	var data []*contest.Problem
-	for _, v := range problemTitleInfosResp.ProblemTitleInfos {
+	for _, problemTitleInfo := range problemTitleInfosResp.ProblemTitleInfos {
 		data = append(data, &contest.Problem{
-			ProblemId: v.GetProblemIds(),
-			Title:     v.GetTitle(),
+			ProblemId: problemTitleInfo.GetProblemIds(),
+			Title:     problemTitleInfo.GetTitle(),
 		})
 	}
 	resp.Problems = data

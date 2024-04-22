@@ -22,6 +22,20 @@ const routes = [{
         title: 'YunOj - 题库'
     },
 }, {
+    path: '/problem/edit/:problemId',
+    name: 'problem-edit',
+    component: () => import('@/views/problem/problemEdit.vue'),
+    meta: {
+        title: 'YunOj - 题库'
+    },
+}, {
+    path: '/problem/new',
+    name: 'problem-new',
+    component: () => import('@/views/problem/problemEdit.vue'),
+    meta: {
+        title: 'YunOj - 题库'
+    },
+}, {
     path: '/problem/:problemId',
     name: 'problemContent',
     component: () => import('@/views/problem/problemContent.vue'),

@@ -40,16 +40,16 @@ func (l *GetProblemsByPageLogic) GetProblemsByPage(req *types.GetProblemsByPageR
 	}
 	resp.Code, resp.Message = res.GetCode(), res.GetMessage()
 	var data []types.Problem
-	for _, v := range res.GetProblems() {
+	for _, problemInfo := range res.GetProblems() {
 		data = append(data, types.Problem{
-			ProblemId:   v.GetProblemId(),
-			Title:       v.GetTitle(),
-			TimeLimit:   v.GetTimeLimit(),
-			MemoryLimit: v.GetMemoryLimit(),
-			Description: v.GetDescription(),
-			HardLevel:   v.GetHardLevel(),
-			SubmitCount: v.GetSubmitCount(),
-			PassCount:   v.GetPassCount(),
+			ProblemId:   problemInfo.GetProblemId(),
+			Title:       problemInfo.GetTitle(),
+			TimeLimit:   problemInfo.GetTimeLimit(),
+			MemoryLimit: problemInfo.GetMemoryLimit(),
+			Description: problemInfo.GetDescription(),
+			HardLevel:   problemInfo.GetHardLevel(),
+			SubmitCount: problemInfo.GetSubmitCount(),
+			PassCount:   problemInfo.GetPassCount(),
 		})
 	}
 	resp.Data = data

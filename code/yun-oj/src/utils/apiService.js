@@ -18,7 +18,7 @@ apiService.interceptors.request.use(config => {
 
 // 响应拦截器
 apiService.interceptors.response.use(response => {
-    if (response.code === 401) {
+    if (response.status === 401) {
         localStorage.removeItem('U-Token');
         window.location.href = '/login';
         return;
@@ -26,7 +26,11 @@ apiService.interceptors.response.use(response => {
     return response;
 }, error => {
     // 响应错误处理
-    return Promise.reject(error);
+    // return Promise.reject(error);
+    if (error.response.status === 401) {
+        localStorage.clear();
+        window.location.href = '/login';
+    }
 });
 
 export default apiService;

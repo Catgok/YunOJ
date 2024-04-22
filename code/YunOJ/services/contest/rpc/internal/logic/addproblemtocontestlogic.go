@@ -30,10 +30,10 @@ func (l *AddProblemToContestLogic) AddProblemToContest(in *contest.AddProblemToC
 		Message: "success",
 	}
 	var data []*model.ContestProblemInfo
-	for _, v := range in.ProblemIds {
+	for _, problemId := range in.ProblemIds {
 		data = append(data, &model.ContestProblemInfo{
 			ContestId: in.ContestId,
-			ProblemId: v,
+			ProblemId: problemId,
 		})
 	}
 	_, err := l.svcCtx.ContestProblemInfoModel.InsertBatch(l.ctx, data)

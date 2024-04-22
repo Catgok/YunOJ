@@ -1,7 +1,12 @@
 <template>
   <div>
-    <div style="text-align:left; margin:0 15px 15px 5px;font-size: 30px">
-      {{ this.$route.params.problemId }}. {{ problemInfo.title }}
+    <div style="display: flex;justify-content: space-between;align-items: center;">
+      <div style="text-align:left; margin:0 15px 15px 5px;font-size: 30px">
+        {{ this.$route.params.problemId }}. {{ problemInfo.title }}
+      </div>
+      <div>
+        <div v-if="isCoach()" @click="routerToEditProblem">编辑题目</div>
+      </div>
     </div>
     <div style="display: flex">
       <div style="flex: 20;border-top: 1px #938c8c solid;">
@@ -18,7 +23,7 @@
         </div>
         <div class="problem-attach-info problem-attach-info-0">
           <div>难度 :</div>
-          <div>{{ problemInfo.hardLevel }}</div>
+          <div :style="hardStyle">{{ problemInfo.hardLevel }}</div>
         </div>
         <div @click="problemSubmission()" class="problem-attach-info problem-submission-button">
           <div>提交记录</div>
@@ -49,14 +54,11 @@
             :indent-with-tab="true"
             :tab-size="4"
             :extensions="codemirrorExtensions"
-            @change="codeChange"
-            @focus="codeFocus"
-            @blur="codeBlur"
         />
       </div>
 
       <div style="display: flex;justify-content: space-between;align-items: center">
-        <div></div>
+        <div> {{ runCodeResultMsg }}</div>
         <div style="display: flex;justify-content: flex-end;margin: 25px 10px 15px 0">
           <el-button @click="runCode">运行</el-button>
           <el-button @click="submitCode">提交</el-button>
@@ -89,11 +91,12 @@
 <script>
 import {cpp} from '@codemirror/lang-cpp'
 import {autocompletion} from '@codemirror/autocomplete'
-import {autoTextarea, getLoginStatus} from "@/utils/utils";
+import {autoTextarea, getLoginStatus, isCoach} from "@/utils/utils";
 
 import {basicLight} from '@uiw/codemirror-theme-basic/light'
 import {Codemirror} from 'vue-codemirror'
 import {ElButton, ElInput, ElOption, ElSelect} from "element-plus"
+import {codeRunResultMap} from "@/utils/globalStaticData";
 
 export default {
   components: {Codemirror, ElInput, ElButton, ElSelect, ElOption},
@@ -116,6 +119,8 @@ export default {
         // {label: '其他语言', value: 2,},
       ],
       submitId: '',
+      hardStyle: {},
+      runCodeResultMsg: '',
     }
   },
   created() {
@@ -130,6 +135,26 @@ export default {
     const targetTextElement = document.querySelector(".output-case-textarea")
     autoTextarea(sourceTextElement)
     autoTextarea(targetTextElement)
+
+    const uToken = localStorage.getItem('U-Token')
+    this.socket = new WebSocket(`ws://localhost:8080?uToken=${uToken}`);
+    this.socket.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      this.runCodeResultMsg = codeRunResultMap[message.Result]
+    };
+
+    // this.socket.onopen = () => {
+    //   console.log('WebSocket connected');
+    // };
+    //
+    // this.socket.onclose = () => {
+    //   console.log('WebSocket disconnected');
+    // };
+    //
+    // this.socket.onerror = (error) => {
+    //   console.error('WebSocket Error:', error);
+    // };
+
   },
   computed: {
     renderedMarkdown() {
@@ -139,20 +164,17 @@ export default {
     },
   },
   methods: {
-    codeChange() {
-      // console.log('change', this.inputCode)
-    },
-    codeFocus() {
-      // console.log('focus', this.inputCode)
-    },
-    codeBlur() {
-      // console.log('blur', this.inputCode)
+    isCoach,
+    routerToEditProblem() {
+      const path = `/problem/edit/${this.problemInfo.problemId}`
+      this.$router.push(path)
     },
     problemSubmission() {
       const path = `/problem/submission/${this.problemInfo.problemId}`
       this.$router.push(path)
     },
     getProblemInfo(problemId) {
+      const hardMap = ['', '简单', '中等', '困难']
       const req = {
         problemId: parseInt(problemId),
       }
@@ -168,11 +190,12 @@ export default {
         this.problemInfo.memoryLimit = resp.data.memoryLimit
         this.problemInfo.passCount = resp.data.passCount
         this.problemInfo.tryCount = resp.data.submitCount
-        this.problemInfo.hardLevel = resp.data.hardLevel
+        this.problemInfo.hardLevel = hardMap[resp.data.hardLevel]
         sessionStorage.setItem('problemTitle.' + this.problemInfo.problemId, this.problemInfo.title)
       })
     },
     runCode() {
+      this.runCodeResultMsg = '运行中.....'
       if (getLoginStatus() === false) {
         this.$router.push('/login')
         return
@@ -185,13 +208,15 @@ export default {
       this.$axios.post('/judge/onlineJudge', req).then((res) => {
         const resp = res.data
         if (resp.code !== 0) {
-          // todo
+          this.runCodeResultMsg = resp.message
           return
         }
         this.outputCase = resp.data
+        this.runCodeResultMsg = '运行成功'
       })
     },
     submitCode() {
+      this.runCodeResultMsg = '正在评测.....'
       if (getLoginStatus() === false) {
         this.$router.push('/login')
         return
