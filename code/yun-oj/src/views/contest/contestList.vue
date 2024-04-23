@@ -5,7 +5,6 @@
     </div>
     <div style="height: 40px">
     </div>
-
     <el-table :data="contestData" stripe style="width: 100%;">
       <el-table-column type="index" label="#" width="70" :index="ContestListIndexMethod"/>
       <el-table-column prop="name" label="竞赛名称">
@@ -17,19 +16,19 @@
       <el-table-column prop="endTime" label="结束时间" width="150"/>
       <el-table-column width="150">
         <template #default="scope">
-          <el-button text @click="signupContest(scope.row)">报名</el-button>
+          <el-button text @click="signupContest(scope.row)">报名</el-button><!-- todo -->
         </template>
       </el-table-column>
     </el-table>
 
     <div style="display: flex;flex-direction: row-reverse; margin: 30px 0 40px 0 ">
-      <el-pagination
-          small background layout="prev, pager, next"
-          :total="total"
-          :current-page="currentPage"
-          :page-size="pageSize"
-          @current-change="handleCurrentChange"
-      ></el-pagination>
+      <el-pagination small background layout="prev, pager, next" :total="total" :current-page="currentPage"
+                     :page-size="pageSize" @current-change="handleCurrentChange"></el-pagination>
+    </div>
+    <div style="text-align: right">
+      <el-button type="success" v-if="isCoach()&&total!==0&&total<=currentPage*pageSize" @click="routeToNewContest">
+        新建竞赛
+      </el-button>
     </div>
   </div>
 </template>
@@ -37,12 +36,13 @@
 <script>
 import moment from 'moment';
 import {ElButton, ElPagination, ElTable, ElTableColumn} from "element-plus";
+import {isCoach} from "@/utils/utils";
 
 export default {
   components: {ElTable, ElTableColumn, ElPagination, ElButton},
   data() {
     return {
-      total: 5,
+      total: 0,
       currentPage: 1,
       pageSize: 5,
       contestData: []
@@ -52,8 +52,12 @@ export default {
     this.loadContestListData(1)
   },
   methods: {
+    isCoach,
     ContestListIndexMethod(index) {
       return (this.currentPage - 1) * this.pageSize + index + 1
+    },
+    routeToNewContest() {
+      this.$router.push('/contest/new')
     },
     handleContestProblemClick(row) {
       const url = `/contest/${row.id}`;

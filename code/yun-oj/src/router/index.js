@@ -23,14 +23,14 @@ const routes = [{
     },
 }, {
     path: '/problem/edit/:problemId',
-    name: 'problem-edit',
+    name: 'problemEdit',
     component: () => import('@/views/problem/problemEdit.vue'),
     meta: {
         title: 'YunOj - 题库'
     },
 }, {
     path: '/problem/new',
-    name: 'problem-new',
+    name: 'problemNew',
     component: () => import('@/views/problem/problemEdit.vue'),
     meta: {
         title: 'YunOj - 题库'
@@ -70,6 +70,20 @@ const routes = [{
     meta: {
         title: 'YunOj - 竞赛'
     },
+},{
+    path: '/contest/new',
+    name: 'contestNew',
+    component: () => import('@/views/contest/contestEdit.vue'),
+    meta: {
+        title: 'YunOj - 竞赛'
+    },
+},{
+    path: '/contest/edit/:contestId',
+    name: 'contestEdit',
+    component: () => import('@/views/contest/contestEdit.vue'),
+    meta: {
+        title: 'YunOj - 竞赛'
+    },
 }, {
     path: '/contest/:contestId/problem/:problemId',
     name: 'contestProblemContent',
@@ -77,20 +91,19 @@ const routes = [{
     meta: {
         title: 'YunOj - 竞赛'
     },
-},
-    {
-        path: '/announcement',
-        name: 'announcement',
-        component: () => import('@/views/announcement/announcement.vue'),
-        meta: {},
-    }, {
-        path: '/onlineIDE',
-        name: 'onlineIDE',
-        component: () => import('@/views/onlineIDE/onlineIDE.vue'),
-        meta: {
-            title: 'YunOj - 在线IDE'
-        },
-    }
+}, {
+    path: '/announcement',
+    name: 'announcement',
+    component: () => import('@/views/announcement/announcement.vue'),
+    meta: {},
+}, {
+    path: '/onlineIDE',
+    name: 'onlineIDE',
+    component: () => import('@/views/onlineIDE/onlineIDE.vue'),
+    meta: {
+        title: 'YunOj - 在线IDE'
+    },
+}
 ]
 const router = createRouter({
     history: createWebHistory(),

@@ -5,7 +5,7 @@
         {{ this.$route.params.problemId }}. {{ problemInfo.title }}
       </div>
       <div>
-        <div v-if="isCoach()" @click="routerToEditProblem">编辑题目</div>
+        <div v-if="isCoach()" @click="routeToEditProblem">编辑题目</div>
       </div>
     </div>
     <div style="display: flex">
@@ -45,16 +45,9 @@
       </div>
 
       <div class="code-editor">
-        <codemirror
-            class="code-editor-codemirror"
-            style="height: 400px;"
-            v-model="inputCode"
-            placeholder="打出你的代码吧！"
-            :autofocus="true"
-            :indent-with-tab="true"
-            :tab-size="4"
-            :extensions="codemirrorExtensions"
-        />
+        <codemirror class="code-editor-codemirror" style="height: 400px;" v-model="inputCode"
+                    placeholder="打出你的代码吧！" :autofocus="true" :indent-with-tab="true" :tab-size="4"
+                    :extensions="codemirrorExtensions"/>
       </div>
 
       <div style="display: flex;justify-content: space-between;align-items: center">
@@ -96,7 +89,7 @@ import {autoTextarea, getLoginStatus, isCoach} from "@/utils/utils";
 import {basicLight} from '@uiw/codemirror-theme-basic/light'
 import {Codemirror} from 'vue-codemirror'
 import {ElButton, ElInput, ElOption, ElSelect} from "element-plus"
-import {codeRunResultMap} from "@/utils/globalStaticData";
+import {codeRunResultMap, hardLevelMap} from "@/utils/globalStaticData";
 
 export default {
   components: {Codemirror, ElInput, ElButton, ElSelect, ElOption},
@@ -108,11 +101,7 @@ export default {
       inputCode: '',
       inputCase: '',
       outputCase: '运行后会显示输出',
-      problemInfo: {
-        problemId: '',
-        title: '',
-        content: ''
-      },
+      problemInfo: {problemId: '', title: '', content: ''},
       language: '',
       languageOptions: [
         {label: 'C++', value: 1,},
@@ -165,7 +154,7 @@ export default {
   },
   methods: {
     isCoach,
-    routerToEditProblem() {
+    routeToEditProblem() {
       const path = `/problem/edit/${this.problemInfo.problemId}`
       this.$router.push(path)
     },
@@ -174,7 +163,6 @@ export default {
       this.$router.push(path)
     },
     getProblemInfo(problemId) {
-      const hardMap = ['', '简单', '中等', '困难']
       const req = {
         problemId: parseInt(problemId),
       }
@@ -190,7 +178,7 @@ export default {
         this.problemInfo.memoryLimit = resp.data.memoryLimit
         this.problemInfo.passCount = resp.data.passCount
         this.problemInfo.tryCount = resp.data.submitCount
-        this.problemInfo.hardLevel = hardMap[resp.data.hardLevel]
+        this.problemInfo.hardLevel = hardLevelMap[resp.data.hardLevel]
         sessionStorage.setItem('problemTitle.' + this.problemInfo.problemId, this.problemInfo.title)
       })
     },

@@ -17,30 +17,28 @@
       <el-table-column prop="passRate" label="通过率" width="150"/>
     </el-table>
 
-    <el-button v-if="isCoach()" @click="routerToNewProblem"> 新建题目</el-button>
-
     <div style="display: flex;flex-direction: row-reverse; margin: 30px 0 40px 0 ">
-      <el-pagination
-          small background layout="prev, pager, next"
-          :total="total"
-          :current-page="currentPage"
-          :page-size="pageSize"
-          @current-change="handleCurrentChange"
-      ></el-pagination>
+      <el-pagination small background layout="prev, pager, next" :total="total" :current-page="currentPage"
+                     :page-size="pageSize" @current-change="handleCurrentChange"></el-pagination>
+    </div>
+    <div style="text-align: right">
+      <el-button type="success" v-show="isCoach()&&total!==0&&total<=currentPage*pageSize" @click="routeToNewProblem">
+        新建题目
+      </el-button>
     </div>
   </div>
 </template>
 
 <script>
-import {ElPagination, ElTable, ElTableColumn} from "element-plus";
+import {ElButton, ElPagination, ElTable, ElTableColumn} from "element-plus";
 import {hardLevelMap} from "@/utils/globalStaticData";
 import {isCoach} from "@/utils/utils";
 
 export default {
-  components: {ElTable, ElTableColumn, ElPagination},
+  components: {ElTable, ElTableColumn, ElPagination, ElButton},
   data() {
     return {
-      total: 5,
+      total: 0,
       currentPage: 1,
       pageSize: 5,
       problemData: []
@@ -51,7 +49,7 @@ export default {
   },
   methods: {
     isCoach,
-    routerToNewProblem() {
+    routeToNewProblem() {
       this.$router.push('/problem/new')
     },
     ProblemListIndexMethod(index) {

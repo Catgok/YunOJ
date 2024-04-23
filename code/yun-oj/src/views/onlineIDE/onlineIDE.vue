@@ -15,18 +15,11 @@
     </div>
 
     <div class="code-editor">
-      <codemirror
-          class="code-editor-codemirror"
-          style="height: 400px;"
-          v-model="inputCode"
-          :autofocus="true"
-          :indent-with-tab="true"
-          :tab-size="4"
-          :extensions="codemirrorExtensions"
-      />
+      <codemirror class="code-editor-codemirror" style="height: 400px;" v-model="inputCode" :autofocus="true"
+                  :indent-with-tab="true" :tab-size="4" :extensions="codemirrorExtensions"/>
     </div>
 
-<!--    <div> {{ runResult }}</div>-->
+    <!--    <div> {{ runResult }}</div>-->
 
     <div style="display: flex;margin-top: 20px">
       <div>

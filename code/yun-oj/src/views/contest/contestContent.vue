@@ -1,17 +1,24 @@
 <template>
   <div>
-    <div style="text-align:left; margin:0 15px 15px 5px;font-size: 30px">
-      <div>{{ contestInfo.name }}</div>
-      <div style="display: flex;font-size: 16px">
-        <div>{{ contestInfo.startTime }}</div>
-        --
-        <div>{{ contestInfo.endTime }}</div>
+    <div style="text-align:left; margin:0 15px 15px 5px">
+      <div>
+        <div style="font-size: 30px">{{ contestInfo.name }}</div>
+        <div style="display: flex;font-size: 16px;justify-content: space-between;">
+          <div style="display: flex">
+            <div>{{ contestInfo.startTime }}</div>
+            &nbsp; -- &nbsp;
+            <div>{{ contestInfo.endTime }}</div>
+          </div>
+        </div>
       </div>
     </div>
-    <div style="display: flex">
-      <div v-for="item in funcList" :key="item.id" class="contest-detail-box" @click="clickFunc(item.id)">
-        {{ item.name }}
-      </div>
+    <div style="display: flex;justify-content: space-between;    align-items: flex-end;">
+      <el-radio-group v-model="this.showFunc">
+        <el-radio-button v-for="item in funcList" :key="item.id" :value="item.id" @click="clickFunc(item.id)">
+          {{ item.name }}
+        </el-radio-button>
+      </el-radio-group>
+      <el-button @click="routeToEditContest()">编辑竞赛</el-button>
     </div>
     <div style="display: flex">
       <div style="flex: 20;border-top: 1px #938c8c solid;">
@@ -30,27 +37,17 @@ import ContestProblemList from "@/views/contest/detail/contestProblemList.vue";
 import ContestRankInfo from "@/views/contest/detail/contestRankInfo.vue";
 import {eventBus} from "@/utils/eventBus";
 import {formDate} from "@/utils/utils";
+import {ElButton, ElRadioButton, ElRadioGroup} from "element-plus";
 
 export default {
   name: 'contestContent',
-  components: {ContestProblemList, ContestRankInfo},
+  components: {ContestProblemList, ContestRankInfo, ElRadioButton, ElRadioGroup, ElButton},
   data() {
     return {
-      contestInfo: {
-        contestId: 1,
-        contestName: '',
-        description: '',
-      },
-      showFunc: '',
-      funcList: [
-        {name: '比赛信息'},
-        {name: '题目列表'},
-        {name: '竞赛榜单'},
-      ],
-      eventsMap: {
-        2: 'contestProblemListEvent',
-        3: 'contestRankInfoEvent'
-      },
+      contestInfo: {contestId: 1, contestName: '', description: '',},
+      showFunc: 1,
+      funcList: [{name: '比赛信息'}, {name: '题目列表'}, {name: '竞赛榜单'},],
+      eventsMap: {2: 'contestProblemListEvent', 3: 'contestRankInfoEvent'},
     }
   },
   created() {
@@ -71,8 +68,10 @@ export default {
   methods: {
     clickFunc(id) {
       this.showFunc = id
-
       if (id > 1) eventBus.emit(this.eventsMap[id], this.contestInfo.id)
+    },
+    routeToEditContest() {
+      this.$router.push(`/contest/edit/${this.contestInfo.id}`)
     },
     loadContestInfo(contestId) {
       const req = {

@@ -10,17 +10,9 @@
     <!--    <div style="margin: 5px ">提交记录</div>-->
     <div style="border-top: 1px #938c8c solid;">
       <div class="code-editor" style="pointer-events: none;">
-        <codemirror
-            class="code-editor-codemirror"
-            style="height: 400px;"
-            v-model="submissionContent"
-            placeholder="打出你的代码吧！"
-            :autofocus="true"
-            :indent-with-tab="true"
-            :tab-size="4"
-            :extensions="codemirrorExtensions"
-            :options="{readOnly: true}"
-        />
+        <codemirror class="code-editor-codemirror" style="height: 400px;" v-model="submissionContent"
+                    placeholder="打出你的代码吧！" :autofocus="true" :indent-with-tab="true" :tab-size="4"
+                    :extensions="codemirrorExtensions" :options="{readOnly: true}"/>
       </div>
     </div>
 
