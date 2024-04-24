@@ -24,6 +24,11 @@ type Contest struct {
 	EndTime     int64  `json:"endTime"`
 }
 
+type ContestBaseInfo struct {
+	Id   int64  `json:"id"`
+	Name string `json:"name"`
+}
+
 type ContestProblemInfo struct {
 	ProblemId int64  `json:"problemId"`
 	Title     string `json:"title"`
@@ -130,6 +135,16 @@ type GetProblemsByPageResponse struct {
 	Total int64     `json:"total"`
 }
 
+type GetRecentContestsResponse struct {
+	BaseResponse
+	Data []ContestBaseInfo `json:"data"`
+}
+
+type GetRecentProblemsResponse struct {
+	BaseResponse
+	Data []ProblemTitleInfo `json:"data"`
+}
+
 type GetSignUpContestsResponse struct {
 	BaseResponse
 	Data []int64 `json:"data"`
@@ -197,6 +212,11 @@ type Problem struct {
 	HardLevel   int64  `json:"hardLevel"`
 	SubmitCount int64  `json:"submitCount"`
 	PassCount   int64  `json:"passCount"`
+}
+
+type ProblemTitleInfo struct {
+	ProblemId int64  `json:"problemId"`
+	Title     string `json:"title"`
 }
 
 type RegisterRequest struct {

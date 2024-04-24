@@ -37,6 +37,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/getContestsByPage",
 				Handler: contest.GetContestsByPageHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/getRecentContests",
+				Handler: contest.GetRecentContestsHandler(serverCtx),
+			},
 		},
 		rest.WithPrefix("/v1/contest"),
 		rest.WithTimeout(3000*time.Millisecond),
@@ -120,6 +125,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/getByPage",
 				Handler: problem.GetProblemsByPageHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/getRecentProblems",
+				Handler: problem.GetRecentProblemsHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/v1/problem"),

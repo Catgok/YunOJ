@@ -23,6 +23,7 @@ const (
 	ContestService_UpdateContest_FullMethodName        = "/contest.ContestService/UpdateContest"
 	ContestService_GetContestListByPage_FullMethodName = "/contest.ContestService/GetContestListByPage"
 	ContestService_GetContestById_FullMethodName       = "/contest.ContestService/GetContestById"
+	ContestService_GetRecentContests_FullMethodName    = "/contest.ContestService/GetRecentContests"
 	ContestService_SignUpContest_FullMethodName        = "/contest.ContestService/SignUpContest"
 	ContestService_GetSignUpContests_FullMethodName    = "/contest.ContestService/GetSignUpContests"
 	ContestService_SubmitAnswer_FullMethodName         = "/contest.ContestService/SubmitAnswer"
@@ -39,6 +40,7 @@ type ContestServiceClient interface {
 	UpdateContest(ctx context.Context, in *UpdateContestRequest, opts ...grpc.CallOption) (*UpdateContestResponse, error)
 	GetContestListByPage(ctx context.Context, in *GetContestListByPageRequest, opts ...grpc.CallOption) (*GetContestListByPageResponse, error)
 	GetContestById(ctx context.Context, in *GetContestByIdRequest, opts ...grpc.CallOption) (*GetContestByIdResponse, error)
+	GetRecentContests(ctx context.Context, in *GetRecentContestsRequest, opts ...grpc.CallOption) (*GetRecentContestsResponse, error)
 	SignUpContest(ctx context.Context, in *SignUpContestRequest, opts ...grpc.CallOption) (*SignUpContestResponse, error)
 	GetSignUpContests(ctx context.Context, in *GetSignUpContestsRequest, opts ...grpc.CallOption) (*GetSignUpContestsResponse, error)
 	SubmitAnswer(ctx context.Context, in *SubmitAnswerRequest, opts ...grpc.CallOption) (*SubmitAnswerResponse, error)
@@ -85,6 +87,15 @@ func (c *contestServiceClient) GetContestListByPage(ctx context.Context, in *Get
 func (c *contestServiceClient) GetContestById(ctx context.Context, in *GetContestByIdRequest, opts ...grpc.CallOption) (*GetContestByIdResponse, error) {
 	out := new(GetContestByIdResponse)
 	err := c.cc.Invoke(ctx, ContestService_GetContestById_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *contestServiceClient) GetRecentContests(ctx context.Context, in *GetRecentContestsRequest, opts ...grpc.CallOption) (*GetRecentContestsResponse, error) {
+	out := new(GetRecentContestsResponse)
+	err := c.cc.Invoke(ctx, ContestService_GetRecentContests_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -153,6 +164,7 @@ type ContestServiceServer interface {
 	UpdateContest(context.Context, *UpdateContestRequest) (*UpdateContestResponse, error)
 	GetContestListByPage(context.Context, *GetContestListByPageRequest) (*GetContestListByPageResponse, error)
 	GetContestById(context.Context, *GetContestByIdRequest) (*GetContestByIdResponse, error)
+	GetRecentContests(context.Context, *GetRecentContestsRequest) (*GetRecentContestsResponse, error)
 	SignUpContest(context.Context, *SignUpContestRequest) (*SignUpContestResponse, error)
 	GetSignUpContests(context.Context, *GetSignUpContestsRequest) (*GetSignUpContestsResponse, error)
 	SubmitAnswer(context.Context, *SubmitAnswerRequest) (*SubmitAnswerResponse, error)
@@ -177,6 +189,9 @@ func (UnimplementedContestServiceServer) GetContestListByPage(context.Context, *
 }
 func (UnimplementedContestServiceServer) GetContestById(context.Context, *GetContestByIdRequest) (*GetContestByIdResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetContestById not implemented")
+}
+func (UnimplementedContestServiceServer) GetRecentContests(context.Context, *GetRecentContestsRequest) (*GetRecentContestsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRecentContests not implemented")
 }
 func (UnimplementedContestServiceServer) SignUpContest(context.Context, *SignUpContestRequest) (*SignUpContestResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SignUpContest not implemented")
@@ -277,6 +292,24 @@ func _ContestService_GetContestById_Handler(srv interface{}, ctx context.Context
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ContestServiceServer).GetContestById(ctx, req.(*GetContestByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ContestService_GetRecentContests_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRecentContestsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContestServiceServer).GetRecentContests(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ContestService_GetRecentContests_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContestServiceServer).GetRecentContests(ctx, req.(*GetRecentContestsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -411,6 +444,10 @@ var ContestService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetContestById",
 			Handler:    _ContestService_GetContestById_Handler,
+		},
+		{
+			MethodName: "GetRecentContests",
+			Handler:    _ContestService_GetRecentContests_Handler,
 		},
 		{
 			MethodName: "SignUpContest",

@@ -36,6 +36,7 @@ type (
 		Update(ctx context.Context, data *Problem) error
 		Delete(ctx context.Context, problemId int64) error
 		FindByPage(ctx context.Context, offset, limit int64) ([]Problem, error)
+		FindRecentProblems(ctx context.Context, limit int64) ([]Problem, error)
 		Count(ctx context.Context) (int64, error)
 	}
 
@@ -167,7 +168,19 @@ func (m *defaultProblemModel) Update(ctx context.Context, newData *Problem) erro
 	}, problemProblemIdKey, problemTitleKey)
 	return err
 }
-
+func (m *defaultProblemModel) FindRecentProblems(ctx context.Context, limit int64) ([]Problem, error) {
+	var resp []Problem
+	query := fmt.Sprintf("select %s from %s where `is_delete` = 0 order by `problem_id` desc limit ?", problemRows, m.table)
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, limit)
+	switch err {
+	case nil:
+		return resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
 func (m *defaultProblemModel) FindByPage(ctx context.Context, offset, limit int64) ([]Problem, error) {
 	problemPageKey := fmt.Sprintf("%s%v.%v", cacheProblemPagePrefix, offset, limit)
 	var resp []Problem

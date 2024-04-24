@@ -9,14 +9,14 @@
       <el-table-column type="index" label="#" width="70" :index="ContestListIndexMethod"/>
       <el-table-column prop="name" label="竞赛名称">
         <template #default="scope">
-          <div @click="handleContestProblemClick(scope.row)" class="problem-item">{{ scope.row.name }}</div>
+          <div @click="handleContestClick(scope.row)" class="contest-item">{{ scope.row.name }}</div>
         </template>
       </el-table-column>
       <el-table-column prop="startTime" label="开始时间" width="150"/>
       <el-table-column prop="endTime" label="结束时间" width="150"/>
       <el-table-column width="150">
         <template #default="scope">
-          <el-button text @click="signupContest(scope.row)">报名</el-button><!-- todo -->
+          <el-button link @click="signupContest(scope.row)">报名</el-button><!-- todo -->
         </template>
       </el-table-column>
     </el-table>
@@ -59,7 +59,7 @@ export default {
     routeToNewContest() {
       this.$router.push('/contest/new')
     },
-    handleContestProblemClick(row) {
+    handleContestClick(row) {
       const url = `/contest/${row.id}`;
       window.open(url);
     },
@@ -107,7 +107,7 @@ export default {
 </script>
 
 <style scoped>
-.problem-item:hover {
+.contest-item:hover {
   cursor: pointer;
   color: blue;
   text-decoration: underline;

@@ -25,6 +25,8 @@ type (
 	GetProblemTitleByIdsResponse          = problem.GetProblemTitleByIdsResponse
 	GetProblemsByPageRequest              = problem.GetProblemsByPageRequest
 	GetProblemsByPageResponse             = problem.GetProblemsByPageResponse
+	GetRecentProblemsRequest              = problem.GetRecentProblemsRequest
+	GetRecentProblemsResponse             = problem.GetRecentProblemsResponse
 	GetSubmitByIdRequest                  = problem.GetSubmitByIdRequest
 	GetSubmitByIdResponse                 = problem.GetSubmitByIdResponse
 	GetSubmitByUserIdAndProblemIdRequest  = problem.GetSubmitByUserIdAndProblemIdRequest
@@ -40,6 +42,7 @@ type (
 	ProblemService interface {
 		GetProblemById(ctx context.Context, in *GetProblemByIdRequest, opts ...grpc.CallOption) (*GetProblemByIdResponse, error)
 		GetProblemTitleByIds(ctx context.Context, in *GetProblemTitleByIdsRequest, opts ...grpc.CallOption) (*GetProblemTitleByIdsResponse, error)
+		GetRecentProblems(ctx context.Context, in *GetRecentProblemsRequest, opts ...grpc.CallOption) (*GetRecentProblemsResponse, error)
 		GetProblemsByPage(ctx context.Context, in *GetProblemsByPageRequest, opts ...grpc.CallOption) (*GetProblemsByPageResponse, error)
 		CreateProblem(ctx context.Context, in *CreateProblemRequest, opts ...grpc.CallOption) (*CreateProblemResponse, error)
 		UpdateProblem(ctx context.Context, in *UpdateProblemRequest, opts ...grpc.CallOption) (*UpdateProblemResponse, error)
@@ -69,6 +72,11 @@ func (m *defaultProblemService) GetProblemById(ctx context.Context, in *GetProbl
 func (m *defaultProblemService) GetProblemTitleByIds(ctx context.Context, in *GetProblemTitleByIdsRequest, opts ...grpc.CallOption) (*GetProblemTitleByIdsResponse, error) {
 	client := problem.NewProblemServiceClient(m.cli.Conn())
 	return client.GetProblemTitleByIds(ctx, in, opts...)
+}
+
+func (m *defaultProblemService) GetRecentProblems(ctx context.Context, in *GetRecentProblemsRequest, opts ...grpc.CallOption) (*GetRecentProblemsResponse, error) {
+	client := problem.NewProblemServiceClient(m.cli.Conn())
+	return client.GetRecentProblems(ctx, in, opts...)
 }
 
 func (m *defaultProblemService) GetProblemsByPage(ctx context.Context, in *GetProblemsByPageRequest, opts ...grpc.CallOption) (*GetProblemsByPageResponse, error) {

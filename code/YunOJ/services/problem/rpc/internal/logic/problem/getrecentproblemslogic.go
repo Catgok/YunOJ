@@ -9,27 +9,27 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetProblemTitleByIdsLogic struct {
+type GetRecentProblemsLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewGetProblemTitleByIdsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetProblemTitleByIdsLogic {
-	return &GetProblemTitleByIdsLogic{
+func NewGetRecentProblemsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetRecentProblemsLogic {
+	return &GetRecentProblemsLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *GetProblemTitleByIdsLogic) GetProblemTitleByIds(in *problem.GetProblemTitleByIdsRequest) (*problem.GetProblemTitleByIdsResponse, error) {
-	resp := &problem.GetProblemTitleByIdsResponse{
+func (l *GetRecentProblemsLogic) GetRecentProblems(in *problem.GetRecentProblemsRequest) (*problem.GetRecentProblemsResponse, error) {
+	resp := &problem.GetRecentProblemsResponse{
 		Code:    0,
 		Message: "success",
 	}
 
-	res, err := l.svcCtx.ProblemModel.FindTitlesByIds(l.ctx, in.ProblemIds)
+	res, err := l.svcCtx.ProblemModel.FindRecentProblems(l.ctx, 10)
 	if err != nil {
 		resp.Code, resp.Message = 5003, err.Error()
 		return resp, nil
@@ -41,6 +41,6 @@ func (l *GetProblemTitleByIdsLogic) GetProblemTitleByIds(in *problem.GetProblemT
 			Title:     problemTitleInfo.Title,
 		})
 	}
-	resp.ProblemTitleInfos = data
+	resp.ProblemTitleInfo = data
 	return resp, nil
 }

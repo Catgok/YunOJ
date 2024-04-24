@@ -42,6 +42,11 @@ func (s *ContestServiceServer) GetContestById(ctx context.Context, in *contest.G
 	return l.GetContestById(in)
 }
 
+func (s *ContestServiceServer) GetRecentContests(ctx context.Context, in *contest.GetRecentContestsRequest) (*contest.GetRecentContestsResponse, error) {
+	l := logic.NewGetRecentContestsLogic(ctx, s.svcCtx)
+	return l.GetRecentContests(in)
+}
+
 func (s *ContestServiceServer) SignUpContest(ctx context.Context, in *contest.SignUpContestRequest) (*contest.SignUpContestResponse, error) {
 	l := logic.NewSignUpContestLogic(ctx, s.svcCtx)
 	return l.SignUpContest(in)

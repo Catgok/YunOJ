@@ -35,6 +35,7 @@ type (
 		Update(ctx context.Context, data *ContestInfo) error
 		Delete(ctx context.Context, contestId int64) error
 		FindByPage(ctx context.Context, offset, limit int64) ([]ContestInfo, error)
+		FindRecentContests(ctx context.Context, num int) ([]ContestInfo, error)
 		Count(ctx context.Context) (int64, error)
 	}
 
@@ -129,7 +130,15 @@ func (m *defaultContestInfoModel) FindByPage(ctx context.Context, offset, limit 
 		return nil, err
 	}
 }
-
+func (m *defaultContestInfoModel) FindRecentContests(ctx context.Context, num int) ([]ContestInfo, error) {
+	var resp []ContestInfo
+	query := fmt.Sprintf("select %s from %s order by `contest_id` desc limit ?", contestInfoRows, m.table)
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, num)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
 func (m *defaultContestInfoModel) Count(ctx context.Context) (int64, error) {
 	var count int64
 	query := fmt.Sprintf("select count(*) from %s ", m.table)

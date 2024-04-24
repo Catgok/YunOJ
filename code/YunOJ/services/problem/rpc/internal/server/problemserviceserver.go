@@ -38,6 +38,11 @@ func (s *ProblemServiceServer) GetProblemsByPage(ctx context.Context, in *proble
 	return l.GetProblemsByPage(in)
 }
 
+func (s *ProblemServiceServer) GetRecentProblems(ctx context.Context, in *problem.GetRecentProblemsRequest) (*problem.GetRecentProblemsResponse, error) {
+	l := problemlogic.NewGetRecentProblemsLogic(ctx, s.svcCtx)
+	return l.GetRecentProblems(in)
+}
+
 func (s *ProblemServiceServer) CreateProblem(ctx context.Context, in *problem.CreateProblemRequest) (*problem.CreateProblemResponse, error) {
 	l := problemlogic.NewCreateProblemLogic(ctx, s.svcCtx)
 	return l.CreateProblem(in)

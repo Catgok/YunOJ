@@ -6,7 +6,7 @@
         <global-header/>
       </el-header>
       <el-scrollbar class="main-content">
-        <el-main class="global-main">
+        <el-main :style="computedMainStyle" class="global-main">
           <router-view></router-view>
         </el-main>
       </el-scrollbar>
@@ -26,6 +26,27 @@ import GlobalNotice from "@/components/globalNotice.vue";
 export default {
   name: "AppIndex",
   components: {ElContainer, ElHeader, ElMain, ElFooter, ElScrollbar, GlobalHeader, GlobalNotice},
+  data() {
+    return {
+      isMainRoute: true,
+    }
+  },
+  computed: {
+    computedMainStyle() {
+      if (!this.isMainRoute) {
+        return {
+          backgroundColor: `rgba(255, 255, 255, 0.75)`,
+          backdropFilter: `blur(0.5px)`,
+          boxShadow: `0 0 10px rgba(0, 0, 0, 0.25)`
+        };
+      }
+    }
+  },
+  watch: {
+    $route(to, from) {
+      this.isMainRoute = to.name === 'main';
+    }
+  },
 }
 </script>
 
@@ -47,9 +68,6 @@ export default {
   width: 80vw;
   border-radius: 10px;
   padding: 30px;
-  background-color: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(5px);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25); /* 设置阴影效果 */
 }
 
 .main-content {

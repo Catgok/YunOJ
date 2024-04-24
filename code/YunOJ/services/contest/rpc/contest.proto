@@ -12,6 +12,11 @@ message Contest {
   int64 endTime = 5;
 }
 
+message ContestBaseInfo {
+  int64 id = 1;
+  string name = 2;
+}
+
 message SubmitAnswerRequest {
   int64 contest_id = 1;
   int64 user_id = 2;
@@ -57,6 +62,14 @@ message GetContestByIdResponse {
   string message = 2;
   Contest contest = 3;
 }
+
+message GetRecentContestsRequest{}
+message GetRecentContestsResponse{
+  int64 code = 1;
+  string message = 2;
+  repeated ContestBaseInfo contestBaseInfos = 3;
+}
+
 message UpdateContestRequest {
   Contest contest = 1;
 }
@@ -128,6 +141,7 @@ service ContestService {
   rpc UpdateContest(UpdateContestRequest) returns (UpdateContestResponse);
   rpc GetContestListByPage(GetContestListByPageRequest) returns (GetContestListByPageResponse);
   rpc GetContestById(GetContestByIdRequest) returns (GetContestByIdResponse);
+  rpc GetRecentContests(GetRecentContestsRequest) returns (GetRecentContestsResponse);
 
   rpc SignUpContest(SignUpContestRequest) returns (SignUpContestResponse);
   rpc GetSignUpContests(GetSignUpContestsRequest) returns (GetSignUpContestsResponse);

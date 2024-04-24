@@ -9,7 +9,7 @@
           <el-option v-for="item in languageOptions" :key="item.value" :label="item.label" :value="item.value"/>
         </el-select>
         <div style="margin-left: 10px">
-          <el-button style="color:green" type="text" @click="onlineJudge"> > 运行</el-button>
+          <el-button style="color:green;text-align: center;height: 100%" link @click="onlineJudge"> > 运行</el-button>
         </div>
       </div>
     </div>

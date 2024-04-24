@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	ProblemService_GetProblemById_FullMethodName                = "/problem.ProblemService/GetProblemById"
 	ProblemService_GetProblemTitleByIds_FullMethodName          = "/problem.ProblemService/GetProblemTitleByIds"
+	ProblemService_GetRecentProblems_FullMethodName             = "/problem.ProblemService/GetRecentProblems"
 	ProblemService_GetProblemsByPage_FullMethodName             = "/problem.ProblemService/GetProblemsByPage"
 	ProblemService_CreateProblem_FullMethodName                 = "/problem.ProblemService/CreateProblem"
 	ProblemService_UpdateProblem_FullMethodName                 = "/problem.ProblemService/UpdateProblem"
@@ -37,6 +38,7 @@ const (
 type ProblemServiceClient interface {
 	GetProblemById(ctx context.Context, in *GetProblemByIdRequest, opts ...grpc.CallOption) (*GetProblemByIdResponse, error)
 	GetProblemTitleByIds(ctx context.Context, in *GetProblemTitleByIdsRequest, opts ...grpc.CallOption) (*GetProblemTitleByIdsResponse, error)
+	GetRecentProblems(ctx context.Context, in *GetRecentProblemsRequest, opts ...grpc.CallOption) (*GetRecentProblemsResponse, error)
 	GetProblemsByPage(ctx context.Context, in *GetProblemsByPageRequest, opts ...grpc.CallOption) (*GetProblemsByPageResponse, error)
 	CreateProblem(ctx context.Context, in *CreateProblemRequest, opts ...grpc.CallOption) (*CreateProblemResponse, error)
 	UpdateProblem(ctx context.Context, in *UpdateProblemRequest, opts ...grpc.CallOption) (*UpdateProblemResponse, error)
@@ -67,6 +69,15 @@ func (c *problemServiceClient) GetProblemById(ctx context.Context, in *GetProble
 func (c *problemServiceClient) GetProblemTitleByIds(ctx context.Context, in *GetProblemTitleByIdsRequest, opts ...grpc.CallOption) (*GetProblemTitleByIdsResponse, error) {
 	out := new(GetProblemTitleByIdsResponse)
 	err := c.cc.Invoke(ctx, ProblemService_GetProblemTitleByIds_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *problemServiceClient) GetRecentProblems(ctx context.Context, in *GetRecentProblemsRequest, opts ...grpc.CallOption) (*GetRecentProblemsResponse, error) {
+	out := new(GetRecentProblemsResponse)
+	err := c.cc.Invoke(ctx, ProblemService_GetRecentProblems_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -151,6 +162,7 @@ func (c *problemServiceClient) UpdateSubmit(ctx context.Context, in *UpdateSubmi
 type ProblemServiceServer interface {
 	GetProblemById(context.Context, *GetProblemByIdRequest) (*GetProblemByIdResponse, error)
 	GetProblemTitleByIds(context.Context, *GetProblemTitleByIdsRequest) (*GetProblemTitleByIdsResponse, error)
+	GetRecentProblems(context.Context, *GetRecentProblemsRequest) (*GetRecentProblemsResponse, error)
 	GetProblemsByPage(context.Context, *GetProblemsByPageRequest) (*GetProblemsByPageResponse, error)
 	CreateProblem(context.Context, *CreateProblemRequest) (*CreateProblemResponse, error)
 	UpdateProblem(context.Context, *UpdateProblemRequest) (*UpdateProblemResponse, error)
@@ -171,6 +183,9 @@ func (UnimplementedProblemServiceServer) GetProblemById(context.Context, *GetPro
 }
 func (UnimplementedProblemServiceServer) GetProblemTitleByIds(context.Context, *GetProblemTitleByIdsRequest) (*GetProblemTitleByIdsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProblemTitleByIds not implemented")
+}
+func (UnimplementedProblemServiceServer) GetRecentProblems(context.Context, *GetRecentProblemsRequest) (*GetRecentProblemsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRecentProblems not implemented")
 }
 func (UnimplementedProblemServiceServer) GetProblemsByPage(context.Context, *GetProblemsByPageRequest) (*GetProblemsByPageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProblemsByPage not implemented")
@@ -241,6 +256,24 @@ func _ProblemService_GetProblemTitleByIds_Handler(srv interface{}, ctx context.C
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ProblemServiceServer).GetProblemTitleByIds(ctx, req.(*GetProblemTitleByIdsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProblemService_GetRecentProblems_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRecentProblemsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProblemServiceServer).GetRecentProblems(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProblemService_GetRecentProblems_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProblemServiceServer).GetRecentProblems(ctx, req.(*GetRecentProblemsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -403,6 +436,10 @@ var ProblemService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetProblemTitleByIds",
 			Handler:    _ProblemService_GetProblemTitleByIds_Handler,
+		},
+		{
+			MethodName: "GetRecentProblems",
+			Handler:    _ProblemService_GetRecentProblems_Handler,
 		},
 		{
 			MethodName: "GetProblemsByPage",

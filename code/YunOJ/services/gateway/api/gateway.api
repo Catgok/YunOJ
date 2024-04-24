@@ -80,6 +80,10 @@ type (
 		SubmitCount int64  `json:"submitCount"`
 		PassCount   int64  `json:"passCount"`
 	}
+	ProblemTitleInfo {
+		ProblemId int64  `json:"problemId"`
+		Title     string `json:"title"`
+	}
 	Submit {
 		SubmitId   int64  `json:"submitId"`
 		UserId     int64  `json:"userId"`
@@ -161,6 +165,10 @@ type (
 		BaseResponse
 		Data []Submit `json:"data"`
 	}
+	GetRecentProblemsResponse {
+		BaseResponse
+		Data []ProblemTitleInfo `json:"data"`
+	}
 )
 
 @server (
@@ -174,6 +182,9 @@ service Gateway {
 
 	@handler GetProblemsByPage
 	post /getByPage (GetProblemsByPageRequest) returns (GetProblemsByPageResponse)
+
+	@handler GetRecentProblems
+	post /getRecentProblems returns (GetRecentProblemsResponse)
 }
 
 @server (
@@ -253,6 +264,10 @@ type (
 		Description string `json:"description"`
 		StartTime   int64  `json:"startTime"`
 		EndTime     int64  `json:"endTime"`
+	}
+	ContestBaseInfo {
+		Id   int64  `json:"id"`
+		Name string `json:"name"`
 	}
 	ContestProblemInfo {
 		ProblemId int64  `json:"problemId"`
@@ -342,6 +357,10 @@ type (
 		BaseResponse
 		Data []ContestProblemInfo `json:"data"`
 	}
+	GetRecentContestsResponse {
+		BaseResponse
+		Data []ContestBaseInfo `json:"data"`
+	}
 )
 
 @server (
@@ -361,6 +380,9 @@ service Gateway {
 
 	@handler GetContestRank
 	post /getContestRank (GetContestRankRequest) returns (GetContestRankResponse)
+
+	@handler GetRecentContests
+	post /getRecentContests returns (GetRecentContestsResponse)
 }
 
 @server (

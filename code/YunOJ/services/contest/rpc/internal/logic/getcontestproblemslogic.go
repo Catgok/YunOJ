@@ -41,7 +41,7 @@ func (l *GetContestProblemsLogic) GetContestProblems(in *contest.GetContestProbl
 	var data []*contest.Problem
 	for _, problemTitleInfo := range problemTitleInfosResp.ProblemTitleInfos {
 		data = append(data, &contest.Problem{
-			ProblemId: problemTitleInfo.GetProblemIds(),
+			ProblemId: problemTitleInfo.GetProblemId(),
 			Title:     problemTitleInfo.GetTitle(),
 		})
 	}

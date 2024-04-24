@@ -16,6 +16,7 @@ type (
 	AddProblemToContestRequest   = contest.AddProblemToContestRequest
 	AddProblemToContestResponse  = contest.AddProblemToContestResponse
 	Contest                      = contest.Contest
+	ContestBaseInfo              = contest.ContestBaseInfo
 	ContestRankInfo              = contest.ContestRankInfo
 	CreateContestRequest         = contest.CreateContestRequest
 	CreateContestResponse        = contest.CreateContestResponse
@@ -27,6 +28,8 @@ type (
 	GetContestProblemsResponse   = contest.GetContestProblemsResponse
 	GetContestRankRequest        = contest.GetContestRankRequest
 	GetContestRankResponse       = contest.GetContestRankResponse
+	GetRecentContestsRequest     = contest.GetRecentContestsRequest
+	GetRecentContestsResponse    = contest.GetRecentContestsResponse
 	GetSignUpContestsRequest     = contest.GetSignUpContestsRequest
 	GetSignUpContestsResponse    = contest.GetSignUpContestsResponse
 	Problem                      = contest.Problem
@@ -42,6 +45,7 @@ type (
 		UpdateContest(ctx context.Context, in *UpdateContestRequest, opts ...grpc.CallOption) (*UpdateContestResponse, error)
 		GetContestListByPage(ctx context.Context, in *GetContestListByPageRequest, opts ...grpc.CallOption) (*GetContestListByPageResponse, error)
 		GetContestById(ctx context.Context, in *GetContestByIdRequest, opts ...grpc.CallOption) (*GetContestByIdResponse, error)
+		GetRecentContests(ctx context.Context, in *GetRecentContestsRequest, opts ...grpc.CallOption) (*GetRecentContestsResponse, error)
 		SignUpContest(ctx context.Context, in *SignUpContestRequest, opts ...grpc.CallOption) (*SignUpContestResponse, error)
 		GetSignUpContests(ctx context.Context, in *GetSignUpContestsRequest, opts ...grpc.CallOption) (*GetSignUpContestsResponse, error)
 		SubmitAnswer(ctx context.Context, in *SubmitAnswerRequest, opts ...grpc.CallOption) (*SubmitAnswerResponse, error)
@@ -79,6 +83,11 @@ func (m *defaultContestService) GetContestListByPage(ctx context.Context, in *Ge
 func (m *defaultContestService) GetContestById(ctx context.Context, in *GetContestByIdRequest, opts ...grpc.CallOption) (*GetContestByIdResponse, error) {
 	client := contest.NewContestServiceClient(m.cli.Conn())
 	return client.GetContestById(ctx, in, opts...)
+}
+
+func (m *defaultContestService) GetRecentContests(ctx context.Context, in *GetRecentContestsRequest, opts ...grpc.CallOption) (*GetRecentContestsResponse, error) {
+	client := contest.NewContestServiceClient(m.cli.Conn())
+	return client.GetRecentContests(ctx, in, opts...)
 }
 
 func (m *defaultContestService) SignUpContest(ctx context.Context, in *SignUpContestRequest, opts ...grpc.CallOption) (*SignUpContestResponse, error) {

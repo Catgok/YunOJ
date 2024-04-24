@@ -25,7 +25,7 @@ message GetProblemByIdResponse {
 }
 
 message  ProblemTitleInfo{
-  int64 problem_ids = 1;
+  int64 problem_id = 1;
   string title = 2;
 }
 message GetProblemTitleByIdsRequest{
@@ -35,6 +35,14 @@ message GetProblemTitleByIdsResponse{
   int64 code = 1;
   string message = 2;
   repeated ProblemTitleInfo problem_title_infos = 3;
+}
+
+message GetRecentProblemsRequest{}
+
+message GetRecentProblemsResponse{
+  int64 code = 1;
+  string message = 2;
+  repeated ProblemTitleInfo problemTitleInfo = 3;
 }
 
 message GetProblemsByPageRequest {
@@ -136,6 +144,7 @@ message GetSubmitByUserIdAndProblemIdResponse {
 service ProblemService {
   rpc GetProblemById(GetProblemByIdRequest) returns (GetProblemByIdResponse);
   rpc GetProblemTitleByIds(GetProblemTitleByIdsRequest) returns (GetProblemTitleByIdsResponse);
+  rpc GetRecentProblems(GetRecentProblemsRequest) returns (GetRecentProblemsResponse);
   rpc GetProblemsByPage(GetProblemsByPageRequest) returns (GetProblemsByPageResponse);
   rpc CreateProblem(CreateProblemRequest) returns (CreateProblemResponse);
   rpc UpdateProblem(UpdateProblemRequest) returns (UpdateProblemResponse);

@@ -1,12 +1,11 @@
 <template>
   <div>
-    <div>contestProblemList</div>
     <div>
       <el-table :data="contestProblemsInfo" stripe style="width: 100%;" table-layout="auto">
         <el-table-column type="index" :index="contestProblemsListIndexMethod"/>
         <el-table-column prop="title" label="题目名称">
           <template #default="scope">
-            <div @click="handleContestProblemClick(scope.row)" class="problem-item">
+            <div @click="handleContestProblemClick(scope.row)" class="contest-problem-item">
               {{ scope.row.title }}
             </div>
           </template>
@@ -64,7 +63,7 @@ export default {
 }
 </script>
 <style scoped>
-.problem-item:hover {
+.contest-problem-item:hover {
   cursor: pointer;
   color: blue;
   text-decoration: underline;
