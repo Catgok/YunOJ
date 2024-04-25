@@ -9,7 +9,16 @@ Thumbs.db
 
 logs/
 
-target
+target/.env
+target/config
+target/data
+target/server
+
+code/YunOJ/services/gateway/api/internal/middleware/authInterceptor.go
+
+!*Dockerfile
 
 *.puml
 *.sh
+
+*.yaml

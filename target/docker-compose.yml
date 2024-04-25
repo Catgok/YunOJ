@@ -1,65 +1,217 @@
 version: '3.5'
-# 网络配置
-networks:
-  backend:
-    driver: ${NETWORKS_DRIVER}
 
 # 服务容器配置
 services:
-  etcd: # etcd容器
-    build:
-      context: ./etcd                                 # 指定构建的 Dockerfile 文件
-    environment:
-      - TZ=${TZ}
-      - ALLOW_NONE_AUTHENTICATION=yes
-      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
-      - ETCD_ADVERTISE_CLIENT_URLS=http://0.0.0.0:2379
-    ports: # 设置端口映射
-      - "${ETCD_PORT}:2379"
-    networks:
-      - backend
-    restart: no
-
   mysql:
     build:
       context: ./mysql
+    image: yun-oj-mysql:0.1
+    container_name: yun-oj-mysql
     environment:
-      - TZ=${TZ}
-      - MYSQL_USER=${MYSQL_USERNAME}                  # Mysql 用户名称
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}              # Mysql 用户密码
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}    # Mysql root 用户密码
+      TZ: ${TZ}
+      MYSQL_USER: ${MYSQL_USERNAME}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
-      - ${DATA_PATH_HOST}/mysql:/var/lib/mysql        # Mysql 数据挂载目录
+      - ${DATA_PATH_HOST}/mysql:/var/lib/mysql
     ports:
       - "${MYSQL_PORT}:3306"
-    networks:
-      - backend
-    restart: no
+    restart: unless-stopped
 
   redis:
     build:
       context: ./redis
+    image: yun-oj-redis:0.1
+    container_name: yun-oj-redis
     environment:
-      - TZ=${TZ}
+      TZ: ${TZ}
     volumes:
-      - ${DATA_PATH_HOST}/redis:/data                 # Redis 数据挂载目录
+      - ${DATA_PATH_HOST}/redis:/data
+      - ${CONFIG_PATH_HOST}/redis/redis.conf:/usr/local/etc/redis/redis.conf
     ports:
       - "${REDIS_PORT}:6379"
-    networks:
-      - backend
-    restart: always
+    command: redis-server /usr/local/etc/redis/redis.conf
+    restart: unless-stopped
+
+  etcd:
+    build:
+      context: ./etcd
+    image: yun-oj-etcd:0.1
+    container_name: yun-oj-etcd
+    environment:
+      TZ: ${TZ}
+      ALLOW_NONE_AUTHENTICATION: yes
+      ETCD_ADVERTISE_CLIENT_URLS: http://${dockerHost}:${ETCD_PORT}
+    ports:
+      - "${ETCD_PORT}:2379"
+    volumes:
+      - ${DATA_PATH_HOST}/etcd:/bitnami/etcd
+    restart: unless-stopped
+
+  zookeeper:
+    build:
+      context: ./zookeeper
+    image: yun-oj-zookeeper:0.1
+    container_name: yun-oj-zookeeper
+    ports:
+      - "${ZOOKEEPER_PORT}:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+
+  kafka:
+    build:
+      context: ./kafka
+    image: yun-oj-kafka:0.1
+    container_name: yun-oj-kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "${KAFKA_PORT}:9092"
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: ${zookeeperHost}:${ZOOKEEPER_PORT}
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${dockerHost}:${KAFKA_PORT}
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  go-judge:
+    build:
+      context: ./judge
+    image: yun-oj-go-judge:0.1
+    container_name: yun-oj-go-judge
+    environment:
+      TZ: ${TZ}
+    volumes:
+      - ${DATA_PATH_HOST}/judge:/data
+    ports:
+      - "${GO_JUDGE_PORT}:5050"
+    shm_size: 256m
+    privileged: true
+    restart: unless-stopped
+
+
+  # yun-oj-server 容器配置
+  webKafka:
+    build:
+      context: ./server/webKafka
+    image: yun-oj-web-kafka:0.1
+    container_name: yun-oj-webKafka
+    environment:
+      TZ: ${TZ}
+    volumes:
+      - ./server/webKafka/webKafka.js:/app/webKafka.js
+      - ./server/webKafka/package.json:/app/package.json
+    ports:
+      - "${WEB_KAFKA_PORT}:8080"
+    extra_hosts:
+      - "serverhost:${serverhost}"
+    restart: unless-stopped
+
+  gateway:
+    build:
+      context: ./server/gateway
+    image: yun-oj-gateway:0.1
+    container_name: yun-oj-gateway
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 256M
+    environment:
+      TZ: ${TZ}
+    volumes:
+      - ${CONFIG_PATH_HOST}/server/gateway.yaml:/app/etc/gateway.yaml
+    ports:
+      - "${GATEWAY_PORT}:8888"
+    extra_hosts:
+      - "serverhost:${serverhost}"
+    depends_on:
+      - user
+      - problem
+      - judge
+      - contest
+    restart: unless-stopped
+
+  user:
+    build:
+      context: ./server/user
+    image: yun-oj-user:0.1
+    container_name: yun-oj-user
+    deploy:
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 128M
+    environment:
+      TZ: ${TZ}
+    volumes:
+      - ${CONFIG_PATH_HOST}/server/user.yaml:/app/etc/user.yaml
+    ports:
+      - "${USER_PORT}:9010"
+    extra_hosts:
+      - "serverhost:${serverhost}"
+    restart: unless-stopped
+
+  problem:
+    build:
+      context: ./server/problem
+    image: yun-oj-problem:0.1
+    container_name: yun-oj-problem
+    deploy:
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 128M
+    environment:
+      TZ: ${TZ}
+    volumes:
+      - ${CONFIG_PATH_HOST}/server/problem.yaml:/app/etc/problem.yaml
+    ports:
+      - "${PROBLEM_PORT}:9020"
+    extra_hosts:
+      - "serverhost:${serverhost}"
+    restart: unless-stopped
 
   judge:
     build:
-      context: ./judge
+      context: ./server/judge
+    image: yun-oj-judge:0.1
+    container_name: yun-oj-judge
+    deploy:
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 128M
     environment:
-      - TZ=${TZ}
+      TZ: ${TZ}
     volumes:
-      - ${DATA_PATH_HOST}/judge:/data                 # judge 数据挂载目录
+      - ${CONFIG_PATH_HOST}/server/judge.yaml:/app/etc/judge.yaml
     ports:
-      - "${JUDGE_PORT}:5050"
-    networks:
-      - backend
-    restart: no
-    shm_size: 256m
-    privileged: true
+      - "${JUDGE_PORT}:9030"
+    extra_hosts:
+      - "serverhost:${serverhost}"
+    depends_on:
+      - problem
+    restart: unless-stopped
+
+  contest:
+    build:
+      context: ./server/contest
+    image: yun-oj-contest:0.1
+    container_name: yun-oj-contest
+    deploy:
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 128M
+    environment:
+      TZ: ${TZ}
+    volumes:
+      - ${CONFIG_PATH_HOST}/server/contest.yaml:/app/etc/contest.yaml
+    ports:
+      - "${CONTEST_PORT}:9030"
+    extra_hosts:
+      - "serverhost:${serverhost}"
+    depends_on:
+      - user
+      - problem
+      - judge
+    restart: unless-stopped

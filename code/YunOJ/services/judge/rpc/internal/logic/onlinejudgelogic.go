@@ -53,7 +53,7 @@ func onlineJudgeOne(code, input string, submitId, timeLimit, memLimit int64) (re
 	timeLimitNs, memLimitB := timeLimit*1000000, memLimit<<20
 
 	compileReq := fmt.Sprintf(`{"cmd":[{"args":["/usr/bin/g++","%d.cpp","-o","%d"],"env":["PATH=/usr/bin:/bin"],"files":[{"content":""},{"name":"stdout","max":10240},{"name":"stderr","max":10240}],"cpuLimit":10000000000,"memoryLimit":134217728,"procLimit":50,"copyIn":{"%d.cpp":{"content":%s}},"copyOut":["stdout","stderr"],"copyOutCached":["%d"]}]}`, submitId, submitId, submitId, strconv.Quote(code), submitId)
-	compileResp, err := utils.HttpPost("http://serverhost:5050/run", []byte(compileReq))
+	compileResp, err := utils.HttpPost("http://serverhost:12060/run", []byte(compileReq))
 	if err != nil {
 		return SystemError, ""
 	}
@@ -69,7 +69,7 @@ func onlineJudgeOne(code, input string, submitId, timeLimit, memLimit int64) (re
 	fileId := compileData[0].FileIds[fmt.Sprintf("%d", submitId)]
 
 	runReq := fmt.Sprintf(`{"cmd":[{"args":["%d"],"env":["PATH=/usr/bin:/bin"],"files":[{"content":%s},{"name":"stdout","max":10240},{"name":"stderr","max":10240}],"cpuLimit":%d,"memoryLimit":%d,"procLimit":50,"copyIn":{"%d":{"fileId":"%s"}}}]}`, submitId, strconv.Quote(input), timeLimitNs, memLimitB, submitId, fileId)
-	runResp, err := utils.HttpPost("http://serverhost:5050/run", []byte(runReq))
+	runResp, err := utils.HttpPost("http://serverhost:12060/run", []byte(runReq))
 	if err != nil {
 		return SystemError, ""
 	}

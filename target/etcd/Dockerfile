@@ -1,1 +1,1 @@
-FROM bitnami/etcd:3.5.12
+FROM bitnami/etcd:3.5

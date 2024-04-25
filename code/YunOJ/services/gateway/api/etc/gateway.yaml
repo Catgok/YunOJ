@@ -1,10 +1,10 @@
-Name: User
+Name: Gateway
 Host: 0.0.0.0
 Port: 8888
 
 Auth:
-  AccessSecret: 6B$)*Us(nvOWLx2C
-  AccessExpire: 7200
+  AccessSecret: Tu2fL8gRDs
+  AccessExpire: 86400
 
 UserRpc:
   Etcd:

@@ -6,7 +6,7 @@ Etcd:
   Key: problem.rpc
 
 Mysql:
-  DataSource: root:mysql_root@tcp(serverhost:13306)/YunOj?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+  DataSource: root:mysql_root@tcp(serverhost:13306)/YunOj?charset=utf8mb4&parseTime=true
 
 CacheRedis:
   - Host: serverhost:16379

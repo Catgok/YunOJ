@@ -2,7 +2,8 @@ import axios from 'axios';
 import {eventBus} from "@/utils/eventBus";
 
 const apiService = axios.create({
-    baseURL: 'http://localhost:8888/v1/',
+    // baseURL: 'http://localhost:8888/v1/',
+    baseURL: 'https://api.yunoj.hhxxblog.top/v1/',
     timeout: 3000, // 请求超时时间ms
 });
 
