@@ -29,6 +29,12 @@ func (l *AddProblemToContestLogic) AddProblemToContest(in *contest.AddProblemToC
 		Code:    0,
 		Message: "success",
 	}
+	err := l.svcCtx.ContestProblemInfoModel.DeleteByContestId(l.ctx, in.ContestId)
+	if err != nil {
+		resp.Code, resp.Message = 5003, err.Error()
+		return resp, nil
+	}
+
 	var data []*model.ContestProblemInfo
 	for _, problemId := range in.ProblemIds {
 		data = append(data, &model.ContestProblemInfo{
@@ -36,7 +42,7 @@ func (l *AddProblemToContestLogic) AddProblemToContest(in *contest.AddProblemToC
 			ProblemId: problemId,
 		})
 	}
-	_, err := l.svcCtx.ContestProblemInfoModel.InsertBatch(l.ctx, data)
+	_, err = l.svcCtx.ContestProblemInfoModel.InsertBatch(l.ctx, data)
 	if err != nil {
 		resp.Code, resp.Message = 5003, err.Error()
 		return resp, nil

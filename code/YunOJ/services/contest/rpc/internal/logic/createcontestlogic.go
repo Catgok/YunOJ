@@ -36,11 +36,15 @@ func (l *CreateContestLogic) CreateContest(in *contest.CreateContestRequest) (*c
 		StartTime:   time.Unix(in.GetContest().GetStartTime(), 0),
 		EndTime:     time.Unix(in.GetContest().GetEndTime(), 0),
 	}
-	_, err := l.svcCtx.ContestInfoModel.Insert(l.ctx, data)
+	res, err := l.svcCtx.ContestInfoModel.Insert(l.ctx, data)
 	if err != nil {
 		resp.Code, resp.Message = 5003, err.Error()
 		return resp, nil
 	}
-	resp.Success = true
+	resp.ContestId, err = res.LastInsertId()
+	if err != nil {
+		resp.Code, resp.Message = 5003, err.Error()
+		return resp, nil
+	}
 	return resp, nil
 }

@@ -45,6 +45,6 @@ func (l *CreateContestLogic) CreateContest(req *types.CreateContestRequest) (res
 		return resp, nil
 	}
 	resp.Code, resp.Message = res.GetCode(), res.GetMessage()
-	resp.Data = true
+	resp.Data = res.GetContestId()
 	return resp, nil
 }

@@ -35,6 +35,7 @@ type (
 		FindByContestId(ctx context.Context, contestId int64) ([]int64, error)
 		Update(ctx context.Context, data *ContestProblemInfo) error
 		Delete(ctx context.Context, contestProblemId int64) error
+		DeleteByContestId(ctx context.Context, contestId int64) error
 	}
 
 	defaultContestProblemInfoModel struct {
@@ -163,6 +164,10 @@ func (m *defaultContestProblemInfoModel) Update(ctx context.Context, newData *Co
 	return err
 }
 
+func (m *defaultContestProblemInfoModel) DeleteByContestId(ctx context.Context, contestId int64) error {
+	_, err := m.ExecNoCacheCtx(ctx, "delete from "+m.table+" where `contest_id` = ?", contestId)
+	return err
+}
 func (m *defaultContestProblemInfoModel) formatPrimary(primary any) string {
 	return fmt.Sprintf("%s%v", cacheContestProblemInfoContestProblemIdPrefix, primary)
 }

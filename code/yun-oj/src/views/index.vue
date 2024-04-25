@@ -37,6 +37,7 @@ export default {
         return {
           backgroundColor: `rgba(255, 255, 255, 0.75)`,
           backdropFilter: `blur(0.5px)`,
+          marginBottom: `10vw`,
           boxShadow: `0 0 10px rgba(0, 0, 0, 0.25)`
         };
       }
@@ -64,7 +65,7 @@ export default {
 }
 
 .global-main {
-  margin: 2vw 20px 10vw 20px;
+  margin: 2vw 20px 0 20px;
   width: 80vw;
   border-radius: 10px;
   padding: 30px;

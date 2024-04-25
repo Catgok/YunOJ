@@ -38,6 +38,7 @@ func (l *GetContestRankLogic) GetContestRank(req *types.GetContestRankRequest) (
 	for _, rankInfo := range res.GetRankInfo() {
 		data = append(data, types.ContestRankInfo{
 			UserId:        rankInfo.GetUserId(),
+			UserName:      rankInfo.GetUserName(),
 			ProblemId:     rankInfo.GetProblemId(),
 			TryTimes:      rankInfo.GetTryTimes(),
 			SubmitTimes:   rankInfo.GetSubmitTime(),

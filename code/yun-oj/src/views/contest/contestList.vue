@@ -12,8 +12,8 @@
           <div @click="handleContestClick(scope.row)" class="contest-item">{{ scope.row.name }}</div>
         </template>
       </el-table-column>
-      <el-table-column prop="startTime" label="开始时间" width="150"/>
-      <el-table-column prop="endTime" label="结束时间" width="150"/>
+      <el-table-column prop="startTime" label="开始时间" width="180"/>
+      <el-table-column prop="endTime" label="结束时间" width="180"/>
       <el-table-column width="150">
         <template #default="scope">
           <el-button link @click="signupContest(scope.row)">报名</el-button><!-- todo -->
@@ -44,7 +44,7 @@ export default {
     return {
       total: 0,
       currentPage: 1,
-      pageSize: 5,
+      pageSize: 10,
       contestData: []
     }
   },
@@ -69,7 +69,7 @@ export default {
       this.loadContestListData(val)
     },
     loadContestListData(pageNo) {
-      let contestData = this.contestData
+      this.contestData = []
       const req = {
         pageNo: pageNo,
         pageSize: this.pageSize
@@ -81,7 +81,7 @@ export default {
         }
         this.total = resp.total
         for (let i = 0; i < resp.data.length; i++) {
-          contestData.push({
+          this.contestData.push({
             id: resp.data[i].id,
             name: resp.data[i].name,
             startTime: moment(resp.data[i].startTime * 1000).format('YYYY-MM-DD HH:mm'),

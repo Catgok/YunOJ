@@ -33,11 +33,12 @@ message SubmitAnswerResponse {
 
 message ContestRankInfo {
   int64 user_id = 1;
-  int64 problem_id = 2;
-  int64 try_times = 3;
-  int64 submit_time = 4;
-  bool is_pass = 5;
-  int64 first_pass_time = 6;
+  string user_name = 2;
+  int64 problem_id = 3;
+  int64 try_times = 4;
+  int64 submit_time = 5;
+  bool is_pass = 6;
+  int64 first_pass_time = 7;
 }
 message Problem {
   int64 problem_id = 1;
@@ -51,7 +52,7 @@ message CreateContestRequest {
 message CreateContestResponse {
   int64 code = 1;
   string message = 2;
-  bool success = 3;
+  int64 contestId = 3;
 }
 
 message GetContestByIdRequest {

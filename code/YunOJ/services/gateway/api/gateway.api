@@ -218,6 +218,11 @@ type (
 		Input  string `json:"input"`
 		Output string `json:"output"`
 	}
+	OnlineJudgeResult {
+		StatusCode    int64  `json:"statusCode"`
+		StatusMessage string `json:"statusMessage"`
+		Output        string `json:"output"`
+	}
 	SetJudgeCaseRequest {
 		ProblemId int64       `json:"problemId"`
 		Cases     []JudgeCase `json:"cases"`
@@ -232,7 +237,7 @@ type (
 	}
 	OnlineJudgeResponse {
 		BaseResponse
-		Data string `json:"data"`
+		Data OnlineJudgeResult `json:"data"`
 	}
 )
 
@@ -302,12 +307,13 @@ type (
 		Data []ContestRankInfo `json:"data"`
 	}
 	ContestRankInfo {
-		UserId        int64 `json:"userId"`
-		ProblemId     int64 `json:"problemId"`
-		TryTimes      int64 `json:"tryTimes"`
-		SubmitTimes   int64 `json:"submitTimes"`
-		IsPass        bool  `json:"isPass"`
-		FirstPassTime int64 `json:"firstPassTime"`
+		UserId        int64  `json:"userId"`
+		UserName      string `json:"userName"`
+		ProblemId     int64  `json:"problemId"`
+		TryTimes      int64  `json:"tryTimes"`
+		SubmitTimes   int64  `json:"submitTimes"`
+		IsPass        bool   `json:"isPass"`
+		FirstPassTime int64  `json:"firstPassTime"`
 	}
 	CreateContestRequest {
 		Name        string `json:"name"`
@@ -317,7 +323,7 @@ type (
 	}
 	CreateContestResponse {
 		BaseResponse
-		Data bool `json:"data"`
+		Data int64 `json:"data"`
 	}
 	UpdateContestRequest {
 		Contest Contest `json:"contest"`

@@ -35,12 +35,13 @@ type ContestProblemInfo struct {
 }
 
 type ContestRankInfo struct {
-	UserId        int64 `json:"userId"`
-	ProblemId     int64 `json:"problemId"`
-	TryTimes      int64 `json:"tryTimes"`
-	SubmitTimes   int64 `json:"submitTimes"`
-	IsPass        bool  `json:"isPass"`
-	FirstPassTime int64 `json:"firstPassTime"`
+	UserId        int64  `json:"userId"`
+	UserName      string `json:"userName"`
+	ProblemId     int64  `json:"problemId"`
+	TryTimes      int64  `json:"tryTimes"`
+	SubmitTimes   int64  `json:"submitTimes"`
+	IsPass        bool   `json:"isPass"`
+	FirstPassTime int64  `json:"firstPassTime"`
 }
 
 type CreateContestRequest struct {
@@ -52,7 +53,7 @@ type CreateContestRequest struct {
 
 type CreateContestResponse struct {
 	BaseResponse
-	Data bool `json:"data"`
+	Data int64 `json:"data"`
 }
 
 type CreateProblemRequest struct {
@@ -200,7 +201,13 @@ type OnlineJudgeRequest struct {
 
 type OnlineJudgeResponse struct {
 	BaseResponse
-	Data string `json:"data"`
+	Data OnlineJudgeResult `json:"data"`
+}
+
+type OnlineJudgeResult struct {
+	StatusCode    int64  `json:"statusCode"`
+	StatusMessage string `json:"statusMessage"`
+	Output        string `json:"output"`
 }
 
 type Problem struct {

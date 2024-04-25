@@ -46,10 +46,7 @@ export default {
         if (resp.code !== 0) {
           return
         }
-        this.contestProblemsInfo = resp.data
-        for (let i = 0; i < this.contestProblemsInfo.length; i++) {
-          this.contestProblemsInfo[i].id = i + 1
-        }
+        this.contestProblemsInfo = resp.data.sort((a, b) => a.problemId - b.problemId)
       })
     },
     handleContestProblemClick(row) {

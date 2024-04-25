@@ -91,13 +91,12 @@ int main() {
       }
 
       this.$axios.post('/judge/onlineJudge', req).then((res) => {
-        const resp = res.data
-        if (resp.code !== 0) {
-          this.outputCase = resp.message
+        const resp = res.data.data
+        if (resp.statusCode !== 0) {
+          this.outputCase = resp.statusMessage
           return
         }
-        this.outputCase = resp.data
-        // this.runResult = "运行成功"
+        this.outputCase = resp.output
       })
     },
   },

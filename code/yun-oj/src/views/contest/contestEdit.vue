@@ -40,16 +40,10 @@
             </el-table-column>
           </el-table>
         </el-form-item>
-        <!--        <el-form-item label="竞赛题目">-->
-        <!--          <el-select v-model="contestInfo.problemList" multiple style="width: 180px">-->
-        <!--            <el-option v-for="item in problemList" :key="item.value" :label="item.label" :value="item.value"/>-->
-        <!--          </el-select>-->
-        <!--        </el-form-item>-->
       </el-form>
     </div>
     <div style="text-align: right">
       <el-button type="primary" @click="onSubmitContestInfo">{{ submitContestInfo }}</el-button>
-      <!--      <el-button type="primary" @click="onSubmitContestProblem">{{ submitContestProblemInfo }}</el-button>-->
     </div>
   </div>
 </template>
@@ -74,11 +68,10 @@ export default {
       titleInfo: '',
       isNewContest: false,
       submitContestInfo: '',
-      // submitContestProblemInfo: '更新题目',
-      contestInfo: {name: '', startTime: '', endTime: '', description: '', problemList: []},
+      contestInfo: {id: '', name: '', startTime: '', endTime: '', description: ''},
       contestTimeInfo: [],
       problemSearchInput: '',
-      contestProblemInfo: [{id: 1, name: 'A'}, {id: 2, name: 'B'}, {id: 3, name: 'C'},]
+      contestProblemInfo: []
     }
   },
   created() {
@@ -89,7 +82,8 @@ export default {
     } else {
       this.titleInfo = '编辑竞赛'
       this.submitContestInfo = '提交修改'
-      this.getContestInfo(this.$route.params.contestId)
+      this.contestInfo.id = this.$route.params.contestId
+      this.getContestInfo(this.contestInfo.id)
     }
   },
   computed: {
@@ -100,13 +94,6 @@ export default {
     },
   },
   methods: {
-    onSubmitContestInfo() {
-      console.log(this.contestInfo);
-      // todo
-    },
-    // onSubmitContestProblem() {
-    //   // todo
-    // },
     getContestInfo(contestId) {
       const req = {
         contestId: parseInt(contestId),
@@ -122,11 +109,87 @@ export default {
         this.contestInfo.endTime = resp.data.endTime
         this.contestTimeInfo.push(new Date(this.contestInfo.startTime * 1000), new Date(this.contestInfo.endTime * 1000))
       })
+      const getContestProblemsReq = {
+        contestId: parseInt(contestId),
+      }
+      this.$axios.post('/contest/getContestProblems', getContestProblemsReq).then((res) => {
+        const resp = res.data
+        if (resp.code !== 0) {
+          return
+        }
+        if (resp.data && resp.data.length > 0)
+          this.contestProblemInfo = resp.data.map(item => ({id: item.problemId, name: item.title}));
+        else this.contestProblemInfo = []
+      })
+    },
+    onSubmitContestInfo() {
+      this.contestInfo.startTime = this.contestTimeInfo[0].getTime() / 1000
+      this.contestInfo.endTime = this.contestTimeInfo[1].getTime() / 1000
+      if (this.isNewContest) {
+        let addContestReq = {
+          name: this.contestInfo.name,
+          description: this.contestInfo.description,
+          startTime: this.contestInfo.startTime,
+          endTime: this.contestInfo.endTime
+        }
+        this.$axios.post('/contest/createContest', addContestReq).then((res) => {
+          const resp = res.data
+          if (resp.code !== 0) {
+            return
+          }
+          this.contestInfo.id = resp.data
+          // if (this.contestProblemInfo.length === 0) return;
+          let updateContestProblemReq = {
+            contestId: parseInt(this.contestInfo.id),
+            problemIds: []
+          }
+          updateContestProblemReq.problemIds = this.contestProblemInfo.map(item => item.id)
+          this.$axios.post('/contest/addProblem', updateContestProblemReq).then((res) => {
+            const resp = res.data
+            if (resp.code !== 0) {
+              return
+            }
+            console.log('add contest success') // todo 提示
+          })
+        })
+      } else {
+        let updateContestReq = {
+          contest: this.contestInfo
+        }
+        updateContestReq.contest.id = parseInt(updateContestReq.contest.id)
+        this.$axios.post('/contest/updateContest', updateContestReq).then((res) => {
+          const resp = res.data
+          if (resp.code !== 0) {
+            return
+          }
+        })
+        let updateContestProblemReq = {
+          contestId: parseInt(this.contestInfo.id),
+          problemIds: []
+        }
+        updateContestProblemReq.problemIds = this.contestProblemInfo.map(item => item.id)
+        this.$axios.post('/contest/addProblem', updateContestProblemReq).then((res) => {
+          const resp = res.data
+          if (resp.code !== 0) {
+            return
+          }
+          console.log('update contest success') // todo 提示
+        })
+      }
     },
     handleAddProblem() {
-      // todo
-      const problemInfo = {id: parseInt(this.problemSearchInput), name: '题目名称' + this.problemSearchInput}
-      this.contestProblemInfo.push(problemInfo)
+      const req = {
+        problemId: parseInt(this.problemSearchInput),
+      }
+      this.$axios.post('/problem/get', req).then((res) => {
+        const resp = res.data
+        if (resp.code !== 0) {
+          console.log('error')// todo 提示
+          return
+        }
+        const problemInfo = {id: parseInt(this.problemSearchInput), name: resp.data.title}
+        this.contestProblemInfo.push(problemInfo)
+      })
     },
     handleDeleteProblem(row) {
       const index = this.contestProblemInfo.findIndex(problem => problem.id === row.id);
@@ -138,5 +201,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

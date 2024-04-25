@@ -1,6 +1,6 @@
 <template>
   <div style="height: 70vh;width: 100%">
-    <div style="display: flex" class="main-page-item">
+    <div style="display: flex;margin-top: -20px" class="main-page-item">
       <div style="text-align:left;" v-html="renderedMarkdown"></div>
     </div>
     <div style="display: flex;height: 30vh;margin-bottom: 15px;">
@@ -8,10 +8,10 @@
         <div>
           <div class="main-page-text">最新题目</div>
           <el-table :data="problemData" stripe style="width:calc(40vw - 79.5px)">
-            <el-table-column prop="id" label="ID" width="60"></el-table-column>
-            <el-table-column prop="problemName" label="题目名称">
+            <el-table-column prop="problemId" label="ID" width="60"></el-table-column>
+            <el-table-column prop="title" label="题目名称">
               <template #default="scope">
-                <div @click="handleProblemClick(scope.row)" class="problem-item">{{ scope.row.problemName }}</div>
+                <div @click="handleProblemClick(scope.row)" class="problem-item">{{ scope.row.title }}</div>
               </template>
             </el-table-column>
           </el-table>
@@ -45,17 +45,8 @@ export default {
 # 11
 $$a_b$$
       `,
-      problemData: [
-        {id: 1001, problemName: 'A+B Problem'},
-        {id: 1002, problemName: 'A+B Problem2'},
-        {id: 1003, problemName: 'A+B Problem3'},
-        {id: 1004, problemName: 'A+B Problem4'},
-        {id: 1005, problemName: 'A+B Problem5'},
-      ],
-      contestData: [
-        {id: '1', name: '1'},
-        {id: '1', name: '2'},
-      ]
+      problemData: [],
+      contestData: []
     }
   },
   created() {
@@ -83,10 +74,25 @@ $$a_b$$
       window.open(url);
     },
     loadRecentProblemData() {
-      // todo
+      this.$axios.post('/problem/getRecentProblems').then((res) => {
+        const resp = res.data
+        if (resp.code !== 0) {
+          return
+        }
+        const problemTitleList = resp.data
+        this.problemData = problemTitleList.sort(() => Math.random() - 0.5).slice(0, 5).sort((a, b) => a.problemId - b.problemId);
+      })
     },
     loadRecentContestData() {
-      // todo
+      this.$axios.post('/contest/getRecentContests').then((res) => {
+        const resp = res.data
+        if (resp.code !== 0) {
+          return
+        }
+        const ContestBaseInfoList = resp.data
+        this.contestData = ContestBaseInfoList.sort(() => Math.random() - 0.5).slice(0, 5).sort((a, b) => a.id - b.id);
+        ;
+      })
     }
   }
 }

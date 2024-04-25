@@ -128,22 +128,10 @@ export default {
     const uToken = localStorage.getItem('U-Token')
     this.socket = new WebSocket(`ws://localhost:8080?uToken=${uToken}`);
     this.socket.onmessage = (event) => {
+      console.log(event)
       const message = JSON.parse(event.data);
       this.runCodeResultMsg = codeRunResultMap[message.Result]
     };
-
-    // this.socket.onopen = () => {
-    //   console.log('WebSocket connected');
-    // };
-    //
-    // this.socket.onclose = () => {
-    //   console.log('WebSocket disconnected');
-    // };
-    //
-    // this.socket.onerror = (error) => {
-    //   console.error('WebSocket Error:', error);
-    // };
-
   },
   computed: {
     renderedMarkdown() {
@@ -194,12 +182,12 @@ export default {
         input: this.inputCase,
       }
       this.$axios.post('/judge/onlineJudge', req).then((res) => {
-        const resp = res.data
-        if (resp.code !== 0) {
-          this.runCodeResultMsg = resp.message
+        const resp = res.data.data
+        if (resp.statusCode !== 0) {
+          this.runCodeResultMsg = resp.statusMessage
           return
         }
-        this.outputCase = resp.data
+        this.outputCase = resp.output
         this.runCodeResultMsg = '运行成功'
       })
     },
@@ -216,7 +204,7 @@ export default {
       }
       let uri = '/problem/submit'
       if (this.inContest) {
-        req.contestId = this.contestId
+        req.contestId = parseInt(this.contestId)
         uri = '/contest/submitAnswer'
       }
       this.$axios.post(uri, req).then((res) => {

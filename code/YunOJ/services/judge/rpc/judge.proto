@@ -16,6 +16,11 @@ message JudgeResponse {
   string message = 2;
 }
 
+message OnlineJudgeResult{
+  int64 status_code = 1;
+  string status_message = 2;
+  string output = 3;
+}
 message OnlineJudgeRequest {
   string input = 1;
   string code = 2;
@@ -24,7 +29,7 @@ message OnlineJudgeRequest {
 message OnlineJudgeResponse {
   int64 code = 1;
   string message = 2;
-  string output = 3;
+  OnlineJudgeResult onlineJudgeResult = 3;
 }
 
 message JudgeCase{

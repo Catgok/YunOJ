@@ -12,6 +12,7 @@ type Config struct {
 		DataSource string
 	}
 	ProblemRpc               zrpc.RpcClientConf
+	UserRpc                  zrpc.RpcClientConf
 	CacheRedis               cache.CacheConf
 	SubmitChangeConsumerConf kq.KqConf
 }

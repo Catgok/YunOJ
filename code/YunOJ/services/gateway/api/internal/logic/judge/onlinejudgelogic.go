@@ -35,7 +35,12 @@ func (l *OnlineJudgeLogic) OnlineJudge(req *types.OnlineJudgeRequest) (resp *typ
 		resp.Code, resp.Message = 500, err.Error()
 		return resp, nil
 	}
-	resp.Code, resp.Message = res.Code, res.Message
-	resp.Data = res.Output
+	resp.Code, resp.Message = res.GetCode(), res.GetMessage()
+	data := types.OnlineJudgeResult{
+		StatusCode:    res.GetOnlineJudgeResult().GetStatusCode(),
+		StatusMessage: res.GetOnlineJudgeResult().GetStatusMessage(),
+		Output:        res.GetOnlineJudgeResult().GetOutput(),
+	}
+	resp.Data = data
 	return
 }

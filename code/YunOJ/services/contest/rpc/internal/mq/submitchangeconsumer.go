@@ -45,12 +45,12 @@ func (l *SubmitChange) Consume(key, val string) error {
 	if err != nil || contestUserInfo == nil {
 		return nil
 	}
-
 	contestRankInfo, err := l.svcCtx.ContestRankInfoModel.FindOneByContestIdUserIdProblemId(l.ctx, contestId, userId, problemId)
 	if errors.Is(err, model.ErrNotFound) || contestRankInfo == nil {
 		contestRankInfo = &model.ContestRankInfo{
 			ContestId:     contestId,
 			UserId:        userId,
+			UserName:      contestUserInfo.UserName,
 			ProblemId:     problemId,
 			TryTimes:      0,
 			IsPass:        false,

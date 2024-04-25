@@ -1,7 +1,6 @@
-const {CompressionTypes, CompressionCodecs} = require('kafkajs')
+const {CompressionTypes, Kafka, CompressionCodecs} = require('kafkajs')
 const SnappyCodec = require('kafkajs-snappy')
 const {WebSocketServer} = require('ws')
-const {Kafka} = require('kafkajs')
 const url = require('url')
 const axios = require('axios')
 

@@ -24,6 +24,7 @@ type (
 	JudgeResponse                      = judge.JudgeResponse
 	OnlineJudgeRequest                 = judge.OnlineJudgeRequest
 	OnlineJudgeResponse                = judge.OnlineJudgeResponse
+	OnlineJudgeResult                  = judge.OnlineJudgeResult
 
 	JudgeService interface {
 		Judge(ctx context.Context, in *JudgeRequest, opts ...grpc.CallOption) (*JudgeResponse, error)

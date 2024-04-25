@@ -45,6 +45,7 @@ type (
 		ContestRankId int64         `db:"contest_rank_id"` // 竞赛排名信息ID
 		ContestId     int64         `db:"contest_id"`      // 竞赛ID
 		UserId        int64         `db:"user_id"`         // 用户ID
+		UserName      string        `db:"user_name"`       // 用户名称
 		ProblemId     int64         `db:"problem_id"`      // 题目ID
 		SubmitTimes   int64         `db:"submit_times"`    // 提交次数
 		TryTimes      int64         `db:"try_times"`       // 尝试次数
@@ -132,8 +133,8 @@ func (m *defaultContestRankInfoModel) Insert(ctx context.Context, data *ContestR
 	contestRankInfoContestIdUserIdProblemIdKey := fmt.Sprintf("%s%v:%v:%v", cacheContestRankInfoContestIdUserIdProblemIdPrefix, data.ContestId, data.UserId, data.ProblemId)
 	contestRankInfoContestRankIdKey := fmt.Sprintf("%s%v", cacheContestRankInfoContestRankIdPrefix, data.ContestRankId)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?)", m.table, contestRankInfoRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.ContestId, data.UserId, data.ProblemId, data.SubmitTimes, data.TryTimes, data.IsPass, data.FirstPassTime)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?)", m.table, contestRankInfoRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.ContestId, data.UserId, data.UserName, data.ProblemId, data.SubmitTimes, data.TryTimes, data.IsPass, data.FirstPassTime)
 	}, contestRankInfoContestIdUserIdProblemIdKey, contestRankInfoContestRankIdKey)
 	return ret, err
 }
@@ -148,7 +149,7 @@ func (m *defaultContestRankInfoModel) Update(ctx context.Context, newData *Conte
 	contestRankInfoContestRankIdKey := fmt.Sprintf("%s%v", cacheContestRankInfoContestRankIdPrefix, data.ContestRankId)
 	_, err = m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `contest_rank_id` = ?", m.table, contestRankInfoRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, newData.ContestId, newData.UserId, newData.ProblemId, newData.SubmitTimes, newData.TryTimes, newData.IsPass, newData.FirstPassTime, newData.ContestRankId)
+		return conn.ExecCtx(ctx, query, newData.ContestId, newData.UserId, newData.UserName, newData.ProblemId, newData.SubmitTimes, newData.TryTimes, newData.IsPass, newData.FirstPassTime, newData.ContestRankId)
 	}, contestRankInfoContestIdUserIdProblemIdKey, contestRankInfoContestRankIdKey)
 	return err
 }

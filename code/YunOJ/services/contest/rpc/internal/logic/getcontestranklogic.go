@@ -36,6 +36,7 @@ func (l *GetContestRankLogic) GetContestRank(in *contest.GetContestRankRequest) 
 	for _, contestRankInfo := range data {
 		rankInfoList = append(rankInfoList, &contest.ContestRankInfo{
 			UserId:        contestRankInfo.UserId,
+			UserName:      contestRankInfo.UserName,
 			ProblemId:     contestRankInfo.ProblemId,
 			TryTimes:      contestRankInfo.TryTimes,
 			SubmitTime:    contestRankInfo.SubmitTimes,

@@ -40,8 +40,12 @@ func (l *OnlineJudgeLogic) OnlineJudge(in *judge.OnlineJudgeRequest) (*judge.Onl
 	if len(output) > 4096 {
 		output = output[:4096]
 	}
-	resp.Code, resp.Message = int64(res), res.GetMsg()
-	resp.Output = output
+	data := &judge.OnlineJudgeResult{
+		StatusCode:    int64(res),
+		StatusMessage: res.GetMsg(),
+		Output:        output,
+	}
+	resp.OnlineJudgeResult = data
 	return resp, nil
 }
 

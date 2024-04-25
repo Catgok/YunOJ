@@ -84,6 +84,7 @@ export default {
             code: submitInfo.code,
           })
         })
+        this.submissionData.sort((a, b) => b.submissionId - a.submissionId)
       })
     }
   },

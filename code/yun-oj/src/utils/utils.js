@@ -84,5 +84,5 @@ export function formDate(time) {
 
 export function isCoach() {
     const userInfo = JSON.parse(localStorage.getItem('userInfo'))
-    return userInfo.userType === 1
+    return userInfo && userInfo.userType && userInfo.userType === 1
 }
