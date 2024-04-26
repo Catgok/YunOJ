@@ -126,7 +126,7 @@ export default {
     autoTextarea(targetTextElement)
 
     const uToken = localStorage.getItem('U-Token')
-    this.socket = new WebSocket(`ws://serverhost:12020?uToken=${uToken}`); // todo 是否可nginx
+    this.socket = new WebSocket(`ws://webkafkanginx-avvzxdijgd.cn-hongkong.fcapp.run?uToken=${uToken}`);
     this.socket.onmessage = (event) => {
       console.log(event)
       const message = JSON.parse(event.data);

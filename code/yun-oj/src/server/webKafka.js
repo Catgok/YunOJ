@@ -6,7 +6,7 @@ const axios = require('axios')
 
 CompressionCodecs[CompressionTypes.Snappy] = SnappyCodec
 
-const wss = new WebSocketServer({port: 8080});
+const wss = new WebSocketServer({port: 8888});
 
 const kafka = new Kafka({
     clientId: 'YUN-OJ-Kafka-Client-Agent',
@@ -37,7 +37,7 @@ wss.on('connection', async function connection(ws, req) {
     // console.log(req)
     const queryParams = url.parse(req.url, true).query;
     const uToken = queryParams.uToken;
-    await axios.post('http://0.0.0.0:8888/v1/user/getUserInfoByUToken', {}, {
+    await axios.post('http://serverhost:12030/v1/user/getUserInfoByUToken', {}, {
         headers: {'U-Token': uToken}
     }).then(response => {
         const res = JSON.parse(JSON.stringify(response.data))

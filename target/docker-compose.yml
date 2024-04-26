@@ -103,6 +103,8 @@ services:
       - "${WEB_KAFKA_PORT}:8080"
     extra_hosts:
       - "serverhost:${serverhost}"
+    depends_on:
+      - kafka
     restart: unless-stopped
 
   gateway:
