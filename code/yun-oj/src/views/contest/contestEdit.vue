@@ -2,7 +2,7 @@
   <div>
     <div style="font-size: 28px; border-bottom: 1px #938c8c solid;margin-bottom: 30px">{{ titleInfo }}</div>
     <div style="width: 100%">
-      <el-form :model="contestInfo" label-position="left" label-width="auto" style="max-width: 1000px">
+      <el-form :model="contestInfo" label-position="left" label-width="auto" style="max-width: 1300px">
         <el-form-item label="竞赛名称">
           <el-input v-model="contestInfo.name"/>
         </el-form-item>
@@ -60,6 +60,7 @@ import {
   ElTableColumn,
   ElTimePicker
 } from "element-plus";
+import {eventBus} from "@/utils/eventBus";
 
 export default {
   components: {ElForm, ElFormItem, ElButton, ElCol, ElTimePicker, ElInput, ElDatePicker, ElTable, ElTableColumn},
@@ -138,7 +139,12 @@ export default {
             return
           }
           this.contestInfo.id = resp.data
-          // if (this.contestProblemInfo.length === 0) return;
+          if (this.contestProblemInfo.length === 0) {
+            let noticeData = {type: "success", message: "新建竞赛成功", duration: 1300}
+            eventBus.emit('globalNotice', noticeData)
+            this.$router.go(-1)
+            return;
+          }
           let updateContestProblemReq = {
             contestId: parseInt(this.contestInfo.id),
             problemIds: []
@@ -149,20 +155,12 @@ export default {
             if (resp.code !== 0) {
               return
             }
-            console.log('add contest success') // todo 提示
+            let noticeData = {type: "success", message: "新建竞赛成功", duration: 1300}
+            eventBus.emit('globalNotice', noticeData)
+            this.$router.go(-1)
           })
         })
       } else {
-        let updateContestReq = {
-          contest: this.contestInfo
-        }
-        updateContestReq.contest.id = parseInt(updateContestReq.contest.id)
-        this.$axios.post('/contest/updateContest', updateContestReq).then((res) => {
-          const resp = res.data
-          if (resp.code !== 0) {
-            return
-          }
-        })
         let updateContestProblemReq = {
           contestId: parseInt(this.contestInfo.id),
           problemIds: []
@@ -173,7 +171,19 @@ export default {
           if (resp.code !== 0) {
             return
           }
-          console.log('update contest success') // todo 提示
+        })
+        let updateContestReq = {
+          contest: this.contestInfo
+        }
+        updateContestReq.contest.id = parseInt(updateContestReq.contest.id)
+        this.$axios.post('/contest/updateContest', updateContestReq).then((res) => {
+          const resp = res.data
+          if (resp.code !== 0) {
+            return
+          }
+          let noticeData = {type: "success", message: "更新竞赛成功", duration: 1300}
+          eventBus.emit('globalNotice', noticeData)
+          this.$router.go(-1)
         })
       }
     },
@@ -184,7 +194,8 @@ export default {
       this.$axios.post('/problem/get', req).then((res) => {
         const resp = res.data
         if (resp.code !== 0) {
-          console.log('error')// todo 提示
+          let noticeData = {type: "error", message: "题目ID不存在", duration: 3000}
+          eventBus.emit('globalNotice', noticeData)
           return
         }
         const problemInfo = {id: parseInt(this.problemSearchInput), name: resp.data.title}

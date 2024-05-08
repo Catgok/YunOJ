@@ -36,10 +36,16 @@ func (l *UpdateSubmitLogic) UpdateSubmit(in *problem.UpdateSubmitRequest) (*prob
 		return resp, nil
 	}
 
-	res.Status = in.Submit.Status
-	res.Result = in.Submit.Result
-	res.Time = in.Submit.Time
-	res.Memory = in.Submit.Memory
+	res.Status = in.Submit.GetStatus()
+	res.Result = in.Submit.GetResult()
+	res.Time = in.Submit.GetTime()
+	res.Memory = in.Submit.GetMemory()
+	if in.Submit.GetResult() == 0 {
+		err = l.svcCtx.ProblemModel.AddPassCount(l.ctx, res.ProblemId)
+		if err != nil {
+			logx.Errorf("AddPassCount Error , err :%v", err)
+		}
+	}
 	err = l.svcCtx.UserSubmitModel.Update(l.ctx, res)
 	if err != nil {
 		resp.Code, resp.Message = 5003, err.Error()

@@ -26,10 +26,10 @@ apiService.interceptors.response.use(response => {
         return;
     }
     if (response.data.code !== 0) {
-        const noticeData = {type: "error", message: response.data.message, duration: 2500}
-        eventBus.emit('globalNotice', noticeData)
-        response.data.code = -1
-        return response;
+        // const noticeData = {type: "error", message: response.data.message, duration: 2500}
+        // eventBus.emit('globalNotice', noticeData)
+        // response.data.code = -1
+        // return response;
     }
     return response;
 }, error => {

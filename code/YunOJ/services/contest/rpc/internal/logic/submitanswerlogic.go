@@ -41,6 +41,11 @@ func (l *SubmitAnswerLogic) SubmitAnswer(in *contest.SubmitAnswerRequest) (*cont
 		resp.Code, resp.Message = 10301, "The contest is not in progress"
 		return resp, nil
 	}
+	res, err := l.svcCtx.ContestUserInfoModel.FindOneByContestIdUserId(l.ctx, in.GetContestId(), in.GetUserId())
+	if err != nil || res == nil {
+		resp.Code, resp.Message = 10302, "You are not allowed to submit in this contest"
+		return resp, nil
+	}
 	createSubmitResp, err := l.svcCtx.ProblemRpc.CreateSubmit(l.ctx, &problem.CreateSubmitRequest{
 		UserId:    in.GetUserId(),
 		ProblemId: in.GetProblemId(),

@@ -78,42 +78,31 @@ func (l *JudgeLogic) Judge(in *judge.JudgeRequest) (*judge.JudgeResponse, error)
 	}
 
 	// 3、for 每一个case go-judge api评测, 对比输出结果
+	runRes := Accepted
 	timeTotUsed, memTotUsed := int64(0), int64(0)
 	for i := 0; i < len(inputsCase); i++ {
 		res, timeUsed, memUsed := judgeOne(in.Code, inputsCase[i], outputsCase[i], in.SubmitId, timeLimit, memLimit)
 		timeTotUsed = max(timeTotUsed, timeUsed)
 		memTotUsed = max(memTotUsed, memUsed)
 		if res != Accepted {
-			//4、调用problem.rpc更新评测结果
-			updateSubmitResult, err := l.svcCtx.ProblemRpc.UpdateSubmit(l.ctx, &problem.UpdateSubmitRequest{
-				Submit: &problem.Submit{
-					SubmitId: in.SubmitId,
-					Time:     timeTotUsed,
-					Memory:   memTotUsed,
-					Result:   int64(res),
-				},
-			})
-			if err != nil || updateSubmitResult.Success == false {
-				resp.Code, resp.Message = 500, err.Error()
-				return resp, nil
-			}
-			return resp, nil
+			runRes = res
+			break
 		}
 	}
 
+	//4、调用problem.rpc更新评测结果
 	updateSubmitResult, err := l.svcCtx.ProblemRpc.UpdateSubmit(l.ctx, &problem.UpdateSubmitRequest{
 		Submit: &problem.Submit{
 			SubmitId: in.SubmitId,
 			Time:     timeTotUsed,
 			Memory:   memTotUsed,
-			Result:   int64(Accepted),
+			Result:   int64(runRes),
 		},
 	})
 	if err != nil || updateSubmitResult.Success == false {
 		resp.Code, resp.Message = 500, err.Error()
 		return resp, nil
 	}
-
 	return resp, nil
 }
 

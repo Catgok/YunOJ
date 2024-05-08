@@ -51,7 +51,6 @@ export default {
       this.$axios.post('/problem/getSubmit', req).then((res) => {
         const resp = res.data
         if (resp.code !== 0) {
-          // todo
           return
         }
         this.submissionContent = resp.data.code

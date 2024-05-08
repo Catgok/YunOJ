@@ -65,7 +65,7 @@ export default {
       this.$axios.post('/user/login', req).then((res) => {
         const resp = res.data
         if (resp.code !== 0) {
-          noticeData = {type: "error", message: "用户名密码错误", duration: 2500}
+          noticeData = {type: "error", message: "用户名或密码错误", duration: 2500}
           eventBus.emit('globalNotice', noticeData)
           return
         }
@@ -86,7 +86,8 @@ export default {
       this.$axios.post('/user/register', req).then((res) => {
         const resp = res.data
         if (resp.code !== 0) {
-          // todo toast 注册失败 resp.message
+          let noticeData = {type: "error", message: "用户名或手机号已使用，请重试", duration: 2500}
+          eventBus.emit('globalNotice', noticeData)
           return
         }
         if (resp.data) {

@@ -47,7 +47,10 @@ func (l *CreateSubmitLogic) CreateSubmit(in *problem.CreateSubmitRequest) (*prob
 		resp.Code, resp.Message = 5003, err.Error()
 		return resp, nil
 	}
-
+	err = l.svcCtx.ProblemModel.AddSubmitCount(l.ctx, in.ProblemId)
+	if err != nil {
+		logx.Errorf("AddSubmitCount Error , err :%v", err)
+	}
 	problemSubmitMessageBody := ProblemSubmitMessageBody{
 		SubmitId:  id,
 		ProblemId: in.ProblemId,

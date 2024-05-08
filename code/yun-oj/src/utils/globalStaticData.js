@@ -9,9 +9,9 @@ const codeRunResultMap = {
     7: 'System Error',
 }
 const hardLevelMap = {
-    1: '简单',
-    2: '中等',
-    3: '困难',
+    0: '简单',
+    1: '中等',
+    2: '困难',
 }
 const languageMap = {
     1: 'C++'

@@ -65,7 +65,6 @@ export default {
       this.$axios.post('/problem/getSubmissionByProblemId', req).then((res) => {
         const resp = res.data
         if (resp.code !== 0) {
-          // todo
           return
         }
         if (resp.data === null || resp.data.length === 0) {

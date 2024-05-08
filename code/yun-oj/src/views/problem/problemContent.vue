@@ -90,6 +90,7 @@ import {basicLight} from '@uiw/codemirror-theme-basic/light'
 import {Codemirror} from 'vue-codemirror'
 import {ElButton, ElInput, ElOption, ElSelect} from "element-plus"
 import {codeRunResultMap, hardLevelMap} from "@/utils/globalStaticData";
+import {eventBus} from "@/utils/eventBus";
 
 export default {
   components: {Codemirror, ElInput, ElButton, ElSelect, ElOption},
@@ -128,9 +129,8 @@ export default {
     const uToken = localStorage.getItem('U-Token')
     this.socket = new WebSocket(`ws://webkafkanginx-avvzxdijgd.cn-hongkong.fcapp.run?uToken=${uToken}`);
     this.socket.onmessage = (event) => {
-      console.log(event)
       const message = JSON.parse(event.data);
-      this.runCodeResultMsg = codeRunResultMap[message.Result]
+      if (this.submitId === message.SubmitId) this.runCodeResultMsg = codeRunResultMap[message.Result]
     };
   },
   computed: {
@@ -209,8 +209,16 @@ export default {
       }
       this.$axios.post(uri, req).then((res) => {
         const resp = res.data
+        if (resp.code === 10301) {
+          const noticeData = {type: "error", message: '竞赛未开始或已结束', duration: 3000}
+          eventBus.emit('globalNotice', noticeData)
+        }
+        if (resp.code === 10302) {
+          const noticeData = {type: "error", message: '未报名竞赛', duration: 3000}
+          eventBus.emit('globalNotice', noticeData)
+        }
         if (resp.code !== 0) {
-          // todo
+          this.runCodeResultMsg = ''
           return
         }
         this.submitId = resp.data

@@ -70,14 +70,14 @@ const routes = [{
     meta: {
         title: 'YunOj - 竞赛'
     },
-},{
+}, {
     path: '/contest/new',
     name: 'contestNew',
     component: () => import('@/views/contest/contestEdit.vue'),
     meta: {
         title: 'YunOj - 竞赛'
     },
-},{
+}, {
     path: '/contest/edit/:contestId',
     name: 'contestEdit',
     component: () => import('@/views/contest/contestEdit.vue'),
@@ -91,11 +91,6 @@ const routes = [{
     meta: {
         title: 'YunOj - 竞赛'
     },
-}, {
-    path: '/announcement',
-    name: 'announcement',
-    component: () => import('@/views/announcement/announcement.vue'),
-    meta: {},
 }, {
     path: '/onlineIDE',
     name: 'onlineIDE',

@@ -6,7 +6,7 @@
     <div style="height: 40px">
     </div>
     <el-table :data="contestData" stripe style="width: 100%;">
-      <el-table-column type="index" label="#" width="70" :index="ContestListIndexMethod"/>
+      <el-table-column type="index" label="#" width="70" :index="contestListIndexMethod"/>
       <el-table-column prop="name" label="竞赛名称">
         <template #default="scope">
           <div @click="handleContestClick(scope.row)" class="contest-item">{{ scope.row.name }}</div>
@@ -15,8 +15,9 @@
       <el-table-column prop="startTime" label="开始时间" width="180"/>
       <el-table-column prop="endTime" label="结束时间" width="180"/>
       <el-table-column width="150">
-        <template #default="scope">
-          <el-button link @click="signupContest(scope.row)">报名</el-button><!-- todo -->
+        <template #default="scope" style="width: 50px ">
+          <el-button link v-show="!signUpStatus(scope.row)" @click="signupContest(scope.row)">报名</el-button>
+          <div v-show="signUpStatus(scope.row)">已报名</div>
         </template>
       </el-table-column>
     </el-table>
@@ -37,6 +38,7 @@
 import moment from 'moment';
 import {ElButton, ElPagination, ElTable, ElTableColumn} from "element-plus";
 import {isCoach} from "@/utils/utils";
+import {eventBus} from "@/utils/eventBus";
 
 export default {
   components: {ElTable, ElTableColumn, ElPagination, ElButton},
@@ -45,15 +47,30 @@ export default {
       total: 0,
       currentPage: 1,
       pageSize: 10,
-      contestData: []
+      contestData: [],
+      signedContest: []
     }
   },
   created() {
     this.loadContestListData(1)
+    this.getSigned()
   },
   methods: {
+    getSigned() {
+      this.$axios.post('/contest/getSignUpContests').then((res) => {
+        const resp = res.data
+        if (resp.code !== 0) {
+          return
+        }
+        this.signedContest = resp.data
+        // console.log(this.signedContest)
+      })
+    },
+    signUpStatus(row){
+      return this.signedContest.includes(row.id)
+    },
     isCoach,
-    ContestListIndexMethod(index) {
+    contestListIndexMethod(index) {
       return (this.currentPage - 1) * this.pageSize + index + 1
     },
     routeToNewContest() {
@@ -96,9 +113,15 @@ export default {
       }
       this.$axios.post('/contest/signUpContest', req).then((res) => {
         const resp = res.data
+        if (resp.code === 10301) {
+          const noticeData = {type: "error", message: '竞赛未开始或已结束', duration: 3000}
+          eventBus.emit('globalNotice', noticeData)
+        }
         if (resp.code !== 0) {
           return
         }
+        const noticeData = {type: "success", message: '报名竞赛成功', duration: 1300}
+        eventBus.emit('globalNotice', noticeData)
 
       })
     }

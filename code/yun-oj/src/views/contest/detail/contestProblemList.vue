@@ -46,7 +46,7 @@ export default {
         if (resp.code !== 0) {
           return
         }
-        this.contestProblemsInfo = resp.data.sort((a, b) => a.problemId - b.problemId)
+        if (resp.data !== null && resp.data !== []) this.contestProblemsInfo = resp.data.sort((a, b) => a.problemId - b.problemId)
       })
     },
     handleContestProblemClick(row) {

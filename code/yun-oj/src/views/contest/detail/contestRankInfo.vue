@@ -104,6 +104,7 @@ export default {
       })
     },
     doRank(rankInfo) {
+      if (rankInfo === null || rankInfo.length === 0) return
       this.contestRankTableInfo = []
       this.contestRankTitleInfo = []
       rankInfo.forEach(data => {
@@ -130,7 +131,7 @@ export default {
       this.contestRankTableInfo.forEach((user, index) => {
         user.penalty = Math.round(user.penalty / 60);
       });
-      console.log(this.contestRankTableInfo)
+      // console.log(this.contestRankTableInfo)
 
       const req = {
         contestId: parseInt(this.contestId),

@@ -40,7 +40,6 @@ func (l *GetContestProblemsLogic) GetContestProblems(req *types.GetContestProble
 			ProblemId: problemInfo.GetProblemId(),
 			Title:     problemInfo.GetTitle(),
 		})
-
 	}
 	resp.Code, resp.Message = res.GetCode(), res.GetMessage()
 	resp.Data = data

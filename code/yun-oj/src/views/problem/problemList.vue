@@ -81,7 +81,7 @@ export default {
             id: problem.problemId,
             problemName: problem.title,
             hardLevel: hardLevelMap[problem.hardLevel],
-            passRate: problem.submitCount === 0 ? '0%' : 100 * problem.passCount / problem.submitCount + '%'
+            passRate: problem.submitCount === 0 ? '0%' : (100 * problem.passCount / problem.submitCount).toFixed(2) + '%'
           })
         })
       })

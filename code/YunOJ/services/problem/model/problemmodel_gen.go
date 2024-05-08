@@ -38,6 +38,8 @@ type (
 		FindByPage(ctx context.Context, offset, limit int64) ([]Problem, error)
 		FindRecentProblems(ctx context.Context, limit int64) ([]Problem, error)
 		Count(ctx context.Context) (int64, error)
+		AddSubmitCount(ctx context.Context, submitId int64) error
+		AddPassCount(ctx context.Context, submitId int64) error
 	}
 
 	defaultProblemModel struct {
@@ -204,7 +206,23 @@ func (m *defaultProblemModel) Count(ctx context.Context) (int64, error) {
 	err := m.QueryRowNoCache(&count, query)
 	return count, err
 }
+func (m *defaultProblemModel) AddSubmitCount(ctx context.Context, submitId int64) error {
+	problem, err := m.FindOne(ctx, submitId)
+	if err != nil {
+		return err
+	}
+	problem.SubmitCount++
+	return m.Update(ctx, problem)
+}
 
+func (m *defaultProblemModel) AddPassCount(ctx context.Context, submitId int64) error {
+	problem, err := m.FindOne(ctx, submitId)
+	if err != nil {
+		return err
+	}
+	problem.PassCount++
+	return m.Update(ctx, problem)
+}
 func (m *defaultProblemModel) formatPrimary(primary any) string {
 	return fmt.Sprintf("%s%v", cacheProblemProblemIdPrefix, primary)
 }

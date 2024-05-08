@@ -41,9 +41,10 @@ export default {
   components: {ElTable, ElTableColumn},
   data() {
     return {
-      helloText: `欢迎来到 YUN-OJ
-# 11
-$$a_b$$
+      helloText: `
+# 欢迎来到 YUN-OJ
+### 这里是属于YNU的ACM竞赛基地
+### 点击题目开始你的ACM之旅吧！
       `,
       problemData: [],
       contestData: []
@@ -65,8 +66,8 @@ $$a_b$$
       return index + 1;
     },
     handleProblemClick(row) {
-      const url = `/problem/${row.id}`;
-      sessionStorage.setItem('problemTitle.' + row.id, row.problemName)
+      const url = `/problem/${row.problemId}`;
+      sessionStorage.setItem('problemTitle.' + row.problemId, row.problemName)
       window.open(url)
     },
     handleContestClick(row) {

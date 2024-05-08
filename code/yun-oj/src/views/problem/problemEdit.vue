@@ -1,8 +1,12 @@
 <template>
   <div>
-    <div style="font-size: 28px; border-bottom: 1px #938c8c solid;margin-bottom: 30px">{{ titleInfo }}</div>
+    <div style="display: flex;border-bottom: 1px #938c8c solid;margin-bottom: 30px;justify-content: space-between;
+    align-items: center;">
+      <div style="font-size: 28px; ">{{ titleInfo }}</div>
+      <el-button type="danger" v-if=!isNewProblem @click="deleteProblem()">删除题目</el-button>
+    </div>
     <div style="width: 100%">
-      <el-form :model="problemInfo" label-position="left" label-width="auto" style="max-width: 1000px">
+      <el-form :model="problemInfo" label-position="left" label-width="auto" style="max-width: 1300px">
         <el-form-item label="题目名称">
           <el-input v-model="problemInfo.title"/>
         </el-form-item>
@@ -24,7 +28,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="题目描述">
-          <el-input type="textarea" :autosize="{ minRows: 10, maxRows: 100 }" v-model="problemInfo.content"/>
+          <el-input type="textarea" :autosize="{ minRows: 10, maxRows: 100 }" v-model="problemInfo.description"/>
         </el-form-item>
         <el-form-item label="描述预览">
           <div style="width:100%;height:100%;border: 1px black solid;min-height: 20vh;padding-left:10px">
@@ -55,6 +59,7 @@
 <script>
 import {ElButton, ElForm, ElFormItem, ElInput, ElInputNumber, ElOption, ElSelect, ElUpload,} from "element-plus";
 import {hardLevelMap} from "@/utils/globalStaticData";
+import {eventBus} from "@/utils/eventBus";
 
 export default {
   components: {ElForm, ElFormItem, ElButton, ElInput, ElInputNumber, ElUpload, ElSelect, ElOption},
@@ -64,14 +69,14 @@ export default {
       titleInfo: '',
       submitProblemInfo: '',
       submitCaseInfo: '更新样例',
-      problemInfo: {problemId: '', title: '', content: '', timeLimit: 1000, memoryLimit: 128, hardLevel: 1,},
+      problemInfo: {problemId: '', title: '', description: '', timeLimit: 1000, memoryLimit: 128, hardLevel: 0,},
       judgeCases: {input: [], output: []},
       inputFileList: [],
       outputFileList: [],
       hardLevelOption: [
+        {value: 0, label: hardLevelMap[0]},
         {value: 1, label: hardLevelMap[1]},
         {value: 2, label: hardLevelMap[2]},
-        {value: 3, label: hardLevelMap[3]},
       ]
     }
   },
@@ -90,17 +95,77 @@ export default {
     renderedMarkdown() {
       // https://github.com/runarberg/markdown-it-math
       const md = require('markdown-it')().use(require('markdown-it-math'),)
-      return md.render(this.problemInfo.content);
+      return md.render(this.problemInfo.description);
     },
   },
   methods: {
+    deleteProblem() {
+      const req = {
+        problemId: this.problemInfo.problemId
+      }
+      this.$axios.post('/problem/delete', req).then((res) => {
+        const resp = res.data
+        if (resp.code !== 0) {
+          return
+        }
+        const noticeData = {type: "success", message: '删除题目成功', duration: 1300}
+        eventBus.emit('globalNotice', noticeData)
+        setTimeout(function () {
+          window.close();
+        }, 1000);
+      })
+    },
     onSubmitProblemInfo() {
-      // todo
-      console.log(this.problemInfo);
+      let req = {
+        title: this.problemInfo.title,
+        timeLimit: this.problemInfo.timeLimit,
+        memoryLimit: this.problemInfo.memoryLimit,
+        description: this.problemInfo.description,
+        hardLevel: this.problemInfo.hardLevel,
+      }
+      let uri = '/problem/create'
+      if (!this.isNewProblem) {
+        req.problemId = this.problemInfo.problemId
+        uri = '/problem/update'
+      }
+      this.$axios.post(uri, req).then((res) => {
+        const resp = res.data
+        if (resp.code !== 0) {
+          return
+        }
+        let message = this.isNewProblem ? '创建题目成功' : '更新题目成功'
+        let noticeData = {type: "success", message: message, duration: 1300}
+        eventBus.emit('globalNotice', noticeData)
+        this.$router.go(-1)
+      })
     },
     onSubmitProblemCase() {
-      // todo
-      console.log(this.judgeCases);
+      if (this.problemInfo.problemId === '') {
+        const noticeData = {type: "error", message: '请先创建题目', duration: 1300}
+        eventBus.emit('globalNotice', noticeData)
+        return
+      }
+      let req = {
+        problemId: this.problemInfo.problemId,
+        cases: []
+      }
+      for (let i = 0; i < this.judgeCases.input.length; i++) {
+        req.cases.push({
+          input: this.judgeCases.input[i],
+          output: this.judgeCases.output[i]
+        })
+      }
+      this.$axios.post('/judge/setJudgeCase', req).then((res) => {
+        const resp = res.data
+        if (resp.code !== 0) {
+          return
+        }
+        let noticeData = {type: "success", message: '更新样例成功', duration: 1300}
+        eventBus.emit('globalNotice', noticeData)
+        this.$router.go(-1)
+      })
+
+      // console.log(this.judgeCases);
     },
     handleExceed() {
       console.log("最多10个样例")
@@ -147,10 +212,11 @@ export default {
         }
         this.problemInfo.problemId = resp.data.problemId
         this.problemInfo.title = resp.data.title
-        this.problemInfo.content = resp.data.description
+        this.problemInfo.description = resp.data.description
         this.problemInfo.timeLimit = resp.data.timeLimit
         this.problemInfo.memoryLimit = resp.data.memoryLimit
-        this.problemInfo.hardLevel = hardLevelMap[resp.data.hardLevel]
+        // this.problemInfo.hardLevel = hardLevelMap[resp.data.hardLevel]
+        this.problemInfo.hardLevel = resp.data.hardLevel
       })
     },
   }
