@@ -127,7 +127,7 @@ export default {
     autoTextarea(targetTextElement)
 
     const uToken = localStorage.getItem('U-Token')
-    this.socket = new WebSocket(`ws://webkafkanginx-avvzxdijgd.cn-hongkong.fcapp.run?uToken=${uToken}`);
+    this.socket = new WebSocket(`wss://webkafkanginx-avvzxdijgd.cn-hongkong.fcapp.run?uToken=${uToken}`);
     this.socket.onmessage = (event) => {
       const message = JSON.parse(event.data);
       if (this.submitId === message.SubmitId) this.runCodeResultMsg = codeRunResultMap[message.Result]
