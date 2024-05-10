@@ -5,8 +5,13 @@
         <el-table-column type="index" :index="contestProblemsListIndexMethod"/>
         <el-table-column prop="title" label="题目名称">
           <template #default="scope">
-            <div @click="handleContestProblemClick(scope.row)" class="contest-problem-item">
-              {{ scope.row.title }}
+            <div @click="handleContestProblemClick(scope.row)" class="contest-problem-item"> {{ scope.row.title }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column align="right">
+          <template #default="scope">
+            <div style="color: #3498db;margin-right: 80px" @click="handleContestProblemClick(scope.row)"
+                 class="contest-problem-item">查看题目
             </div>
           </template>
         </el-table-column>

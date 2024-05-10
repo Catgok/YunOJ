@@ -10,7 +10,7 @@
       <el-table-column type="index" label="#" width="70" :index="ProblemListIndexMethod"/>
       <el-table-column prop="problemName" label="题目名称">
         <template #default="scope">
-          <div @click="handleProblemClick(scope.row)" class="problem-item">{{ scope.row.problemName }}</div>
+          <div style="color: #3498db" @click="handleProblemClick(scope.row)" class="problem-item">{{ scope.row.problemName }}</div>
         </template>
       </el-table-column>
       <el-table-column prop="hardLevel" label="难度" width="150"/>

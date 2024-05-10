@@ -11,7 +11,7 @@
             <el-table-column prop="problemId" label="ID" width="60"></el-table-column>
             <el-table-column prop="title" label="题目名称">
               <template #default="scope">
-                <div @click="handleProblemClick(scope.row)" class="problem-item">{{ scope.row.title }}</div>
+                <div style="color: #3498db" @click="handleProblemClick(scope.row)" class="problem-item">{{ scope.row.title }}</div>
               </template>
             </el-table-column>
           </el-table>
@@ -24,7 +24,7 @@
             <el-table-column type="index" label="#" width="70" :index="ContestListIndexMethod"/>
             <el-table-column prop="name" label="竞赛名称">
               <template #default="scope">
-                <div @click="handleContestClick(scope.row)" class="contest-item">{{ scope.row.name }}</div>
+                <div style="color: #3498db" @click="handleContestClick(scope.row)" class="contest-item">{{ scope.row.name }}</div>
               </template>
             </el-table-column>
           </el-table>

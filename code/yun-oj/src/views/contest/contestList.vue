@@ -9,14 +9,14 @@
       <el-table-column type="index" label="#" width="70" :index="contestListIndexMethod"/>
       <el-table-column prop="name" label="竞赛名称">
         <template #default="scope">
-          <div @click="handleContestClick(scope.row)" class="contest-item">{{ scope.row.name }}</div>
+          <div style="color: #3498db" @click="handleContestClick(scope.row)" class="contest-item">{{ scope.row.name }}</div>
         </template>
       </el-table-column>
       <el-table-column prop="startTime" label="开始时间" width="180"/>
       <el-table-column prop="endTime" label="结束时间" width="180"/>
       <el-table-column width="150">
         <template #default="scope" style="width: 50px ">
-          <el-button link v-show="!signUpStatus(scope.row)" @click="signupContest(scope.row)">报名</el-button>
+          <el-button style="color: #79a978" link v-show="!signUpStatus(scope.row)" @click="signupContest(scope.row)">报名</el-button>
           <div v-show="signUpStatus(scope.row)">已报名</div>
         </template>
       </el-table-column>
