@@ -1,14 +1,14 @@
 const CompressionPlugin = require("compression-webpack-plugin")
-
+const {defineConfig} = require('@vue/cli-service')
 module.exports = {
     transpileDependencies: true,
     chainWebpack: config => {
         config.plugin('html').tap(args => {
-            args[0].title = 'UTiool 在线工具' // 设置全局页面标题
+            args[0].title = 'YunOJ' // 设置全局页面标题
             return args
         })
     },
-    // productionSourceMap: false, //源码
+    productionSourceMap: false, //源码
     configureWebpack: {
         plugins: [
             new CompressionPlugin({
@@ -17,11 +17,16 @@ module.exports = {
                 deleteOriginalAssets: true//压缩后保留原文件
             })
         ],
+        resolve: {
+            fallback: {
+                http: require.resolve("stream-http"),
+                url: require.resolve("url/")
+            },
+        }
         // devtool: "source-map"
     },
     lintOnSave: false,
     devServer: {
         port: 8081
     },
-
 }

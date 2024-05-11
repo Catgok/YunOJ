@@ -5,12 +5,12 @@
         {{ this.$route.params.problemId }}. {{ problemInfo.title }}
       </div>
       <div>
-        <div v-if="isCoach()" @click="routeToEditProblem">编辑题目</div>
+        <div v-if="isCoach()" @click="routeToEditProblem" class="edit-problem-item">编辑题目</div>
       </div>
     </div>
     <div style="display: flex">
       <div style="flex: 20;border-top: 1px #938c8c solid;">
-        <div style="text-align:left;" v-html="renderedMarkdown"></div>
+        <div style="text-align:left; margin-right: 15px" v-html="renderedMarkdown"></div>
       </div>
       <div style="flex: 8;">
         <div class="problem-attach-info problem-attach-info-0">
@@ -25,8 +25,9 @@
           <div>难度 :</div>
           <div :style="hardStyle">{{ problemInfo.hardLevel }}</div>
         </div>
-        <div @click="problemSubmission()" class="problem-attach-info problem-submission-button">
-          <div>提交记录</div>
+        <div @click="problemSubmission()" class="problem-attach-info problem-submission-button"
+             style="  border-bottom: 1px #938c8c solid;">
+          <div style="color: #3498db; ">提交记录</div>
           <!--          <el-button link @click="problemSubmission()" style="margin: 0;border: 0">提交记录</el-button>-->
         </div>
       </div>
@@ -91,6 +92,7 @@ import {Codemirror} from 'vue-codemirror'
 import {ElButton, ElInput, ElOption, ElSelect} from "element-plus"
 import {codeRunResultMap, hardLevelMap} from "@/utils/globalStaticData";
 import {eventBus} from "@/utils/eventBus";
+import texzilla from "texzilla";
 
 export default {
   components: {Codemirror, ElInput, ElButton, ElSelect, ElOption},
@@ -136,7 +138,20 @@ export default {
   computed: {
     renderedMarkdown() {
       // https://github.com/runarberg/markdown-it-math
-      const md = require('markdown-it')().use(require('markdown-it-math'),)
+      const texzilla = require('texzilla');
+      const md = require('markdown-it')()
+          .use(require('markdown-it-math'), {
+            inlineOpen: '$',
+            inlineClose: '$',
+            blockOpen: '$$',
+            blockClose: '$$',
+            inlineRenderer: function(str) {
+              return texzilla.toMathMLString(str);
+            },
+            blockRenderer: function(str) {
+              return texzilla.toMathMLString(str, true);
+            }
+          });
       return md.render(this.problemInfo.content);
     },
   },
@@ -268,12 +283,14 @@ export default {
   display: flex;
   justify-content: space-between;
   padding: 20px 16px 20px 8px;
+  border-right: 1px #938c8c solid;
 }
 
 .problem-attach-info-0 {
   background-color: #D3D3D3;
   border-top: 1px #938c8c solid;
   border-bottom: 1px #938c8c solid;
+  border-right: 1px #938c8c solid;
 }
 
 .problem-submission-button:hover {
@@ -292,5 +309,10 @@ export default {
   border-top: #DCDCDC 1px solid;
   width: 100px;
   background-color: white;
+}
+
+.edit-problem-item {
+  color: #3498db;
+  cursor: pointer;
 }
 </style>

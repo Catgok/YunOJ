@@ -61,6 +61,7 @@ import {
   ElTimePicker
 } from "element-plus";
 import {eventBus} from "@/utils/eventBus";
+import texzilla from "texzilla";
 
 export default {
   components: {ElForm, ElFormItem, ElButton, ElCol, ElTimePicker, ElInput, ElDatePicker, ElTable, ElTableColumn},
@@ -90,7 +91,20 @@ export default {
   computed: {
     renderedMarkdown() {
       // https://github.com/runarberg/markdown-it-math
-      const md = require('markdown-it')().use(require('markdown-it-math'),)
+      const texzilla = require('texzilla');
+      const md = require('markdown-it')()
+          .use(require('markdown-it-math'), {
+            inlineOpen: '$',
+            inlineClose: '$',
+            blockOpen: '$$',
+            blockClose: '$$',
+            inlineRenderer: function(str) {
+              return texzilla.toMathMLString(str);
+            },
+            blockRenderer: function(str) {
+              return texzilla.toMathMLString(str, true);
+            }
+          });
       return md.render(this.contestInfo.description);
     },
   },

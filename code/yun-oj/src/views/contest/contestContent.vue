@@ -38,6 +38,7 @@ import ContestRankInfo from "@/views/contest/detail/contestRankInfo.vue";
 import {eventBus} from "@/utils/eventBus";
 import {formDate} from "@/utils/utils";
 import {ElButton, ElRadioButton, ElRadioGroup} from "element-plus";
+import texzilla from "texzilla";
 
 export default {
   name: 'contestContent',
@@ -61,7 +62,20 @@ export default {
   computed: {
     renderedMarkdown() {
       // https://github.com/runarberg/markdown-it-math
-      const md = require('markdown-it')().use(require('markdown-it-math'))
+      const texzilla = require('texzilla');
+      const md = require('markdown-it')()
+          .use(require('markdown-it-math'), {
+            inlineOpen: '$',
+            inlineClose: '$',
+            blockOpen: '$$',
+            blockClose: '$$',
+            inlineRenderer: function(str) {
+              return texzilla.toMathMLString(str);
+            },
+            blockRenderer: function(str) {
+              return texzilla.toMathMLString(str, true);
+            }
+          });
       return md.render(this.contestInfo.description);
     },
   },
